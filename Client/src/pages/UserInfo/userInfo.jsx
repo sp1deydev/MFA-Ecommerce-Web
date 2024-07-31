@@ -2,13 +2,13 @@ import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import { Avatar, Typography, List, Card, Input, message, Button, Flex, Popconfirm, Modal, Form } from 'antd';
 import { useDispatch, useSelector } from 'react-redux';
-import { userSlice } from '../redux/userSlice';
-import { validateEmail } from '../helpers/emailRegEx';
+import { userSlice } from '../../redux/userSlice';
+import { validateEmail } from '../../helpers/emailRegEx';
 import { toast } from 'react-toastify';
-import { userApi } from '../api/userApi';
+import { userApi } from '../../api/userApi';
 import { EditOutlined, DeleteOutlined, QuestionCircleOutlined } from '@ant-design/icons';
 import { useNavigate } from 'react-router-dom';
-import { capitalizeFirstLetter } from '../helpers/toUpperCase';
+import { capitalizeFirstLetter } from '../../helpers/toUpperCase';
 
 UserInfo.propTypes = {
     

@@ -1,9 +1,9 @@
-import About from "../pages/about";
-import Cart from "../pages/cart";
-import Home from "../pages/home";
-import Login from "../pages/login";
-import Register from "../pages/register";
-import UserInfo from "../pages/userInfo";
+import About from "../pages/About/about";
+import Cart from "../pages/Cart/cart";
+import Home from "../pages/Home/home";
+import Login from "../pages/Login/login";
+import Register from "../pages/Register/register";
+import UserInfo from "../pages/UserInfo/userInfo";
 
 export const configRoutes = [
     {

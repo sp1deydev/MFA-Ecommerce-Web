@@ -2,11 +2,11 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Button, Form, Input, Space, Typography } from 'antd';
 import { useDispatch, useSelector } from 'react-redux';
-import { userSlice } from '../redux/userSlice';
+import { userSlice } from '../../redux/userSlice';
 import { useNavigate } from 'react-router-dom';
-import { authApi } from '../api/authApi';
+import { authApi } from '../../api/authApi';
 import { toast } from 'react-toastify';
-import Loading from '../components/loading';
+import Loading from '../../components/loading';
 
 Register.propTypes = {
     

@@ -2,14 +2,14 @@ import React, { useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { Button, Form, Input, Space, Checkbox, Typography } from 'antd';
 import { useDispatch, useSelector } from 'react-redux';
-import { userSlice } from '../redux/userSlice';
+import { userSlice } from '../../redux/userSlice';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { toast } from 'react-toastify';
-import { authApi } from '../api/authApi';
-import { handleLocalStorage } from '../utils/handleLocalStorage';
-import handleAuthToken from '../utils/handleAuthToken';
-import { handleSessionStorage } from '../utils/handleSessionStorage';
-import Loading from '../components/loading';
+import { authApi } from '../../api/authApi';
+import { handleLocalStorage } from '../../utils/handleLocalStorage';
+import handleAuthToken from '../../utils/handleAuthToken';
+import { handleSessionStorage } from '../../utils/handleSessionStorage';
+import Loading from '../../components/loading';
 
 Login.propTypes = {
     
