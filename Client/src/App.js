@@ -58,7 +58,6 @@ function App() {
   return (
     <Router>
       <div>
-        <HeaderBar />
         <Routers />
       </div>
     </Router>
