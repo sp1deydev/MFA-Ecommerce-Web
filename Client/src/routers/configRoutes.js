@@ -1,3 +1,5 @@
+import MFAConfiguration from "../components/MFAConfiguration";
+import UploadImage from "../components/uploadImage";
 import { ADMIN_LAYOUT, NO_LAYOUT } from "../constants/layout";
 import About from "../pages/About/about";
 import LoginAdmin from "../pages/Admin/Login";
@@ -49,6 +51,14 @@ export const configRoutes = [
         path: '/admin/test',
         component: LoginAdmin,
         layout: ADMIN_LAYOUT
+    },
+    {
+        path: '/testMFA',
+        component: MFAConfiguration,
+    },
+    {
+        path: '/up',
+        component: UploadImage,
     },
     
 ]

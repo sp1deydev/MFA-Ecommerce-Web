@@ -8,8 +8,6 @@ MainLayout.propTypes = {
 };
 
 function MainLayout(props) {
-    console.log('here')
-    console.log(props)
     return (
         <Fragment>
             <HeaderBar/>
