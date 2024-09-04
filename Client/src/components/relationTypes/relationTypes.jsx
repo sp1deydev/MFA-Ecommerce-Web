@@ -4,16 +4,16 @@ import { Avatar, List, Radio, Space } from 'antd';
 
 const data = [
   {
-    title: 'Ant Design Title 1',
+    title: 'Relation Type 1',
   },
   {
-    title: 'Ant Design Title 2',
+    title: 'Relation Type 2',
   },
   {
-    title: 'Ant Design Title 3',
+    title: 'Relation Type 3',
   },
   {
-    title: 'Ant Design Title 4',
+    title: 'Relation Type 4',
   },
 ];
 

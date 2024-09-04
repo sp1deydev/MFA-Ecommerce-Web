@@ -88,7 +88,7 @@ const UploadImage= () => {
         Successfully Uploaded: {countImage}/9
     </div>
       <Upload
-        listType="picture"
+        listType="text"
         fileList={imageList}
         onPreview={handlePreview}
         onChange={handleChange}
