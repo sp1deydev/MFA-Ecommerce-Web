@@ -1,20 +1,108 @@
-import React from 'react';
-import PropTypes from 'prop-types';
-import Loading from '../../components/loading';
+import PropTypes from "prop-types";
+import Loading from "../../components/loading";
+import React from "react";
+import { Row, Col, Card, Button, Typography } from "antd";
+import { ShoppingCartOutlined, GiftOutlined } from "@ant-design/icons";
+import { Carousel, Image } from "antd";
 
-Home.propTypes = {
-    
-};
+const { Title, Text } = Typography;
 
+Home.propTypes = {};
+const carouselItems = [
+  <div key="1">
+    <img
+      src="https://placehold.co/692x438"
+      alt="Slide 1"
+      style={{ width: "100%" }}
+    />
+  </div>,
+  <div key="2">
+    <img
+      src="https://placehold.co/692x438"
+      alt="Slide 2"
+      style={{ width: "100%" }}
+    />
+  </div>,
+  <div key="3">
+    <img
+      src="https://placehold.co/692x438"
+      alt="Slide 3"
+      style={{ width: "100%" }}
+    />
+  </div>,
+];
 function Home(props) {
-    return (
-        <div>
-            <Loading 
-            color="#1677ff"
-            bgColor="#fff"
-            />
-        </div>
-    );
+  return (
+    <div>
+      <Row
+        gutter={[16, 16]}
+        style={{ width: "986px", marginTop: "20px", margin: "auto" }}
+      >
+        <Col span={17}>
+          <Carousel autoplay style={{ width: "692px", height: "438px" }}>
+            {carouselItems.map((item) => item)}
+          </Carousel>
+        </Col>
+        <Col span={7}>
+          <Row gutter={[12, 12]}>
+            <Col span={24}>
+              <img
+                src="https://placehold.co/272x136"
+                alt="Image 4"
+                // style={{ width: "50%" }}
+              />
+            </Col>
+            <Col span={24}>
+              <img
+                src="https://placehold.co/272x136"
+                alt="Image 5"
+                // style={{ width: "50%" }}
+              />
+            </Col>
+            <Col span={24}>
+              <img
+                src="https://placehold.co/272x136"
+                alt="Image 6"
+                // style={{ width: "50%" }}
+              />
+            </Col>
+          </Row>
+        </Col>
+      </Row>
+      <div style={{ padding: "20px", width:'986px', margin:'auto' }}>
+        <Row gutter={[16, 16]}>
+          <Col span={6}>
+            <Card style={{ textAlign: "center", borderRadius: "8px" }}>
+              <ShoppingCartOutlined style={{ fontSize: "32px" }} />
+              <Title level={4}>Free Delivery</Title>
+              <Text>Worldwide from $27</Text>
+            </Card>
+          </Col>
+          <Col span={6}>
+            <Card style={{ textAlign: "center", borderRadius: "8px" }}>
+              <GiftOutlined style={{ fontSize: "32px" }} />
+              <Title level={4}>Warranty</Title>
+              <Text>Up to 2 years</Text>
+            </Card>
+          </Col>
+          <Col span={6}>
+            <Card style={{ textAlign: "center", borderRadius: "8px" }}>
+              <GiftOutlined style={{ fontSize: "32px" }} />
+              <Title level={4}>Easy Return</Title>
+              <Text>365 days return</Text>
+            </Card>
+          </Col>
+          <Col span={6}>
+            <Card style={{ textAlign: "center", borderRadius: "8px" }}>
+              <GiftOutlined style={{ fontSize: "32px" }} />
+              <Title level={4}>Wide Choice</Title>
+              <Text>100k items available</Text>
+            </Card>
+          </Col>
+        </Row>
+      </div>
+    </div>
+  );
 }
 
 export default Home;
