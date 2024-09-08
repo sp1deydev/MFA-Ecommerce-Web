@@ -25,7 +25,6 @@ HeaderBar.propTypes = {
 };
 
 const { Header } = Layout;
-const { SubMenu } = Menu;
 
 function HeaderBar(props) {
     const currentUser = useSelector((state) => state.user.currentUser) || {};
@@ -62,66 +61,82 @@ function HeaderBar(props) {
     //declare menuItems to by pass children warning
     const menuItems = [
         {
-            key: '1',
-            icon: <HomeOutlined />,
-            label: 'Home',
-            onClick: handleHome
+          key: '1',
+          icon: <HomeOutlined style={{ color: '#fff' }} />,
+          label: 'Home',
+          onClick: handleHome,
+          style: { color: '#fff' },
         },
         {
-            key: '2',
-            icon: <InfoCircleOutlined />,
-            label: 'About',
-            onClick: handleAbout
+          key: '2',
+          icon: <InfoCircleOutlined style={{ color: '#fff' }} />,
+          label: 'About',
+          onClick: handleAbout,
+          style: { color: '#fff' },
         },
         {
-            key: '8',
-            icon: <ShoppingCartOutlined />,
-            label: 'Cart',
-            onClick: handleCart
+          key: '8',
+          icon: <ShoppingCartOutlined style={{ color: '#fff' }} />,
+          label: 'Cart',
+          onClick: handleCart,
+          style: { color: '#fff' },
         },
         {
-            key: '3',
-            icon: currentUser && !isEmpty ? <SmileOutlined /> : <FrownOutlined />,
-            label: currentUser && !isEmpty ? 'Username' : 'Guest',
-            children: currentUser && !isEmpty ? [
+          key: '3',
+          icon: currentUser && !isEmpty ? (
+            <SmileOutlined style={{ color: '#fff' }} />
+          ) : (
+            <FrownOutlined style={{ color: '#fff' }} />
+          ),
+          label: currentUser && !isEmpty ? (
+            <span style={{ color: '#fff' }}>Username</span>
+          ) : (
+            <span style={{ color: '#fff' }}>Guest</span>
+          ),
+          style: { color: '#fff' },
+          children: currentUser && !isEmpty
+            ? [
                 {
-                    key: '4',
-                    icon: <UserOutlined />,
-                    label: 'My Profile',
-                    onClick: handleProfile
+                  key: '4',
+                  icon: <UserOutlined />,
+                  label: 'My Profile',
+                  onClick: handleProfile,
                 },
                 {
-                    key: '5',
-                    icon: <LogoutOutlined />,
-                    label: 'Log Out',
-                    onClick: handleLogout
-                }
-            ] : [
+                  key: '5',
+                  icon: <LogoutOutlined />,
+                  label: 'Log Out',
+                  onClick: handleLogout,
+                },
+              ]
+            : [
                 {
-                    key: '6',
-                    icon: <LoginOutlined />,
-                    label: 'Login',
-                    onClick: handleLogin
+                  key: '6',
+                  icon: <LoginOutlined />,
+                  label: 'Login',
+                  onClick: handleLogin,
                 },
                 {
-                    key: '7',
-                    icon: <UserAddOutlined />,
-                    label: 'Register',
-                    onClick: handleRegister
-                }
-            ]
-        }
-    ];
+                  key: '7',
+                  icon: <UserAddOutlined />,
+                  label: 'Register',
+                  onClick: handleRegister,
+                },
+              ],
+        },
+      ];
+      
     return (
         <div>
 
-        <Header style={{ background: '#fff', marginBottom: "24px" }}>
-            <div className="logo" style={{ width: '120px', height: '31px', background: '#2412', margin: '16px 28px 16px 0', float: 'left' }} />
+        <Header style={{ background: '#1677ff', color: '#fff' }}>
+            <div className="logo" style={{ width: '120px', height: '31px', background: '#2412', margin: '16px 28px 16px 0', float: 'left' }} >
+                Logo
+            </div>
 
             <Menu
-            theme="light"
             mode="horizontal"
-            style={{ display: 'flex', justifyContent: 'flex-end', alignItems: 'center' }}
+            style={{ display: 'flex', justifyContent: 'flex-end', alignItems: 'center', background: '#1677ff', color: '#fff!' }}
             items={menuItems}
         />
         </Header>
