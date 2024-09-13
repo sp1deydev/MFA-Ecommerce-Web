@@ -164,7 +164,7 @@ function Home(props) {
           <a >More {'>'}</a>
         </div>
       </div>
-      <div className="home-sub-container">
+      <div className="home-sub-container" style={{paddingBottom:'16px'}}>
         <h1>Mùa tựu trường</h1>
         <img
           src="https://placehold.co/986x136"

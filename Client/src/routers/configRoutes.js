@@ -6,6 +6,7 @@ import LoginAdmin from "../pages/Admin/Login";
 import Cart from "../pages/Cart/cart";
 import Home from "../pages/Home/home";
 import Login from "../pages/Login/login";
+import ProductDetails from "../pages/ProductDetails/productdetails";
 import Register from "../pages/Register/register";
 import UserInfo from "../pages/UserInfo/userInfo";
 
@@ -59,6 +60,10 @@ export const configRoutes = [
     {
         path: '/up',
         component: UploadImage,
+    },
+    {
+        path: '/products/:productId',
+        component: ProductDetails,
     },
     
 ]
