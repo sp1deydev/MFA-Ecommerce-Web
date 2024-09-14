@@ -5,50 +5,12 @@ import { Row, Col, Card, Button, Typography, Input } from "antd";
 import { ShoppingCartOutlined, GiftOutlined } from "@ant-design/icons";
 import { Carousel, Image } from "antd";
 import ProductCard from "../../components/productCard/productCard";
+import { useSelector } from "react-redux";
 
 const { Title, Text } = Typography;
 const { Search } = Input;
 
 Home.propTypes = {};
-const products = [
-  {
-    name: "Màn hình MSI G244F E2 24",
-  },
-  {
-    name: "Màn hình Dahua DHI-LM22-A200Y 22",
-  },
-  {
-    name: "Màn hình Dahua DHI-LM22-A200Y 22",
-  },
-  {
-    name: "Màn hình Dahua DHI-LM22-A200Y 22",
-  },
-  {
-    name: "Màn hình Dahua DHI-LM22-A200Y 22",
-  },
-  {
-    name: "Màn hình Dahua DHI-LM22-A200Y 22",
-  },
-  {
-    name: "Màn hình Dahua DHI-LM22-A200Y 22",
-  },
-  {
-    name: "Màn hình Dahua DHI-LM22-A200Y 22",
-  },
-  {
-    name: "Màn hình Dahua DHI-LM22-A200Y 22",
-  },
-  {
-    name: "Màn hình Dahua DHI-LM22-A200Y 22",
-  },
-  {
-    name: "Màn hình Dahua DHI-LM22-A200Y 22",
-  },
-  {
-    name: "Màn hình Dahua DHI-LM22-A200Y 22",
-  },
-];
-
 const carouselItems = [
   <div key="1">
     <img
@@ -73,6 +35,7 @@ const carouselItems = [
   </div>,
 ];
 function Home(props) {
+  const products = useSelector((state)=>state.product.productList) || []
   return (
     <div style={{backgroundColor: '#e5e7eb'}}>
       <div className="home-sub-container">

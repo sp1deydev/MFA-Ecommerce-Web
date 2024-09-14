@@ -129,14 +129,14 @@ function HeaderBar(props) {
     return (
         <div>
 
-        <Header style={{ background: '#1677ff', color: '#fff' }}>
+        <Header style={{ background: '#0066CC', color: '#fff' }}>
             <div className="logo" style={{ width: '120px', height: '31px', background: '#2412', margin: '16px 28px 16px 0', float: 'left' }} >
                 Logo
             </div>
 
             <Menu
             mode="horizontal"
-            style={{ display: 'flex', justifyContent: 'flex-end', alignItems: 'center', background: '#1677ff', color: '#fff!' }}
+            style={{ display: 'flex', justifyContent: 'flex-end', alignItems: 'center', background: '#0066CC', color: '#fff' }}
             items={menuItems}
         />
         </Header>
