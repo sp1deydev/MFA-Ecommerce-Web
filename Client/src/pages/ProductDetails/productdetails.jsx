@@ -1,11 +1,12 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import { useParams } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import { Typography } from 'antd';
 import { vietnamCurrency } from '../../helpers/currency';
-import { GiftOutlined, PlusOutlined, ShoppingOutlined, FileProtectOutlined } from '@ant-design/icons';
-import { Button } from 'antd';
+import { GiftOutlined, PlusOutlined, ShoppingOutlined, FileProtectOutlined, InfoCircleOutlined, ShopOutlined } from '@ant-design/icons';
+import { Button, Row, Col } from 'antd';
+import ProductCard from '../../components/productCard/productCard';
 
 const { Title } = Typography;
 
@@ -17,7 +18,13 @@ function ProductDetails(props) {
     const {productId} = useParams()
     const products = useSelector(state => state.product.productList)
     const product =  products.find(product => product.id == productId); //use find() instead of filter() beacause I just want product object not a array
-    console.log('product', product)
+    const [recommendProducts, setRecommendProducts] = useState([]);
+    useEffect(()=> {
+        let arr = products.filter(product => product.id != productId)
+        arr = arr.sort(() => 0.5 - Math.random());
+        arr = arr.slice(0, 4);
+        setRecommendProducts(arr);
+    }, [product])
     return (
         <div className='product-detail-container'>
             <div className='product-detail-sub-container'>
@@ -54,6 +61,20 @@ function ProductDetails(props) {
                     </div>
                 </div>
             </div>
+            <div className='product-detail-description'>
+                <Title level={4}><InfoCircleOutlined /> Description</Title>
+                Lorem ipsum dolor sit amet consectetur adipisicing elit. Magnam ab fuga reprehenderit, porro obcaecati culpa beatae odit architecto tenetur ipsum mollitia explicabo tempora temporibus blanditiis aperiam pariatur dolores repudiandae autem?
+                {product.description}
+            </div>
+            <Title level={3}><ShopOutlined /> Recommend For You</Title>
+            <Row gutter={[8, 8]}>
+                {recommendProducts.map((product, index) => (
+                  <Col key={index} span={6}>
+                    
+                    <ProductCard product={product}/>
+                    </Col>
+                ))}
+            </Row>
         </div>
     );
 }

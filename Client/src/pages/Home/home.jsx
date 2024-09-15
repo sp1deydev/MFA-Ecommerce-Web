@@ -75,7 +75,7 @@ function Home(props) {
           </Col>
         </Row>
       </div>
-      <div style={{ padding: "20px", width:'986px', margin:'auto' }}>
+      <div style={{ padding: "20px 0px", width:'986px', margin:'auto' }}>
        <Row gutter={[16, 16]}>
          <Col span={6}>
            <Card style={{ textAlign: "center", borderRadius: "8px"}} className="home-card">
@@ -115,10 +115,14 @@ function Home(props) {
         />
       </div>
       <div className="home-sub-container">
-        <h1>Danh sách sản phẩm</h1>
+        {/* <h1>Popular Products</h1> */}
+        <Title level={2}>Featured Products</Title>
         <Row gutter={[8, 8]}>
           {products.map((product, index) => (
-            <ProductCard key={index} product={product} />
+            <Col key={index} span={6}>
+
+              <ProductCard product={product}/>
+              </Col>
           ))}
         </Row>
       </div>
@@ -128,7 +132,7 @@ function Home(props) {
         </div>
       </div>
       <div className="home-sub-container" style={{paddingBottom:'16px'}}>
-        <h1>Mùa tựu trường</h1>
+        <Title level={2}>New Arrivals</Title>
         <img
           src="https://placehold.co/986x136"
           alt="Image"
