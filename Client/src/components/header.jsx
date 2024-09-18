@@ -127,9 +127,8 @@ function HeaderBar(props) {
       ];
       
     return (
-        <div>
 
-        <Header style={{ background: '#0066CC', color: '#fff' }}>
+        <Header style={{ background: '#0066CC', color: '#fff', position: 'fixed', zIndex: 1000, width: '100vw', top: 0}}>
             <div className="logo" style={{ width: '120px', height: '31px', background: '#2412', margin: '16px 28px 16px 0', float: 'left' }} >
                 Logo
             </div>
@@ -140,7 +139,6 @@ function HeaderBar(props) {
             items={menuItems}
         />
         </Header>
-        </div>
     );
 }
 

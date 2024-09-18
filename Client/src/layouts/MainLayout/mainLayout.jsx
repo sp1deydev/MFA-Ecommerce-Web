@@ -11,7 +11,9 @@ function MainLayout(props) {
     return (
         <Fragment>
             <HeaderBar/>
-            {props.children}
+            <div style={{marginTop: '64px'}}>
+                {props.children}
+            </div>
             <Footer/>
         </Fragment>
     );

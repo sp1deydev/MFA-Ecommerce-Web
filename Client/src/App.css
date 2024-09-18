@@ -19,9 +19,9 @@ html {
   width: 672px;
 }
 .home-sub-container {
+  padding-top: 20px;
   width: 986px;
   margin: auto;
-  margin-top: 16px;
 }
 .product-card-image {
   margin-bottom: 12px;;

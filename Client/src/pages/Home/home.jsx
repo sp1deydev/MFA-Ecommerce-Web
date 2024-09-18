@@ -37,7 +37,7 @@ const carouselItems = [
 function Home(props) {
   const products = useSelector((state)=>state.product.productList) || []
   return (
-    <div style={{backgroundColor: '#e5e7eb'}}>
+    <div style={{backgroundColor: '#e5e7eb',}}>
       <div className="home-sub-container">
         <Row
           gutter={[16, 16]}
