@@ -4,6 +4,7 @@ html {
 .form-container {
   margin-top: 10%;
   width: 100%;
+  margin-bottom: 286px;
 }
 .sub-form-container {
   margin-left: auto;
@@ -260,3 +261,4 @@ ul{
   font-weight: 600;
   font-size: 18px;
 }
+

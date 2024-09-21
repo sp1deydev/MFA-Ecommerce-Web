@@ -9,6 +9,7 @@ import Login from "../pages/Login/login";
 import ProductDetails from "../pages/ProductDetails/productdetails";
 import Register from "../pages/Register/register";
 import UserInfo from "../pages/UserInfo/userInfo";
+import Dashboard from "../pages/Admin/Dashboard";
 
 export const configRoutes = [
     {
@@ -44,16 +45,6 @@ export const configRoutes = [
         rolePermissions: ['admin', 'user'],
     },
     {
-        path: '/admin/login',
-        component: LoginAdmin,
-        layout: NO_LAYOUT
-    },
-    {
-        path: '/admin/test',
-        component: LoginAdmin,
-        layout: ADMIN_LAYOUT
-    },
-    {
         path: '/testMFA',
         component: MFAConfiguration,
     },
@@ -64,6 +55,21 @@ export const configRoutes = [
     {
         path: '/products/:productId',
         component: ProductDetails,
+    },
+    {
+        path: '/admin/login',
+        component: LoginAdmin,
+        layout: NO_LAYOUT
+    },
+    {
+        path: '/admin/test',
+        component: LoginAdmin,
+        layout: ADMIN_LAYOUT
+    },
+    {
+        path: '/admin/dashboard',
+        component: Dashboard,
+        layout: ADMIN_LAYOUT
     },
     
 ]
