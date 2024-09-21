@@ -9,13 +9,17 @@ MainLayout.propTypes = {
 
 function MainLayout(props) {
     return (
-        <Fragment>
-            <HeaderBar/>
-            <div style={{marginTop: '64px'}}>
+        <div style={{display:'flex', flexDirection:'column', minHeight:'100vh'}}>
+            <div>
+                <HeaderBar/>
+            </div>
+            <div style={{marginTop: '64px', flex: 1}}>
                 {props.children}
             </div>
-            <Footer/>
-        </Fragment>
+            <div >
+                <Footer /> 
+            </div>
+        </div>
     );
 }
 

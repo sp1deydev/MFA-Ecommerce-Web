@@ -236,4 +236,27 @@ ul{
   border-radius: 8px;
   margin-bottom: 12px;
 }
-
+.cart-container {
+  display: flex;
+  flex-direction: row;
+  gap: 20px;
+  padding: 0px 100px 40px;
+}
+.cart-list {
+  width: 78%;
+}
+.check-out-container {
+  width: 21%;
+}
+.cart-check-out-info {
+  display: flex;
+  justify-content: space-between;
+}
+.cart-text {
+  font-weight: 400;
+  font-size: 14px;
+}
+.cart-bold-text {
+  font-weight: 600;
+  font-size: 18px;
+}
