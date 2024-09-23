@@ -1,86 +1,200 @@
 import React from 'react';
-import { Layout, Menu, Breadcrumb, Card, Row, Col } from 'antd';
 import {
-  PieChartOutlined,
-  DesktopOutlined,
-  UserOutlined,
-  TeamOutlined,
-  FileOutlined,
+    Col, Row, Typography, Spin, Card, Empty, Table, Breadcrumb, BackTop
+} from 'antd';
+import {
+    DashboardOutlined, HomeOutlined, ContactsTwoTone, ShopTwoTone, HddTwoTone, ShoppingTwoTone
 } from '@ant-design/icons';
+import {
+    AreaChart, Area, XAxis, CartesianGrid, Tooltip, ResponsiveContainer
+} from "recharts";
 
-const { Header, Content, Footer, Sider } = Layout;
-const { SubMenu } = Menu;
+const { Title } = Typography;
 
-class Dashboard extends React.Component {
-  state = {
-    collapsed: false,
-  };
+const Dashboard = () => {
+    const statisticList = {
+        userTotal: 150,
+        productTotal: 200,
+        categoryTotal: 20,
+        orderTotal: 120
+    };
 
-  onCollapse = (collapsed) => {
-    this.setState({ collapsed });
-  };
+    const order = [
+        {
+            key: '1',
+            user: { username: 'John Doe', email: 'john@example.com' },
+            orderTotal: '100.00',
+            billing: 'Credit Card',
+            status: 'Pending',
+        },
+        {
+            key: '2',
+            user: { username: 'Jane Smith', email: 'jane@example.com' },
+            orderTotal: '250.00',
+            billing: 'PayPal',
+            status: 'Completed',
+        },
+    ];
 
-  render() {
-    const { collapsed } = this.state;
+    const data = [
+        { name: 'Jan', Total: 30 },
+        { name: 'Feb', Total: 20 },
+        { name: 'Mar', Total: 50 },
+        { name: 'Apr', Total: 40 },
+        { name: 'May', Total: 60 },
+    ];
+
+    const columns = [
+        {
+            title: 'ID',
+            key: 'index',
+            render: (text, record, index) => index + 1,
+        },
+        {
+            title: 'Tên',
+            dataIndex: 'user',
+            key: 'user',
+            render: (text) => <a>{text.username}</a>,
+        },
+        {
+            title: 'Email',
+            dataIndex: 'user',
+            key: 'user',
+            render: (text) => <a>{text.email}</a>,
+        },
+        {
+            title: 'Tổng tiền',
+            dataIndex: 'orderTotal',
+            key: 'orderTotal',
+            render: (text) => <a>{text}</a>,
+        },
+        {
+            title: 'Hình thức thanh toán',
+            dataIndex: 'billing',
+            key: 'billing',
+        },
+        {
+            title: 'Trạng thái',
+            key: 'status',
+            dataIndex: 'status',
+            render: (slugs) => (
+                <span>
+                    <span key={slugs}>
+                        {slugs?.toUpperCase()}
+                    </span>
+                </span>
+            ),
+        },
+    ];
+
     return (
-      <Layout style={{ minHeight: '100vh' }}>
-        <Sider theme='light' collapsible collapsed={collapsed} onCollapse={this.onCollapse}>
-          <div className="logo" style={{ height: '32px', background: '#2412', margin: '16px' }}>Admin</div>
-          <Menu theme="light" defaultSelectedKeys={['1']} mode="inline">
-            <Menu.Item key="1" icon={<PieChartOutlined />}>
-              Dashboard
-            </Menu.Item>
-            <Menu.Item key="2" icon={<DesktopOutlined />}>
-              Product
-            </Menu.Item>
-            <SubMenu key="sub1" icon={<UserOutlined />} title="User Management">
-              <Menu.Item key="3">Users</Menu.Item>
-              <Menu.Item key="4">Roles</Menu.Item>
-            </SubMenu>
-            <SubMenu key="sub2" icon={<TeamOutlined />} title="Teams">
-              <Menu.Item key="6">Team 1</Menu.Item>
-              <Menu.Item key="8">Team 2</Menu.Item>
-            </SubMenu>
-            <Menu.Item key="9" icon={<FileOutlined />}>
-              Category
-            </Menu.Item>
-            <Menu.Item key="10" icon={<FileOutlined />}>
-              Purchase Order
-            </Menu.Item>
-          </Menu>
-        </Sider>
-        <Layout className="site-layout">
-          <Header className="site-layout-background" style={{ backgroundColor:'#fff',padding: 0 }} />
-          <Content style={{ margin: '0 16px' }}>
-            <Breadcrumb style={{ margin: '16px 0' }}>
-              <Breadcrumb.Item>Dashboard</Breadcrumb.Item>
-              <Breadcrumb.Item>Overview</Breadcrumb.Item>
-            </Breadcrumb>
-            <div style={{ padding: 24, minHeight: 360, background: '#fff' }}>
-              <Row gutter={16}>
-                <Col span={8}>
-                  <Card title="Card 1" bordered={false}>
-                    Card content
-                  </Card>
-                </Col>
-                <Col span={8}>
-                  <Card title="Card 2" bordered={false}>
-                    Card content
-                  </Card>
-                </Col>
-                <Col span={8}>
-                  <Card title="Card 3" bordered={false}>
-                    Card content
-                  </Card>
-                </Col>
-              </Row>
-            </div>
-          </Content>
-          <Footer style={{ textAlign: 'center' }}>Ant Design Dashboard ©2024</Footer>
-        </Layout>
-      </Layout>
-    );
-  }
+        <div>
+            <Spin spinning={false}>
+                <div className='container'>
+                    <div style={{ marginTop: 20 }}>
+                        <Breadcrumb>
+                            <Breadcrumb.Item href="">
+                                <HomeOutlined />
+                            </Breadcrumb.Item>
+                            <Breadcrumb.Item href="">
+                                <DashboardOutlined />
+                                <span>DashBoard</span>
+                            </Breadcrumb.Item>
+                        </Breadcrumb>
+                    </div>
+                    <Row gutter={12} style={{ marginTop: 20 }}>
+                        <Col span={6}>
+                            <Card bordered={false}>
+                                <div className='statistic-card'>
+                                    <div>
+                                        <div className='number_total'>{statisticList.userTotal}</div>
+                                        <div className='title_total'>Số thành viên</div>
+                                    </div>
+                                    <div>
+                                        <ContactsTwoTone style={{ fontSize: 48 }} />
+                                    </div>
+                                </div>
+                            </Card>
+                        </Col>
+                        <Col span={6}>
+                            <Card bordered={false}>
+                                <div className='statistic-card'>
+                                    <div>
+                                        <div className='number_total'>{statisticList.productTotal}</div>
+                                        <div className='title_total'>Số sản phẩm</div>
+                                    </div>
+                                    <div>
+                                        <ShopTwoTone style={{ fontSize: 48 }} />
+                                    </div>
+                                </div>
+                            </Card>
+                        </Col>
+                        <Col span={6}>
+                            <Card bordered={false}>
+                                <div className='statistic-card'>
+                                    <div>
+                                        <div className='number_total'>{statisticList.categoryTotal}</div>
+                                        <div className='title_total'>Số danh mục</div>
+                                    </div>
+                                    <div>
+                                        <HddTwoTone style={{ fontSize: 48 }} />
+                                    </div>
+                                </div>
+                            </Card>
+                        </Col>
+                        <Col span={6}>
+                            <Card bordered={false}>
+                                <div className='statistic-card'>
+                                    <div>
+                                        <div className='number_total'>{statisticList.orderTotal}</div>
+                                        <div className='title_total'>Số đặt hàng</div>
+                                    </div>
+                                    <div>
+                                        <ShoppingTwoTone style={{ fontSize: 48 }} />
+                                    </div>
+                                </div>
+                            </Card>
+                        </Col>
+                    </Row>
+                    <Row gutter={12}>
+                        <Col span={12}>
+                            <div className="chart">
+                                <div className="title">Thống kê đơn hàng trong 12 tháng</div>
+                                <ResponsiveContainer width="100%" aspect={2 / 1}>
+                                    <AreaChart
+                                        width={730}
+                                        height={250}
+                                        data={data}
+                                        margin={{ top: 10, right: 30, left: 0, bottom: 0 }}
+                                    >
+                                        <XAxis dataKey="name" stroke="gray" />
+                                        <CartesianGrid strokeDasharray="3 3" className="chartGrid" />
+                                        <Tooltip />
+                                        <Area
+                                            type="monotone"
+                                            dataKey="Total"
+                                            stroke="#8884d8"
+                                            fillOpacity={1}
+                                            fill="#8884d8"
+                                        />
+                                    </AreaChart>
+                                </ResponsiveContainer>
+                            </div>
+                        </Col>
+                        <Col span={12}>
+                            <div className='chart'>
+                                <div className="title">Đơn hàng mới nhất</div>
+                                <div style={{ marginTop: 10 }}>
+                                    <Table columns={columns} pagination={{ position: ['bottomCenter'] }} dataSource={order} />
+                                </div>
+                            </div>
+                        </Col>
+                    </Row>
+                </div>
+                <BackTop style={{ textAlign: 'right' }} />
+            </Spin>
+        </div >
+    )
 }
 
 export default Dashboard;

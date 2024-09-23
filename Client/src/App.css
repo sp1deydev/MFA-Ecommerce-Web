@@ -261,4 +261,14 @@ ul{
   font-weight: 600;
   font-size: 18px;
 }
+.dashboard-container {
+  background-color: #fff;
+  border-radius: 16px;
+  padding: 28px
+}
+.statistic-card {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
 
