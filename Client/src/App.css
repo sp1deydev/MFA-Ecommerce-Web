@@ -1,6 +1,9 @@
 html {
 
 }
+.padding-12 {
+  padding: 12px;
+}
 .form-container {
   margin-top: 10%;
   width: 100%;
@@ -271,4 +274,12 @@ ul{
   flex-direction: row;
   justify-content: space-between;
 }
-
+.number_total {
+  color: #0066CC;
+  font-weight: 600;
+  font-size: 24px;
+}
+.title_total {
+  font-weight: 500;
+  font-size: 16px;
+}

@@ -91,26 +91,15 @@ const Dashboard = () => {
         <div>
             <Spin spinning={false}>
                 <div className='container'>
-                    <div style={{ marginTop: 20 }}>
-                        <Breadcrumb>
-                            <Breadcrumb.Item href="">
-                                <HomeOutlined />
-                            </Breadcrumb.Item>
-                            <Breadcrumb.Item href="">
-                                <DashboardOutlined />
-                                <span>DashBoard</span>
-                            </Breadcrumb.Item>
-                        </Breadcrumb>
-                    </div>
                     <Row gutter={12} style={{ marginTop: 20 }}>
                         <Col span={6}>
                             <Card bordered={false}>
                                 <div className='statistic-card'>
                                     <div>
                                         <div className='number_total'>{statisticList.userTotal}</div>
-                                        <div className='title_total'>Số thành viên</div>
+                                        <div className='title_total'>Users</div>
                                     </div>
-                                    <div>
+                                    <div style={{alignSelf:'center'}}>
                                         <ContactsTwoTone style={{ fontSize: 48 }} />
                                     </div>
                                 </div>
@@ -121,9 +110,9 @@ const Dashboard = () => {
                                 <div className='statistic-card'>
                                     <div>
                                         <div className='number_total'>{statisticList.productTotal}</div>
-                                        <div className='title_total'>Số sản phẩm</div>
+                                        <div className='title_total'>Products</div>
                                     </div>
-                                    <div>
+                                    <div style={{alignSelf:'center'}}>
                                         <ShopTwoTone style={{ fontSize: 48 }} />
                                     </div>
                                 </div>
@@ -134,9 +123,9 @@ const Dashboard = () => {
                                 <div className='statistic-card'>
                                     <div>
                                         <div className='number_total'>{statisticList.categoryTotal}</div>
-                                        <div className='title_total'>Số danh mục</div>
+                                        <div className='title_total'>Categories</div>
                                     </div>
-                                    <div>
+                                    <div style={{alignSelf:'center'}}>
                                         <HddTwoTone style={{ fontSize: 48 }} />
                                     </div>
                                 </div>
@@ -147,9 +136,9 @@ const Dashboard = () => {
                                 <div className='statistic-card'>
                                     <div>
                                         <div className='number_total'>{statisticList.orderTotal}</div>
-                                        <div className='title_total'>Số đặt hàng</div>
+                                        <div className='title_total'>Purchase Orders</div>
                                     </div>
-                                    <div>
+                                    <div style={{alignSelf:'center'}}>
                                         <ShoppingTwoTone style={{ fontSize: 48 }} />
                                     </div>
                                 </div>
