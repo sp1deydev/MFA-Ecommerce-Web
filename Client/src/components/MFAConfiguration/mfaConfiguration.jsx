@@ -5,6 +5,7 @@ import './style.css';
 import { RightOutlined, LeftOutlined, CheckOutlined } from '@ant-design/icons';
 import UploadImage from '../uploadImage';
 import RelationTypes from '../relationTypes';
+import EstablishRelationTypes from '../establishRelationTypes';
 
 MFAConfiguration.propTypes = {
     
@@ -21,7 +22,7 @@ const steps = [
     },
     {
       title: 'Establish Relations',
-      content: 'Last-content',
+      content: <EstablishRelationTypes/>,
     },
   ];
 

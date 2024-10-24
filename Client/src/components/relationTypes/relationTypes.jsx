@@ -68,7 +68,7 @@ const RelationTypes = () => {
           placeholder="Nhập vào đây..."
           value={inputRelationTypesValue}
           onChange={handleInputChange}
-          style={{ width: 300, marginRight: 10 }}
+          style={{ width: 200, marginRight: 10 }}
         />
         <Button
           type="default"
@@ -100,7 +100,7 @@ const RelationTypes = () => {
                     type="text"
                     icon={<CloseOutlined />}
                     onClick={() => handleCancel(index)}
-                    style={{ color: '#0066CC' }}
+                    style={{ color: '#aaaa' }}
                   />
                 </span>
               ) : (
