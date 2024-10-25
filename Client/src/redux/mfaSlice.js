@@ -7,17 +7,22 @@ export const mfaSlice = createSlice({
         relationTypes: [
             {
               title: 'Relation Type 1',
+              value: 'Relation Type 1'
             },
             {
               title: 'Relation Type 2',
+              value: 'Relation Type 2'
             },
             {
               title: 'Relation Type 3',
+              value: 'Relation Type 3'
             },
             {
               title: 'Relation Type 4',
+              value: 'Relation Type 4'
             },
         ],
+        relationships: [],
         //mock relationTypes value
         // {
         //     relation_id: 'userid+relationtype',
@@ -37,9 +42,13 @@ export const mfaSlice = createSlice({
     reducers: {
         setImageList: (state, action) => {
             state.imageList = action.payload
+            state.relationships = []
         },
         setRelationTypes: (state, action) => {
             state.relationTypes = action.payload
+        },
+        setRelationships: (state, action) => {
+          state.relationships = action.payload
         },
     },
 })

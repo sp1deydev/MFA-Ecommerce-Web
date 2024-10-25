@@ -7,6 +7,9 @@ html {
 .text-center {
   text-align: center;
 }
+.text-primary-color {
+  color: #0066CC;
+}
 .form-container {
   margin-top: 10%;
   width: 100%;

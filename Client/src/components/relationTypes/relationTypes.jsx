@@ -31,7 +31,7 @@ const RelationTypes = () => {
       return;
     }
     const newRelationTypes = [...RelationTypes];
-    newRelationTypes.push({ title: inputRelationTypesValue });
+    newRelationTypes.push({ title: inputRelationTypesValue, value: inputRelationTypesValue});
     dispatch(mfaSlice.actions.setRelationTypes(newRelationTypes));
     setInputRelationTypesValue('');
   };
@@ -45,7 +45,7 @@ const RelationTypes = () => {
   // Handle saving the edited value
   const handleSave = (index) => {
     let updatedRelationTypes = [...RelationTypes];
-    updatedRelationTypes[index] = {title: editedValue};
+    updatedRelationTypes[index] = {title: editedValue, value: editedValue};
     dispatch(mfaSlice.actions.setRelationTypes(updatedRelationTypes));
     setEditingIndex(null); // Exit edit mode
     message.success('Item updated successfully');
