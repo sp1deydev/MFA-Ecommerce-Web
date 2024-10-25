@@ -19,8 +19,14 @@ const EstablishRelationTypes = () => {
   const [selectedRelationType, setSelectedRelationType] = useState('');
   const [displayImages, setDisplayImages] = useState(images)
   const [isModalVisible, setIsModalVisible] = useState(false);
-
-
+  // Trạng thái quản lý viền của từng ảnh (mảng này tự động điều chỉnh theo số lượng ảnh)
+  const [borders, setBorders] = useState(new Array(images.length).fill(false));
+  
+  // Trạng thái chọn của ảnh (mảng này cũng tự động điều chỉnh theo số lượng ảnh)
+  const [selectedImages, setSelectedImages] = useState(new Array(images.length).fill(false));
+  const [selectedImagesInfo, setSelectedImagesInfo] = useState([]);
+  
+  
   //function to get value for color of border (green or red depending on isConfig property)
   const setDisplayImageStatus = (imageList, relationships) => {
     let newImageList = [...imageList];
@@ -77,14 +83,8 @@ const EstablishRelationTypes = () => {
     console.log('relationType', selectedRelationType)
     console.log('imageselect', selectedImagesInfo)
     console.log('relationship', relationships)
-  }, [isModalVisible, toggleLoading, isEstablished])
+  }, [isModalVisible, toggleLoading, isEstablished, selectedImagesInfo])
 
-// Trạng thái quản lý viền của từng ảnh (mảng này tự động điều chỉnh theo số lượng ảnh)
-const [borders, setBorders] = useState(new Array(images.length).fill(false));
-
-// Trạng thái chọn của ảnh (mảng này cũng tự động điều chỉnh theo số lượng ảnh)
-const [selectedImages, setSelectedImages] = useState(new Array(images.length).fill(false));
-const [selectedImagesInfo, setSelectedImagesInfo] = useState([]);
 
   const toggleSelectImage = (index) => {
     const newSelectedImages = [...selectedImages];
