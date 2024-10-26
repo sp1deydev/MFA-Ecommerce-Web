@@ -4,6 +4,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { mfaSlice } from '../../redux/mfaSlice';
 import { UndoOutlined } from '@ant-design/icons';
 import isEqual from 'lodash/isEqual';
+import sortBy from 'lodash/sortBy';
 import { toast } from 'react-toastify';
 
 const { Option } = Select;
@@ -59,7 +60,7 @@ const EstablishRelationTypes = () => {
           return relationType
         }
         for (const relationship of relationships) {
-          const isExised = isEqual(relationship.images, selectedImagesInfo)
+          const isExised = isEqual(sortBy(relationship.images, 'name'), sortBy(selectedImagesInfo, 'name'))
           if(isExised) {
             setIsEstablished(true)
             relationType = relationship.relationType
@@ -114,33 +115,43 @@ const EstablishRelationTypes = () => {
     setSelectedImages(new Array(images.length).fill(false));
   };
   const handleConfirmRelationship = () => {
+    let newRelationships = []
     const item = {
       images: selectedImagesInfo,
       relationType: selectedRelationType,
     }
     if(!isEstablished) {
       console.log('here')
-      let newRelationships = [...relationships]
+      newRelationships = [...relationships]
       newRelationships.push(item)
-      dispatch(mfaSlice.actions.setRelationships(newRelationships))
+      console.log('new push', newRelationships)
+      
     }
     else {
       console.log('there')
       for (const relationship of relationships) {
         let index = 0;
-        const isExised = isEqual(relationship.images, selectedImagesInfo)
+        const isExised = isEqual(sortBy(relationship.images, 'name'), sortBy(selectedImagesInfo, 'name'))
         if(isExised) {
-          let newRelationships = [...relationships]
+          newRelationships = [...relationships]
+          console.log('no change', newRelationships)
           if(selectedRelationType == newRelationships[index].relationType) {
-            break;
+            setIsModalVisible(false);
+            setSelectedImagesInfo([]);
+            setSelectedImages(new Array(images.length).fill(false));
+            setSelectedRelationType('')
+            setToggleLoading(!toggleLoading);
+            setIsEstablished(false)
+            return;
           }
           newRelationships[index] = item
-          dispatch(mfaSlice.actions.setRelationships(newRelationships))
+          console.log('change new', newRelationships)
           break;
         }
         index ++;
       }
     }
+    dispatch(mfaSlice.actions.setRelationships(newRelationships))
     //reset
     setIsModalVisible(false);
     setSelectedImagesInfo([]);
@@ -155,30 +166,36 @@ const EstablishRelationTypes = () => {
     setSelectedRelationType(value)
   };
   const handleReset = (value) => {
+    setIsModalVisible(false);
+    setSelectedImagesInfo([]);
+    setSelectedImages(new Array(images.length).fill(false));
+    setSelectedRelationType('')
     setToggleLoading(!toggleLoading);
+    setIsEstablished(false)
     dispatch(mfaSlice.actions.setRelationships([]))
   };
   const onDelRelationType = (value) => {
     //delete is not working properly
     //maybe find index is not true
+    let newRelationships = [];
+    let index = 0;
     for (const relationship of relationships) {
-      let index = 0;
-      const isExised = isEqual(relationship.images, selectedImagesInfo)
+      const isExised = isEqual(sortBy(relationship.images, 'name'), sortBy(selectedImagesInfo, 'name'))
       if(isExised) {
-        let newRelationships = [...relationships]
+        newRelationships = [...relationships]
         newRelationships.splice(index, 1)
-        dispatch(mfaSlice.actions.setRelationships(newRelationships))
-        //reset
-        setIsModalVisible(false);
-        setSelectedImagesInfo([]);
-        setSelectedImages(new Array(images.length).fill(false));
-        setSelectedRelationType('')
-        setToggleLoading(!toggleLoading);
-        setIsEstablished(false)
-        return;
+        break;
       }
       index ++;
     }
+    dispatch(mfaSlice.actions.setRelationships(newRelationships))
+    //reset
+    setIsModalVisible(false);
+    setSelectedImagesInfo([]);
+    setSelectedImages(new Array(images.length).fill(false));
+    setSelectedRelationType('')
+    setToggleLoading(!toggleLoading);
+    setIsEstablished(false)
     // toast.success('Deleted relationship')
     
   };
