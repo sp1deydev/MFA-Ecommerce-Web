@@ -12,6 +12,7 @@ const { Option } = Select;
 const EstablishRelationTypes = () => {
   const dispatch = useDispatch();
   const relationships = useSelector((state) => state.mfa.relationships)
+  const systemConfig = useSelector((state) => state.mfa.systemConfiguration)
   // Dữ liệu ảnh, thêm bao nhiêu ảnh tùy thích vào mảng này
   const images = useSelector(state => state.mfa.imageList)
   const options = useSelector(state => state.mfa.relationTypes)
@@ -96,8 +97,8 @@ const EstablishRelationTypes = () => {
     }
 
     const selectedCount = newSelectedImages.filter((selected) => selected).length;
-    if (selectedCount === 2) {
-      setIsModalVisible(true); // Hiển thị modal nếu có 2 ảnh được chọn
+    if (selectedCount === systemConfig.numOfImageEachRelationType) {
+      setIsModalVisible(true); // Hiển thị modal nếu có "numOfImageEachRelationType" ảnh được chọn
     }
   };
 
@@ -190,7 +191,7 @@ const EstablishRelationTypes = () => {
   return (
     <div style={{padding:'12px'}}>
       <div style={{marginBottom: '12px', display: 'flex', justifyContent: 'space-between'}}>
-        <span className='text-primary-color'>
+        <span>
           Set relationship for each image        
         </span>
         <Button
