@@ -33,7 +33,6 @@ const EstablishRelationTypes = () => {
     let newImageList = [...imageList];
     for (const image of imageList) {
       if(Array.isArray(relationships) && relationships.length == 0) {
-        console.log('notok') 
         return imageList;
       }
       for (const relationship of relationships) {
@@ -74,16 +73,10 @@ const EstablishRelationTypes = () => {
 
   useEffect(() => {
     setDisplayImages(setDisplayImageStatus(images, relationships))
-    console.log('relationType1', selectedRelationType)
-    console.log('imageselect1', selectedImagesInfo)
-    console.log('relationship1', relationships)
   }, [toggleLoading])
   
   useEffect(() => {
     setSelectedRelationType(setCurrentRelationType(selectedImagesInfo, relationships))
-    console.log('relationType', selectedRelationType)
-    console.log('imageselect', selectedImagesInfo)
-    console.log('relationship', relationships)
   }, [isModalVisible, toggleLoading, isEstablished, selectedImagesInfo])
 
 
@@ -121,20 +114,16 @@ const EstablishRelationTypes = () => {
       relationType: selectedRelationType,
     }
     if(!isEstablished) {
-      console.log('here')
       newRelationships = [...relationships]
       newRelationships.push(item)
-      console.log('new push', newRelationships)
       
     }
     else {
-      console.log('there')
       for (const relationship of relationships) {
         let index = 0;
         const isExised = isEqual(sortBy(relationship.images, 'name'), sortBy(selectedImagesInfo, 'name'))
         if(isExised) {
           newRelationships = [...relationships]
-          console.log('no change', newRelationships)
           if(selectedRelationType == newRelationships[index].relationType) {
             setIsModalVisible(false);
             setSelectedImagesInfo([]);
@@ -145,7 +134,6 @@ const EstablishRelationTypes = () => {
             return;
           }
           newRelationships[index] = item
-          console.log('change new', newRelationships)
           break;
         }
         index ++;

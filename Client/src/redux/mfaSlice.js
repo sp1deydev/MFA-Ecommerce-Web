@@ -3,6 +3,12 @@ import { createSlice } from "@reduxjs/toolkit";
 export const mfaSlice = createSlice({
     name: 'mfa',
     initialState: {
+        systemConfiguration: {
+          numOfUploadedImages: 9,
+          numOfAuthenticatedImages: 4,
+          numOfRelationTypes: 5,
+          numOfImageEachRelationType: 2,
+        },
         imageList: [],
         relationTypes: [
             {

@@ -6,6 +6,7 @@ import { RightOutlined, LeftOutlined, CheckOutlined } from '@ant-design/icons';
 import UploadImage from '../uploadImage';
 import RelationTypes from '../relationTypes';
 import EstablishRelationTypes from '../establishRelationTypes';
+import { useSelector } from 'react-redux';
 
 MFAConfiguration.propTypes = {
     
@@ -29,7 +30,38 @@ const steps = [
 function MFAConfiguration(props) {
 const { token } = theme.useToken();
 const [current, setCurrent] = useState(0);
-
+const systemConfig = useSelector(state => state.mfa.systemConfiguration)
+const imageList = useSelector(state => state.mfa.imageList)
+const relationTypes = useSelector(state => state.mfa.relationTypes)
+const relationships = useSelector(state => state.mfa.relationships)
+const relationshipsCondition = (imageList, relationships) => {
+  let newImageList = [...imageList];
+  for (const image of imageList) {
+    if(Array.isArray(relationships) && relationships.length == 0) {
+      return false;
+    }
+    for (const relationship of relationships) {
+      let images = relationship?.images;
+      if(Array.isArray(images) && images.length == 0) {
+        continue;
+      }
+      for (const relatedImage of images) {
+        if (relatedImage.name === image.name) {
+          const index = newImageList.findIndex(item => item.name == relatedImage.name)
+          let newImageInfo = {... newImageList[index]}
+          newImageInfo.isConfig = true;
+          newImageList[index] = newImageInfo;
+        }
+      }
+     }
+    }
+    for(const image of newImageList) {
+      if (!image.isConfig) {
+        return false;
+      }
+    }
+    return true;
+  }
   const next = () => {
     setCurrent(current + 1);
   };
@@ -66,15 +98,25 @@ const [current, setCurrent] = useState(0);
               Previous
             </Button>
           )}
-           {current < steps.length - 1 && (
-            <Button type="primary" onClick={() => next()} icon={<RightOutlined />} iconPosition='end'>
+          {/* upload image step */}
+           {current < steps.length - 1 && current == 0 && (
+            <Button type="primary" onClick={() => next()} icon={<RightOutlined />} iconPosition='end' disabled={systemConfig.numOfUploadedImages <= imageList.length ? false : true}>
               Next
             </Button>
           )}
+          {/* add relations types step */}
+           {current < steps.length - 1 && current == 1 && (
+            <Button type="primary" onClick={() => next()} icon={<RightOutlined />} iconPosition='end' disabled={systemConfig.numOfRelationTypes <= relationTypes.length ? false : true}>
+              Next
+            </Button>
+          )}
+          {/*establish relationships step */}
           {current === steps.length - 1 && (
             <Button
               type="primary"
               onClick={() => message.success("Processing complete!")}
+              // disabled={true}
+              disabled={relationshipsCondition(imageList, relationships) == false ? true : false}
             >
               Register 
             </Button>
