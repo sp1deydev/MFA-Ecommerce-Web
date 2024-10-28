@@ -33,7 +33,7 @@ const SystemLayout = (props) => {
         navigate('/system/settings');
     }
     const handleProfile = () => {
-        navigate('/sytem/profile');
+        navigate('/system/profile');
     }
 
   return (

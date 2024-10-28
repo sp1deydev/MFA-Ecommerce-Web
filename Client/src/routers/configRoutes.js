@@ -13,6 +13,7 @@ import UserInfo from "../pages/UserInfo/userInfo";
 import Dashboard from "../pages/Admin/Dashboard";
 import LoginSystem from "../pages/System/login";
 import SystemSettings from "../pages/System/systemSettings";
+import Profile from "../pages/System/profile";
 
 export const configRoutes = [
     {
@@ -87,6 +88,13 @@ export const configRoutes = [
         path: '/system/login',
         component: LoginSystem,
         layout: NO_LAYOUT
+    },
+    {
+        path: '/system/profile',
+        component: Profile,
+        layout: SYSTEM_LAYOUT,
+        protected: true,
+        rolePermissions: ['system'],
     },
     {
         path: '/system/settings',
