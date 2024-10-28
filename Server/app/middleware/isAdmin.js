@@ -10,5 +10,14 @@ module.exports = {
             });
         }
         next();
-    }
+    },
+    isSystemAdmin: (req, res, next) => {
+        if (req.role !== "system") {
+            return res.status(403).json({
+                success: false,
+                message: "You do not have permission to access this resource",
+            });
+        }
+        next();
+    },
 }
