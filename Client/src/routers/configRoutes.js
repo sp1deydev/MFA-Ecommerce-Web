@@ -97,6 +97,13 @@ export const configRoutes = [
         rolePermissions: ['system'],
     },
     {
+        path: '/system/first-login/settings',
+        component: SystemSettings,
+        layout: NO_LAYOUT,
+        protected: true,
+        rolePermissions: ['system'],
+    },
+    {
         path: '/system/settings',
         component: SystemSettings,
         layout: SYSTEM_LAYOUT,
