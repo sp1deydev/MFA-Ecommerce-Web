@@ -4,6 +4,12 @@ html {
 .padding-12 {
   padding: 12px;
 }
+.padding-v-24 {
+  padding: 24px 0px;
+}
+.padding-v-40 {
+  padding: 40px 0px;
+}
 .text-center {
   text-align: center;
 }

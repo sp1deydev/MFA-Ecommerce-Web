@@ -18,6 +18,7 @@ const getBase64 = (file) =>
 const UploadImage= () => {
   const dispatch = useDispatch();
   const imageList = useSelector((state)=> state.mfa.imageList) || [];
+  console.log(imageList);
   console.log('image:',imageList)
   const [previewOpen, setPreviewOpen] = useState(false);
   const [previewImage, setPreviewImage] = useState('');

@@ -77,7 +77,7 @@ const relationshipsCondition = (imageList, relationships) => {
     marginRight: 'auto',
     width: '30%',
     // lineHeight: '440px',
-    // textAlign: 'center',
+    textAlign: 'center',
     color: token.colorTextTertiary,
     backgroundColor: token.colorFillAlter,
     borderRadius: token.borderRadiusLG,
@@ -85,7 +85,7 @@ const relationshipsCondition = (imageList, relationships) => {
     marginTop: 16,
   };
     return (
-      <>
+      <div className='padding-v-24'>
         <Steps
           current={current}
           items={items}
@@ -122,7 +122,7 @@ const relationshipsCondition = (imageList, relationships) => {
             </Button>
           )}
         </div>
-      </>
+      </div>
     );
 }
 

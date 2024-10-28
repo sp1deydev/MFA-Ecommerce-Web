@@ -17,12 +17,24 @@ function ProtectedRoute(props) {
     useEffect(()=> {
         if (Object.keys(currentUser).length === 0 && !isLoading) {
             toast.info('Please login first');
-            navigate(`/login?redirect=${window.location.pathname}`)
+            if (window.location.pathname.includes('admin')) {
+              navigate(`/admin/login?redirect=${window.location.pathname}`);
+            } else if (window.location.pathname.includes('system')) {
+              navigate(`/system/login?redirect=${window.location.pathname}`);
+            } else {
+              navigate(`/login?redirect=${window.location.pathname}`);
+            }
         }
         //authorization 
         if (Object.keys(currentUser).length !== 0 && !isLoading && !isRolePermissions) {
             toast.error("Bạn không có quyền truy cập trang này");
-            navigate("/");
+            if (window.location.pathname.includes('admin')) {
+                navigate(`/admin/login?redirect=${window.location.pathname}`);
+              } else if (window.location.pathname.includes('system')) {
+                navigate(`/system/login?redirect=${window.location.pathname}`);
+              } else {
+                navigate(`/`);
+              }
         }
     }, [currentUser, navigate, isLoading]);
     return <Fragment>{currentUser && props.children}</Fragment>;

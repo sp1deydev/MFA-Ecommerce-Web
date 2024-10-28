@@ -1,15 +1,18 @@
 import MFAConfiguration from "../components/MFAConfiguration";
 import UploadImage from "../components/uploadImage";
-import { ADMIN_LAYOUT, NO_LAYOUT } from "../constants/layout";
+import { ADMIN_LAYOUT, NO_LAYOUT, SYSTEM_LAYOUT } from "../constants/layout";
 import About from "../pages/About/about";
 import LoginAdmin from "../pages/Admin/Login";
 import Cart from "../pages/Cart/cart";
 import Home from "../pages/Home/home";
 import Login from "../pages/Login/login";
+import MFA from "../pages/MFA/mfa";
 import ProductDetails from "../pages/ProductDetails/productdetails";
 import Register from "../pages/Register/register";
 import UserInfo from "../pages/UserInfo/userInfo";
 import Dashboard from "../pages/Admin/Dashboard";
+import LoginSystem from "../pages/System/login";
+import SystemSettings from "../pages/System/systemSettings";
 
 export const configRoutes = [
     {
@@ -49,6 +52,10 @@ export const configRoutes = [
         component: MFAConfiguration,
     },
     {
+        path: '/testMFA2',
+        component: MFA,
+    },
+    {
         path: '/up',
         component: UploadImage,
     },
@@ -70,6 +77,23 @@ export const configRoutes = [
         path: '/admin/dashboard',
         component: Dashboard,
         layout: ADMIN_LAYOUT
+    },
+    // {
+    //     path: '/system/login',
+    //     component: Dashboard,
+    //     layout: ADMIN_LAYOUT
+    // },
+    {
+        path: '/system/login',
+        component: LoginSystem,
+        layout: NO_LAYOUT
+    },
+    {
+        path: '/system/settings',
+        component: SystemSettings,
+        layout: SYSTEM_LAYOUT,
+        protected: true,
+        rolePermissions: ['system'],
     },
     
 ]

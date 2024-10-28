@@ -3,9 +3,10 @@ import PropTypes from 'prop-types';
 import { Route, Routes } from 'react-router-dom';
 import { configRoutes } from './configRoutes';
 import ProtectedRoute from './ProtecteRoute';
-import { ADMIN_LAYOUT, NO_LAYOUT } from '../constants/layout';
+import { ADMIN_LAYOUT, NO_LAYOUT, SYSTEM_LAYOUT } from '../constants/layout';
 import AdminLayout from '../layouts/AdminLayout/adminLayout';
 import MainLayout from '../layouts/MainLayout/mainLayout';
+import SystemLayout from '../layouts/SystemLayout/systemLayout';
 
 Routers.propTypes = {
     
@@ -13,6 +14,7 @@ Routers.propTypes = {
 
 const layouts = {
   [ADMIN_LAYOUT]: AdminLayout,
+  [SYSTEM_LAYOUT]: SystemLayout,
   [NO_LAYOUT]: Fragment,
 };
 
