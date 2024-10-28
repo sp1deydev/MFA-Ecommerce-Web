@@ -30,7 +30,6 @@ const tailLayout = {
 function LoginSystem(props) {
     const navigate = useNavigate();
     const currentUser = useSelector((state)=> state.user.currentUser) || {};
-    console.log(currentUser);
     const isLoading = useSelector((state)=> state.user.isLoading)
     const [form] = Form.useForm();
     const dispatch = useDispatch()

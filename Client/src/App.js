@@ -44,8 +44,6 @@ function App() {
       } catch (err) {
         dispatch(userSlice.actions.removeCurrentUser());
         dispatch(userSlice.actions.setIsLoading(false));
-        console.log("err",err)
-        console.log("err1",err.response)
         toast.error(err.response.data.message || "Loi dang nhap");
       }
     };
