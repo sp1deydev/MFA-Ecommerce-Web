@@ -1,6 +1,31 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
+const imageSchema = new Schema(
+  {
+    name: {
+      type: String,
+      required: true,
+    },
+    status: {
+      type: String,
+      required: true,
+    },
+    uid: {
+      type: String,
+      required: true,
+    },
+    url: {
+      type: String,
+      required: true,
+    },
+  },
+  { _id: false } // Disable automatic _id generation
+);
+
+module.exports = imageSchema;
+
+
 const userSchema = new Schema({
       username: {
         type: String,
@@ -27,6 +52,13 @@ const userSchema = new Schema({
         required: true,
         defaut: "user",
       },
+      images: [imageSchema],
+      relationtypes: [String],
+      relationships: [{
+        images: [imageSchema],
+        relationtype: String,
+      }
+      ]
 }, {timestamps: true})
 
 module.exports = mongoose.model('User', userSchema);
