@@ -58,7 +58,11 @@ const userSchema = new Schema({
         images: [imageSchema],
         relationtype: String,
       }
-      ]
+      ],
+      isConfig: {
+        type: Boolean,
+        default: false,
+      },
 }, {timestamps: true})
 
 module.exports = mongoose.model('User', userSchema);
