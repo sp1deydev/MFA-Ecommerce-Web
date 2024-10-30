@@ -84,22 +84,10 @@ export const mfaSlice = createSlice({
           }
       ],
         relationTypes: [
-            {
-              title: 'Relation Type 1',
-              value: 'Relation Type 1'
-            },
-            {
-              title: 'Relation Type 2',
-              value: 'Relation Type 2'
-            },
-            {
-              title: 'Relation Type 3',
-              value: 'Relation Type 3'
-            },
-            {
-              title: 'Relation Type 4',
-              value: 'Relation Type 4'
-            },
+            'Relation Type 1',
+            'Relation Type 2',
+            'Relation Type 3',
+            'Relation Type 4',
         ],
         relationships: [],
         userSelectedRelationType: '',

@@ -15,7 +15,11 @@ const EstablishRelationTypes = () => {
   const systemConfig = useSelector((state) => state.mfa.systemConfiguration)
   // Dữ liệu ảnh, thêm bao nhiêu ảnh tùy thích vào mảng này
   const images = useSelector(state => state.mfa.imageList)
-  const options = useSelector(state => state.mfa.relationTypes)
+  const relationTypes = useSelector(state => state.mfa.relationTypes)
+  let options = []
+  relationTypes.map((relationType) => {
+    options.push({title: relationType, value: relationType})
+  })
   const [toggleLoading, setToggleLoading] = useState(false);
   const [isEstablished, setIsEstablished] = useState(false);
   const [selectedRelationType, setSelectedRelationType] = useState('');
@@ -63,7 +67,7 @@ const EstablishRelationTypes = () => {
           const isExised = isEqual(sortBy(relationship.images, 'name'), sortBy(selectedImagesInfo, 'name'))
           if(isExised) {
             setIsEstablished(true)
-            relationType = relationship.relationType
+            relationType = relationship.relationtype
             return relationType
           }
         }
@@ -112,7 +116,7 @@ const EstablishRelationTypes = () => {
     let newRelationships = []
     const item = {
       images: selectedImagesInfo,
-      relationType: selectedRelationType,
+      relationtype: selectedRelationType,
     }
     if(!isEstablished) {
       newRelationships = [...relationships]
@@ -125,7 +129,7 @@ const EstablishRelationTypes = () => {
         const isExised = isEqual(sortBy(relationship.images, 'name'), sortBy(selectedImagesInfo, 'name'))
         if(isExised) {
           newRelationships = [...relationships]
-          if(selectedRelationType == newRelationships[index].relationType) {
+          if(selectedRelationType == newRelationships[index].relationtype) {
             setIsModalVisible(false);
             setSelectedImagesInfo([]);
             setSelectedImages(new Array(images.length).fill(false));

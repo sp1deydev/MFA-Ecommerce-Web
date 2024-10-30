@@ -11,6 +11,10 @@ const RelationTypes = () => {
   const [editingIndex, setEditingIndex] = useState(null); // To track which item is being edited
   const [editedValue, setEditedValue] = useState(''); // To track the new edited value
   const RelationTypes = useSelector((state) => state.mfa.relationTypes);
+  let displayRelationTypes = []
+  RelationTypes.map((relationType) => {
+    displayRelationTypes.push({title: relationType, value: relationType})
+  })
 
   const textColor = RelationTypes.length >= 5 ? 'success-text' : 'error-text';
 
@@ -31,7 +35,7 @@ const RelationTypes = () => {
       return;
     }
     const newRelationTypes = [...RelationTypes];
-    newRelationTypes.push({ title: inputRelationTypesValue, value: inputRelationTypesValue});
+    newRelationTypes.push(inputRelationTypesValue);
     dispatch(mfaSlice.actions.setRelationTypes(newRelationTypes));
     setInputRelationTypesValue('');
   };
@@ -45,7 +49,7 @@ const RelationTypes = () => {
   // Handle saving the edited value
   const handleSave = (index) => {
     let updatedRelationTypes = [...RelationTypes];
-    updatedRelationTypes[index] = {title: editedValue, value: editedValue};
+    updatedRelationTypes[index] = editedValue;
     dispatch(mfaSlice.actions.setRelationTypes(updatedRelationTypes));
     setEditingIndex(null); // Exit edit mode
     message.success('Item updated successfully');
@@ -84,7 +88,7 @@ const RelationTypes = () => {
     </div>
       <List
         pagination={{ position: 'bottom', align: 'center' }}
-        dataSource={RelationTypes}
+        dataSource={displayRelationTypes}
         renderItem={(item, index) => (
           <List.Item
             actions={[
