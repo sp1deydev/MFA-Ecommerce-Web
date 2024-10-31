@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import { Button, message, Steps, theme } from 'antd';
 import './style.css';
@@ -6,7 +6,10 @@ import { RightOutlined, LeftOutlined, CheckOutlined } from '@ant-design/icons';
 import UploadImage from '../uploadImage';
 import RelationTypes from '../relationTypes';
 import EstablishRelationTypes from '../establishRelationTypes';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
+import { mfaSlice } from '../../redux/mfaSlice';
+import { systemApi } from '../../api/systemApi';
+import { toast } from 'react-toastify';
 
 MFAConfiguration.propTypes = {
     
@@ -28,6 +31,18 @@ const steps = [
   ];
 
 function MFAConfiguration(props) {
+  const dispatch = useDispatch();
+  useEffect(() => {
+    const handleSystemConfig = async () => {
+      try {
+        const systemConfig = await systemApi.getSystemConfig();
+        dispatch(mfaSlice.actions.setSystemConfiguration(systemConfig.data.data));
+      } catch (err) {
+        toast.error(err.response.data.message || "Get System Configuration Error");
+      }
+    }
+    handleSystemConfig();
+  }, []);
 const { token } = theme.useToken();
 const [current, setCurrent] = useState(0);
 const systemConfig = useSelector(state => state.mfa.systemConfiguration)

@@ -11,10 +11,34 @@ ProtectedRoute.propTypes = {
 
 function ProtectedRoute(props) {
     const currentUser = useSelector((state)=> state.user.currentUser) || {};
+    const systemConfiguration = useSelector((state)=> state.mfa.systemConfiguration);
+    const isSystemConfigLoading = useSelector((state)=> state.mfa.isLoading);
+    console.log('systemLoading', isSystemConfigLoading)
     const isLoading = useSelector((state)=> state.user.isLoading)
     const isRolePermissions = props.rolePermissions && props.rolePermissions.includes(currentUser?.role)
     const navigate = useNavigate();
     useEffect(()=> {
+        //system config
+        if(window.location.pathname.includes('system')) {
+          if(window.location.pathname.includes('system/login')) {
+            
+          }
+          else {
+            if(systemConfiguration.id && !isSystemConfigLoading) {
+              navigate(`/system/settings/`);
+            }
+            if(!systemConfiguration.id && !isSystemConfigLoading) {
+              navigate(`/system/first-login/settings`)
+            }
+            //config first time login
+            // if(systemConfiguration.id && currentUser.role == 'system' && !currentUser.isConfig) {
+
+            // }
+          }
+        }
+
+
+
         if (Object.keys(currentUser).length === 0 && !isLoading) {
             toast.info('Please login first');
             if (window.location.pathname.includes('admin')) {

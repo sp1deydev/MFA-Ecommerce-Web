@@ -18,12 +18,13 @@ const getBase64 = (file) =>
 const UploadImage= () => {
   const dispatch = useDispatch();
   const imageList = useSelector((state)=> state.mfa.imageList) || [];
+  const systemConfig = useSelector((state)=> state.mfa.systemConfiguration) || {};
   console.log(imageList);
   console.log('image:',imageList)
   const [previewOpen, setPreviewOpen] = useState(false);
   const [previewImage, setPreviewImage] = useState('');
 
-  const textColor = imageList.filter(file => file.status === 'done').length >= 9 ? 'success-text' : 'error-text';
+  const textColor = imageList.filter(file => file.status === 'done').length >= systemConfig.numOfUploadedImages ? 'success-text' : 'error-text';
   const countImage = imageList.filter(file => file.status === 'done').length;
 
   const uploadFile = async (file) => {
@@ -84,9 +85,9 @@ const UploadImage= () => {
   return (
     <>
     <div style={{ padding: '8px', textAlign: 'center', }}>
-    <div className='margin-8'>Upload at least 9 photos, and there should be at least one photo of yourself </div>
+    <div className='margin-8'>Upload at least {systemConfig.numOfUploadedImages} photos, and there should be at least one photo of yourself </div>
     <div className={textColor}>
-        Successfully Uploaded: {countImage}/9
+        Successfully Uploaded: {countImage}/{systemConfig.numOfUploadedImages}
     </div>
       <Upload
         listType="text"

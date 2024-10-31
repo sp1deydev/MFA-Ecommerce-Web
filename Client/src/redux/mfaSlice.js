@@ -3,11 +3,13 @@ import { createSlice } from "@reduxjs/toolkit";
 export const mfaSlice = createSlice({
     name: 'mfa',
     initialState: {
+        isLoading: true,
         systemConfiguration: {
-          numOfUploadedImages: 9,
-          numOfAuthenticatedImages: 4,
-          numOfRelationTypes: 5,
-          numOfImageEachRelationType: 2,
+          id: '',
+          numOfUploadedImages: 0,
+          numOfAuthenticatedImages: 0,
+          numOfRelationTypes: 0,
+          numOfImageEachRelationType: 0,
         },
         imageList: [
           {
@@ -96,6 +98,9 @@ export const mfaSlice = createSlice({
         randomSystemImages: [],
     },
     reducers: {
+        setIsLoading: (state, action) => {
+            state.isLoading = action.payload
+        },
         setImageList: (state, action) => {
             state.imageList = action.payload
             state.relationships = []
@@ -118,5 +123,8 @@ export const mfaSlice = createSlice({
         SetRandomSystemImages: (state, action) => {
           state.randomSystemImages = action.payload
         },
+        setSystemConfiguration: (state, action) => {
+            state.systemConfiguration = action.payload
+        }
     },
 })

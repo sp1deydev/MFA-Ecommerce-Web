@@ -11,12 +11,13 @@ const RelationTypes = () => {
   const [editingIndex, setEditingIndex] = useState(null); // To track which item is being edited
   const [editedValue, setEditedValue] = useState(''); // To track the new edited value
   const RelationTypes = useSelector((state) => state.mfa.relationTypes);
+  const systemConfig = useSelector((state) => state.mfa.systemConfiguration);
   let displayRelationTypes = []
   RelationTypes.map((relationType) => {
     displayRelationTypes.push({title: relationType, value: relationType})
   })
 
-  const textColor = RelationTypes.length >= 5 ? 'success-text' : 'error-text';
+  const textColor = RelationTypes.length >= systemConfig.numOfRelationTypes ? 'success-text' : 'error-text';
 
   // Handle input change for new item
   const handleInputChange = (e) => {
@@ -82,9 +83,9 @@ const RelationTypes = () => {
           Add
         </Button>
       </div>
-    <div className='text-center'>Add at least 5 Relation Types</div>
+    <div className='text-center'>Add at least {systemConfig.numOfRelationTypes} Relation Types</div>
     <div className={`${textColor} text-center`}>
-        {RelationTypes.length}/5
+        {RelationTypes.length}/{systemConfig.numOfRelationTypes}
     </div>
       <List
         pagination={{ position: 'bottom', align: 'center' }}

@@ -5,8 +5,17 @@ const systemController = {
     
     getSystemConfig: (req, res) => {
         SystemConfig.findOne()
-        .then(result => res.status(200).json({data: result}))
-        .catch(err => res.status(500).json(err))
+            .then((result) => {
+                if (!result) {
+                    return res.status(200).json({ data: {}, success: true });
+                }
+                const { numOfAuthenticatedImages, numOfImageEachRelationType, numOfRelationTypes, numOfUploadedImages, _id } = result;
+                res.status(200).json({
+                    data: { numOfAuthenticatedImages, numOfImageEachRelationType, numOfRelationTypes, numOfUploadedImages, id: _id },
+                    success: true
+                });
+            })
+            .catch((err) => res.status(500).json(err));
     },
     createSystemConfig: (req, res) => {
         const systemConfig = new SystemConfig(req.body);
