@@ -36,15 +36,33 @@ function LoginAdmin(props) {
 
     const [searchParams, setSearchParams] = useSearchParams();
 
-  useEffect(() => {
-    if (!Object.keys(currentUser).length === 0 && searchParams.get('redirect')) {
-      navigate(searchParams.get('redirect'));
-    }
-
-    if (!Object.keys(currentUser).length === 0 && !searchParams.get('redirect')) {
-      navigate('/');
-    }
-  }, [currentUser, searchParams, navigate]);
+    useEffect(() => {
+      if (Object.keys(currentUser).length === 0) {
+        toast.info('Please login first');
+  
+      }
+      if (Object.keys(currentUser).length !== 0 && searchParams.get('redirect')) {
+        if(currentUser.isConfig) {
+          toast.info('Please authenticate 2nd factor authentication first')
+          navigate(`${`/mfa-authentication?redirect=`}${searchParams.get('redirect')}`);
+        }
+        else {
+          toast.info('Please config 2nd factor authentication first')
+          navigate(`${`/mfa-configuration?redirect=`}${searchParams.get('redirect')}`);
+        }
+      }
+      
+      if (Object.keys(currentUser).length !== 0 && !searchParams.get('redirect')) {
+        if(currentUser.isConfig) {
+          toast.info('Please authenticate 2nd factor authentication first')
+          navigate(`/mfa-authentication`);
+        }
+        else {
+          toast.info('Please config 2nd factor authentication first')
+          navigate(`/mfa-configuration`);
+        }
+      }
+    }, [currentUser, searchParams, navigate]);
 
       const onFinish = (values) => {
         form.validateFields().then(async (values) => {

@@ -30,9 +30,9 @@ const SystemSettings = () => {
             })
           }
           dispatch(mfaSlice.actions.setIsLoading(false))
-          if(window.location.pathname.includes('/system/first-login/settings') && isSystemConfig && !isSystemLoading) {
-            toast.info('You have to set system configuration first');
-          }
+          // if(window.location.pathname.includes('/system/first-login/settings') && isSystemConfig && !isSystemLoading) {
+          //   toast.info('You have to set system configuration first');
+          // }
       } catch (err) {
         dispatch(mfaSlice.actions.setIsLoading(false))
         toast.error(err.response.data.message || "Get System Configuration Error or System is not configured");

@@ -19,15 +19,30 @@ function ProtectedRoute(props) {
     const navigate = useNavigate();
     useEffect(()=> {
         //system config
+        //authorization 
+        if (Object.keys(currentUser).length !== 0 && !isLoading && !isRolePermissions) {
+          toast.error("Bạn không có quyền truy cập trang này");
+          if (window.location.pathname.includes('admin')) {
+              navigate(`/admin/login?redirect=${window.location.pathname}`);
+            } else if (window.location.pathname.includes('system')) {
+              navigate(`/system/login?redirect=${window.location.pathname}`);
+            } else {
+              navigate(`/`);
+            }
+      }
         if(window.location.pathname.includes('system')) {
           if(window.location.pathname.includes('system/login')) {
             
           }
           else {
-            if(systemConfiguration.id && !isSystemConfigLoading) {
+            if(systemConfiguration.id && !isSystemConfigLoading && currentUser.role == 'system' 
+              // && !currentUser.isConfig
+            ) {
               navigate(`/system/settings/`);
             }
-            if(!systemConfiguration.id && !isSystemConfigLoading) {
+            if(!systemConfiguration.id && !isSystemConfigLoading && currentUser.role == 'system' 
+              // && !currentUser.isConfig
+            ) {
               navigate(`/system/first-login/settings`)
             }
             //config first time login
@@ -36,10 +51,17 @@ function ProtectedRoute(props) {
             // }
           }
         }
-
-
-
-        if (Object.keys(currentUser).length === 0 && !isLoading) {
+        if (Object.keys(currentUser).length !== 0 && !isLoading && !currentUser.isMFA && systemConfiguration.id) {
+          if (window.location.pathname.includes('admin')) {
+            navigate(`/admin/login?redirect=${window.location.pathname}`);
+          } else if (window.location.pathname.includes('system')) {
+            navigate(`/system/login?redirect=${window.location.pathname}`);
+          } else {
+            navigate(`/login?redirect=${window.location.pathname}`);
+          }
+      }
+        
+        if (Object.keys(currentUser).length === 0 && !isLoading && !currentUser.isMFA) {
             toast.info('Please login first');
             if (window.location.pathname.includes('admin')) {
               navigate(`/admin/login?redirect=${window.location.pathname}`);
@@ -49,17 +71,7 @@ function ProtectedRoute(props) {
               navigate(`/login?redirect=${window.location.pathname}`);
             }
         }
-        //authorization 
-        if (Object.keys(currentUser).length !== 0 && !isLoading && !isRolePermissions) {
-            toast.error("Bạn không có quyền truy cập trang này");
-            if (window.location.pathname.includes('admin')) {
-                navigate(`/admin/login?redirect=${window.location.pathname}`);
-              } else if (window.location.pathname.includes('system')) {
-                navigate(`/system/login?redirect=${window.location.pathname}`);
-              } else {
-                navigate(`/`);
-              }
-        }
+        
     }, [currentUser, navigate, isLoading]);
     return <Fragment>{currentUser && props.children}</Fragment>;
 }

@@ -49,16 +49,26 @@ export const configRoutes = [
         rolePermissions: ['admin', 'user'],
     },
     {
-        path: '/testMFA',
+        path: '/mfa-configuration',
         component: MFAConfiguration,
+        
     },
     {
-        path: '/testMFA2',
+        path: '/mfa-authentication',
         component: MFA,
+        
     },
     {
-        path: '/up',
-        component: UploadImage,
+        path: '/system/mfa-configuration',
+        component: MFAConfiguration,
+        layout: SYSTEM_LAYOUT,
+        rolePermissions: ['system'],
+    },
+    {
+        path: '/system/mfa-authentication',
+        component: MFA,
+        layout: SYSTEM_LAYOUT,
+        rolePermissions: ['system'],
     },
     {
         path: '/products/:productId',
@@ -79,11 +89,6 @@ export const configRoutes = [
         component: Dashboard,
         layout: ADMIN_LAYOUT
     },
-    // {
-    //     path: '/system/login',
-    //     component: Dashboard,
-    //     layout: ADMIN_LAYOUT
-    // },
     {
         path: '/system/login',
         component: LoginSystem,

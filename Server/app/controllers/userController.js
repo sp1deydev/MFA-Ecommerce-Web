@@ -103,6 +103,61 @@ const userController = {
         })
         .catch(err => console.error(err))
     },
+    getUserMfaConfiguration: (req, res) => {
+        const {password, newPassword} = req.body;
+        const id = req.userId
+        console.log(req.body)
+        if (!password || !newPassword) {
+            return res.status(400).json({
+                message: 'Password and new password are required',
+            });
+        }
+        User.findOne(
+            {_id: new mongoose.Types.ObjectId(id)}
+        )
+        .then(result => {
+            if (!result) {
+                console.log("User not found");
+                return res.status(404).json({
+                    message: 'User not found',
+                });
+            }
+            const isMatch = bcrypt.compareSync(password, result.password)
+            console.log(isMatch)
+            if (!isMatch) {
+               res.status(400).json({
+                    message: 'The old password is incorrect',
+                })
+            }
+            else {
+                const salt = bcrypt.genSaltSync(10);
+                const newHashPassword = bcrypt.hashSync(newPassword, salt);
+                result.password = newHashPassword;
+                const newUser = new User(result);
+                newUser.save()
+                    .then(result => {
+                        res.status(200).json({success: true, message: 'Password changed successfully'})
+                    })
+                    .catch(err => res.status(500).json({message: 'Error changing password'}))
+            }
+
+        })
+        .catch(err =>{
+            console.error("Error finding user:", err);
+            res.status(500).json({
+                success: false,
+                message: 'Error finding user',
+                error: err.message,
+            });
+        });
+    },
+    settUserMfaConfiguration: (req, res) => {
+        // const systemConfig = new SystemConfig(req.body);
+        // console.log(req.body);
+        // systemConfig.save()
+        //     .then(result => res.status(200).json({data: result}))
+        //     .catch(err => res.status(500).json(err))
+    },
 }
 
 module.exports = userController;

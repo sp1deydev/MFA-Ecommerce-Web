@@ -10,6 +10,7 @@ import { handleLocalStorage } from '../../utils/handleLocalStorage';
 import handleAuthToken from '../../utils/handleAuthToken';
 import { handleSessionStorage } from '../../utils/handleSessionStorage';
 import Loading from '../../components/loading';
+import { mfaSlice } from '../../redux/mfaSlice';
 
 LoginSystem.propTypes = {
     
@@ -31,20 +32,36 @@ function LoginSystem(props) {
     const navigate = useNavigate();
     const currentUser = useSelector((state)=> state.user.currentUser) || {};
     const isLoading = useSelector((state)=> state.user.isLoading)
+    const systemConfiguration = useSelector((state) => state.mfa.systemConfiguration)
+    console.log('vl',systemConfiguration)
     const [form] = Form.useForm();
     const dispatch = useDispatch()
 
     const [searchParams, setSearchParams] = useSearchParams();
 
-  useEffect(() => {
-    if (!Object.keys(currentUser).length === 0 && searchParams.get('redirect')) {
-      navigate(searchParams.get('redirect'));
-    }
-
-    if (Object.keys(currentUser).length === 0 && !searchParams.get('redirect')) {
-      navigate('/system/settings');
-    }
-  }, [currentUser, searchParams, navigate]);
+    useEffect(() => {
+      if (Object.keys(currentUser).length !== 0 && searchParams.get('redirect') && systemConfiguration.id && currentUser.role == 'system') {
+        if(currentUser.isConfig) {
+          toast.info('Please authenticate 2nd factor authentication first')
+          navigate(`${`/system/mfa-authentication?redirect=`}${searchParams.get('redirect')}`);
+        }
+        else {
+          toast.info('Please config 2nd factor authentication first')
+          navigate(`${`/system/mfa-configuration?redirect=`}${searchParams.get('redirect')}`);
+        }
+      }
+      
+      if (Object.keys(currentUser).length !== 0 && !searchParams.get('redirect') && systemConfiguration.id && currentUser.role == 'system') {
+        if(currentUser.isConfig) {
+          toast.info('Please authenticate 2nd factor authentication first')
+          navigate(`/system/mfa-authentication`);
+        }
+        else {
+          toast.info('Please config 2nd factor authentication first')
+          navigate(`/system/mfa-configuration`);
+        }
+      }
+    }, [currentUser, searchParams, navigate]);
 
 
       const onFinish = (values) => {
@@ -67,37 +84,58 @@ function LoginSystem(props) {
               lastname: user.lastname,
               email: user.email,
               role: user.role,
+              isConfig: user.isConfig,
               createdAt: user.createdAt,
             };
             dispatch(userSlice.actions.setCurrentUser(currentUser));
             handleAuthToken(res.data.token);
-            if(user.role == 'system') {
-                toast.success('Login successfully')
+            if(currentUser.role != 'system') {
+              toast.error('Please use system account')
+              form.resetFields();
             }
             if(values.remember) {
               handleLocalStorage.set('access_token', res.data.token);
             }
             handleSessionStorage.set('access_token', res.data.token);
             dispatch(userSlice.actions.setIsLoading(false))
+            dispatch(mfaSlice.actions.setIsLoading(false))
             
-            if (searchParams.get('redirect')) {
-              navigate(searchParams.get('redirect'));
-            } else {
-              navigate('/system/settings');
-            }
+            // if (searchParams.get('redirect')) {
+            //   navigate(searchParams.get('redirect'));
+            // } else {
+            //   navigate('/system/settings');
+            // }
           } catch (error) {
             const errorMessage =
             error.response.data?.message ||
             'Có lỗi xảy ra phía máy chủ, vui lòng thử lại!';
             toast.error(errorMessage);
+            dispatch(mfaSlice.actions.setIsLoading(false))
             dispatch(userSlice.actions.setIsLoading(false))
           }
-            //
+            if(currentUser.role == 'system' && !isLoading) {
             if (searchParams.get('redirect')) {
-              navigate(searchParams.get('redirect'));
+              if(currentUser.isConfig) {
+                toast.info('Please authenticate 2nd factor authentication first')
+                navigate(`${`/system/mfa-authentication?redirect=`}${searchParams.get('redirect')}`);
+              }
+              else {
+                toast.info('Please config 2nd factor authentication first')
+                navigate(`${`/system/mfa-configuration?redirect=`}${searchParams.get('redirect')}`);
+              }
             } else {
-              navigate('/system/settings');
+              if(currentUser.isConfig) {
+                toast.info('Please authenticate 2nd factor authentication first')
+                navigate(`/system/mfa-authentication`);
+              }
+              else {
+                toast.info('Please config 2nd factor authentication first')
+                navigate(`/system/mfa-configuration`);
+              }
             }
+          }
+          
+
       }).catch((err) => {
             // form validation failed
             console.log(err)

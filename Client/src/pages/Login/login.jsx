@@ -37,12 +37,30 @@ function Login(props) {
     const [searchParams, setSearchParams] = useSearchParams();
 
   useEffect(() => {
-    if (!Object.keys(currentUser).length === 0 && searchParams.get('redirect')) {
-      navigate(searchParams.get('redirect'));
-    }
+    if (Object.keys(currentUser).length === 0) {
+      toast.info('Please login first');
 
-    if (!Object.keys(currentUser).length === 0 && !searchParams.get('redirect')) {
-      navigate('/');
+    }
+    if (Object.keys(currentUser).length !== 0 && searchParams.get('redirect')) {
+      if(currentUser.isConfig) {
+        toast.info('Please authenticate 2nd factor authentication first')
+        navigate(`${`/mfa-authentication?redirect=`}${searchParams.get('redirect')}`);
+      }
+      else {
+        toast.info('Please config 2nd factor authentication first')
+        navigate(`${`/mfa-configuration?redirect=`}${searchParams.get('redirect')}`);
+      }
+    }
+    
+    if (Object.keys(currentUser).length !== 0 && !searchParams.get('redirect')) {
+      if(currentUser.isConfig) {
+        toast.info('Please authenticate 2nd factor authentication first')
+        navigate(`/mfa-authentication`);
+      }
+      else {
+        toast.info('Please config 2nd factor authentication first')
+        navigate(`/mfa-configuration`);
+      }
     }
   }, [currentUser, searchParams, navigate]);
 
@@ -66,6 +84,7 @@ function Login(props) {
               lastname: user.lastname,
               email: user.email,
               role: user.role,
+              isConfig: user.isConfig,
               createdAt: user.createdAt,
             };
             dispatch(userSlice.actions.setCurrentUser(currentUser));
@@ -77,11 +96,11 @@ function Login(props) {
             toast.success(res.data.message);
             dispatch(userSlice.actions.setIsLoading(false))
             
-            if (searchParams.get('redirect')) {
-              navigate(searchParams.get('redirect'));
-            } else {
-              navigate('/');
-            }
+            // if (searchParams.get('redirect')) {
+            //   navigate(searchParams.get('redirect'));
+            // } else {
+            //   navigate('/');
+            // }
           } catch (error) {
             const errorMessage =
             error.response.data?.message ||
@@ -89,12 +108,22 @@ function Login(props) {
             toast.error(errorMessage);
             dispatch(userSlice.actions.setIsLoading(false))
           }
-            //
-            if (searchParams.get('redirect')) {
-              navigate(searchParams.get('redirect'));
-            } else {
-              navigate('/');
-            }
+            
+            // if (searchParams.get('redirect')) {
+            //   if(currentUser.isConfig) {
+            //     navigate(`${`/mfa-authentication?redirect=`}${searchParams.get('redirect')}`);
+            //   }
+            //   else {
+            //     navigate(`${`/mfa-configuration?redirect=`}${searchParams.get('redirect')}`);
+            //   }
+            // } else {
+            //   if(currentUser.isConfig) {
+            //     navigate(`/mfa-authentication`);
+            //   }
+            //   else {
+            //     navigate(`/mfa-configuration`);
+            //   }
+            // }
       }).catch((err) => {
             // form validation failed
             console.log(err)

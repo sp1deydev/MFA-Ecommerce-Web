@@ -39,6 +39,7 @@ function App() {
           lastname: user.lastname,
           email: user.email,
           role: user.role,
+          isConfig: user.isConfig,
           createdAt: user.createdAt,
         };
         dispatch(userSlice.actions.setCurrentUser(currentUser));
