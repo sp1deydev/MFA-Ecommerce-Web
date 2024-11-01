@@ -103,15 +103,8 @@ const userController = {
         })
         .catch(err => console.error(err))
     },
-    getUserMfaConfiguration: (req, res) => {
-        const {password, newPassword} = req.body;
+    configUserMfaConfiguration: (req, res) => {
         const id = req.userId
-        console.log(req.body)
-        if (!password || !newPassword) {
-            return res.status(400).json({
-                message: 'Password and new password are required',
-            });
-        }
         User.findOne(
             {_id: new mongoose.Types.ObjectId(id)}
         )
@@ -122,23 +115,16 @@ const userController = {
                     message: 'User not found',
                 });
             }
-            const isMatch = bcrypt.compareSync(password, result.password)
-            console.log(isMatch)
-            if (!isMatch) {
-               res.status(400).json({
-                    message: 'The old password is incorrect',
-                })
-            }
             else {
-                const salt = bcrypt.genSaltSync(10);
-                const newHashPassword = bcrypt.hashSync(newPassword, salt);
-                result.password = newHashPassword;
+                result.relationtypes = req.body.relationtypes ? req.body.relationtypes: [];
+                result.images = req.body.images ? req.body.images: [];
+                result.relationships = req.body.relationships ? req.body.relationships: [];
                 const newUser = new User(result);
                 newUser.save()
                     .then(result => {
-                        res.status(200).json({success: true, message: 'Password changed successfully'})
+                        res.status(200).json({success: true, message: 'Config successfully', result: result})
                     })
-                    .catch(err => res.status(500).json({message: 'Error changing password'}))
+                    .catch(err => res.status(500).json({message: 'Error Config'}))
             }
 
         })
@@ -151,12 +137,23 @@ const userController = {
             });
         });
     },
-    settUserMfaConfiguration: (req, res) => {
-        // const systemConfig = new SystemConfig(req.body);
-        // console.log(req.body);
-        // systemConfig.save()
-        //     .then(result => res.status(200).json({data: result}))
-        //     .catch(err => res.status(500).json(err))
+    getUserMfaConfiguration: (req, res) => {
+        User.findOne({_id: new mongoose.Types.ObjectId(req.userId)})
+        .then(result => {
+            if (result) {
+                    const data = {
+                        isConfig: result.isConfig,
+                        relationships: result.relationships,
+                        relationtypes: result.relationtypes,
+                        images: result.images,
+                    }
+                    res.status(200).json({result: data, success: true, massage: "Get configuration successfully" });
+                }
+            else {
+                res.json({ message: "User not found", success: false})
+            }
+        })
+        .catch(err => console.error(err))
     },
 }
 
