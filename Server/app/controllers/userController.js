@@ -119,6 +119,7 @@ const userController = {
                 result.relationtypes = req.body.relationtypes ? req.body.relationtypes: [];
                 result.images = req.body.images ? req.body.images: [];
                 result.relationships = req.body.relationships ? req.body.relationships: [];
+                result.isConfig = req.body.isConfig;
                 const newUser = new User(result);
                 newUser.save()
                     .then(result => {

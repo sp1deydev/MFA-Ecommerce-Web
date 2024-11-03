@@ -13,4 +13,10 @@ export const userApi = {
     deleteUser: (data) => {
         return axiosClient.delete('/users/delete', data);
     },
+    config: (data) => {
+        return axiosClient.post('/users/config', data);
+    },
+    getConfig: () => {
+        return axiosClient.get('/users/config');
+    },
 }

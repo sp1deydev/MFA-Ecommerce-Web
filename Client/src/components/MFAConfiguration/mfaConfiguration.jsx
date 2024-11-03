@@ -10,6 +10,10 @@ import { useDispatch, useSelector } from 'react-redux';
 import { mfaSlice } from '../../redux/mfaSlice';
 import { systemApi } from '../../api/systemApi';
 import { toast } from 'react-toastify';
+import { authApi } from '../../api/authApi';
+import { userSlice } from '../../redux/userSlice';
+import { userApi } from '../../api/userApi';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 
 MFAConfiguration.propTypes = {
     
@@ -31,6 +35,8 @@ const steps = [
   ];
 
 function MFAConfiguration(props) {
+  const [searchParams, setSearchParams] = useSearchParams();
+  const navigate = useNavigate();
   const dispatch = useDispatch();
   useEffect(() => {
     const handleSystemConfig = async () => {
@@ -49,6 +55,7 @@ const systemConfig = useSelector(state => state.mfa.systemConfiguration)
 const imageList = useSelector(state => state.mfa.imageList)
 const relationTypes = useSelector(state => state.mfa.relationTypes)
 const relationships = useSelector(state => state.mfa.relationships)
+const currentUser = useSelector(state => state.user.currentUser)
 const relationshipsCondition = (imageList, relationships) => {
   let newImageList = [...imageList];
   for (const image of imageList) {
@@ -83,6 +90,67 @@ const relationshipsCondition = (imageList, relationships) => {
 
   const prev = () => {
     setCurrent(current - 1);
+  };
+
+  const handleSaveConfig = async () => {
+    try {
+      const payload = {
+        isConfig: true,
+        images: imageList,
+        relationships: relationships,
+        relationtypes: relationTypes,
+      }
+      console.log(payload);
+      console.log('test1',currentUser);
+      const res = await userApi.config(payload);
+      if (!res.data.success) {
+        toast.error(res.data.message);
+        dispatch(userSlice.actions.setIsLoading(false))
+        return;
+      }
+      
+      toast.success(res.data.message);
+      dispatch(userSlice.actions.setIsLoading(false))
+      let newCurrentUser = {...currentUser}
+      newCurrentUser.isConfig = true;
+      dispatch(userSlice.actions.setCurrentUser(newCurrentUser))
+      console.log('test',newCurrentUser)
+      try {
+        const newData = await userApi.getConfig();
+        if (!newData.data.success) {
+          toast.error(newData.data.message);
+          dispatch(userSlice.actions.setIsLoading(false))
+          return;
+        }
+        console.log('respones', newData);
+        toast.success(newData.data.message);
+        dispatch(mfaSlice.actions.setImageList(newData.data.result.images))
+        dispatch(mfaSlice.actions.setRelationTypes(newData.data.result.relationtypes))
+        dispatch(mfaSlice.actions.setRelationships(newData.data.result.relationships))
+  
+      } catch (error) {
+        const errorMessage =
+        error.response.data?.message ||
+        'Có lỗi xảy ra phía máy chủ, vui lòng thử lại!';
+        toast.error(errorMessage);
+        dispatch(userSlice.actions.setIsLoading(false))
+      }
+      if (searchParams.get('redirect')) {
+          navigate(`${searchParams.get('redirect')}`);
+      }
+      else {
+        toast.info('Please config 2nd factor authentication first')
+        navigate(`/mfa-authentication`); //home
+      }
+
+
+    } catch (error) {
+      const errorMessage =
+      error.response.data?.message ||
+      'Có lỗi xảy ra phía máy chủ, vui lòng thử lại!';
+      toast.error(errorMessage);
+      dispatch(userSlice.actions.setIsLoading(false))
+    }
   };
 
   const items = steps.map((item) => ({ key: item.title, title: item.title }));
@@ -129,7 +197,7 @@ const relationshipsCondition = (imageList, relationships) => {
           {current === steps.length - 1 && (
             <Button
               type="primary"
-              onClick={() => message.success("Processing complete!")}
+              onClick={() => handleSaveConfig()}
               // disabled={true}
               disabled={relationshipsCondition(imageList, relationships) == false ? true : false}
             >

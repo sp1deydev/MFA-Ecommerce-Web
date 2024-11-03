@@ -12,8 +12,13 @@ const { Option } = Select;
 
 function SelectRelationTypeStep(props) {
     const dispatch = useDispatch();
-    const options = useSelector(state => state.mfa.relationTypes)
+    const RelationTypes = useSelector(state => state.mfa.relationTypes)
+    let options = []
+    RelationTypes.map((relationType) => {
+      options.push({title: relationType, value: relationType})
+    })
     const [selectedRelationType, setSelectedRelationType] = useState()
+    
     const [selectedImagesInfo, setSelectedImagesInfo] = useState([
         {
             "uid": "rc-upload-1730085909393-2",
