@@ -19,4 +19,7 @@ export const userApi = {
     getConfig: () => {
         return axiosClient.get('/users/config');
     },
+    getRandomUserImages: () => {
+        return axiosClient.get('/users/random-user-images');
+    },
 }

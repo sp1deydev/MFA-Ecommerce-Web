@@ -37,10 +37,6 @@ function Login(props) {
     const [searchParams, setSearchParams] = useSearchParams();
 
   useEffect(() => {
-    if (Object.keys(currentUser).length === 0) {
-      toast.info('Please login first');
-
-    }
     if (Object.keys(currentUser).length !== 0 && searchParams.get('redirect')) {
       if(currentUser.isConfig) {
         toast.info('Please authenticate 2nd factor authentication first')

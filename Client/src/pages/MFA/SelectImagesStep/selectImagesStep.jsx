@@ -4,6 +4,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { UndoOutlined } from '@ant-design/icons';
 import isEqual from 'lodash/isEqual';
 import sortBy from 'lodash/sortBy';
+import shuffle from 'lodash/shuffle';
 import { toast } from 'react-toastify';
 import { mfaSlice } from '../../../redux/mfaSlice';
 
@@ -11,34 +12,33 @@ const { Option } = Select;
 
 const SelectImagesStep = () => {
   const dispatch = useDispatch();
-  const relationships = useSelector((state) => state.mfa.relationships)
   const systemConfig = useSelector((state) => state.mfa.systemConfiguration)
   // Dữ liệu ảnh, thêm bao nhiêu ảnh tùy thích vào mảng này
-  const images = useSelector(state => state.mfa.imageList)
-  const options = useSelector(state => state.mfa.relationTypes)
+  const images = useSelector((state) => state.mfa.authenticationDisplayImages)
 
   // Trạng thái chọn của ảnh (mảng này cũng tự động điều chỉnh theo số lượng ảnh)
   const [selectedImages, setSelectedImages] = useState(new Array(images.length).fill(false));
   const [selectedImagesInfo, setSelectedImagesInfo] = useState([]);
-  
-
+  useEffect(() => {
+    setSelectedImages(new Array(images.length).fill(false))
+  }, [images])
   const toggleSelectImage = (index) => {
     const selectedCount = selectedImages.filter((selected) => selected).length;
     if (!selectedImages[index] && selectedCount >= systemConfig.numOfAuthenticatedImages) {
       toast.warn(`You can only select up to ${systemConfig.numOfAuthenticatedImages} images.`);
-      dispatch(mfaSlice.actions.setUserSelectedImages(selectedImagesInfo));
+      // dispatch(mfaSlice.actions.setUserSelectedImages(selectedImagesInfo));
       return;
     }
     const newSelectedImages = [...selectedImages];
     newSelectedImages[index] = !newSelectedImages[index];
     setSelectedImages(newSelectedImages);
-  
+    
     const newSelectedImagesInfo = newSelectedImages
-      .map((isSelected, i) => isSelected ? images[i] : null)
-      .filter((img) => img !== null);
-  
-    dispatch(mfaSlice.actions.setUserSelectedImages(newSelectedImagesInfo));
+    .map((isSelected, i) => isSelected ? images[i] : null)
+    .filter((img) => img !== null);
+    
     setSelectedImagesInfo(newSelectedImagesInfo);
+    dispatch(mfaSlice.actions.setUserSelectedImages(newSelectedImagesInfo));
   };
 
   const handleReset = (value) => {

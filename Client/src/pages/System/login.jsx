@@ -33,7 +33,6 @@ function LoginSystem(props) {
     const currentUser = useSelector((state)=> state.user.currentUser) || {};
     const isLoading = useSelector((state)=> state.user.isLoading)
     const systemConfiguration = useSelector((state) => state.mfa.systemConfiguration)
-    console.log('vl',systemConfiguration)
     const [form] = Form.useForm();
     const dispatch = useDispatch()
 
@@ -100,11 +99,11 @@ function LoginSystem(props) {
             dispatch(userSlice.actions.setIsLoading(false))
             dispatch(mfaSlice.actions.setIsLoading(false))
             
-            // if (searchParams.get('redirect')) {
-            //   navigate(searchParams.get('redirect'));
-            // } else {
-            //   navigate('/system/settings');
-            // }
+            if (searchParams.get('redirect')) {
+              navigate(searchParams.get('redirect'));
+            } else {
+              navigate('/system/settings');
+            }
           } catch (error) {
             const errorMessage =
             error.response.data?.message ||

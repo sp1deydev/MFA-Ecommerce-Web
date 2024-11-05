@@ -10,6 +10,7 @@ router.put('/update', checkLogin, userController.updateUser);
 router.delete('/delete', checkLogin, userController.deleteUser);
 router.post('/config', checkLogin, userController.configUserMfaConfiguration);
 router.get('/config', checkLogin, userController.getUserMfaConfiguration);
+router.get('/random-user-images', checkLogin, userController.getRandomUserImages);
 router.get('/:id', checkLogin, userController.getUserById);
 
 module.exports = router;

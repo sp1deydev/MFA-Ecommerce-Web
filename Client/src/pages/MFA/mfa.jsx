@@ -1,10 +1,19 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import { Button, message, Steps, theme } from 'antd';
 import { RightOutlined, LeftOutlined, CheckOutlined } from '@ant-design/icons';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import SelectImagesStep from './SelectImagesStep';
 import SelectRelationTypeStep from './SelectRelationTypeStep';
+import { systemApi } from '../../api/systemApi';
+import { mfaSlice } from '../../redux/mfaSlice';
+import { toast } from 'react-toastify';
+import isEqual from 'lodash/isEqual';
+import sortBy from 'lodash/sortBy';
+import { useNavigate, useSearchParams } from 'react-router-dom';
+import { userSlice } from '../../redux/userSlice';
+import { userApi } from '../../api/userApi';
+import checkAuth from '../../utils/checkAuth';
 
 MFA.propTypes = {
     
@@ -19,25 +28,87 @@ const steps = [
       title: 'Choose Relation Type',
       content: <SelectRelationTypeStep/>,
     },
-    // {
-    //   title: 'Establish Relations',
-    //   content: <EstablishRelationTypes/>,
-    // },
   ];
 
 function MFA(props) {
+const dispatch = useDispatch();
+const [searchParams, setSearchParams] = useSearchParams();
+const navigate = useNavigate();
 const { token } = theme.useToken();
 const [current, setCurrent] = useState(0);
 const systemConfig = useSelector(state => state.mfa.systemConfiguration)
 const userSelectedImages = useSelector(state => state.mfa.userSelectedImages)
+const randomSelectedImages = useSelector(state => state.mfa.randomSelectedImages)
+const randomSystemImages = useSelector(state => state.mfa.randomSystemImages);
+const randomSelectedRelationType = useSelector(state => state.mfa.randomSelectedRelationType)
 const userSelectedRelationType = useSelector(state => state.mfa.userSelectedRelationType)
+const authenticationDisplayImages = useSelector(state => state.mfa.authenticationDisplayImages)
+const currentUser = useSelector(state => state.user.currentUser)
+//get authentication data
+const getAuthenticationData = async () => {
+  if(checkAuth()) {
+    try {
+      const response = await userApi.getRandomUserImages();
+      let displayImages = [...randomSystemImages, ...response.data.result];
+      displayImages = displayImages.sort(() => Math.random() - 0.5);
+      dispatch(mfaSlice.actions.setAuthenticationDisplayImages(displayImages))
+      dispatch(mfaSlice.actions.setRandomSelectedImages(response.data.result));
+    } catch (err) {
+      toast.error(err.response.data.message || "Get System Configuration Error");
+    }
+  }
+}
+// 
+useEffect(() => {
+  const handleSystemConfig = async () => {
+    try {
+      const systemConfig = await systemApi.getSystemConfig();
+      dispatch(mfaSlice.actions.setSystemConfiguration(systemConfig.data.data));
+    } catch (err) {
+      toast.error(err.response.data.message || "Get System Configuration Error");
+    }
+  }
+  handleSystemConfig();
+  getAuthenticationData();
+}, []);
 
-    const confirmSelectImage = () => {
-    setCurrent(current + 1);
+  const confirmSelectImage = () => {
+    dispatch(mfaSlice.actions.setIsLoading(true))
+    const isExised = isEqual(sortBy(randomSelectedImages, 'name'), sortBy(userSelectedImages, 'name'))
+    if(isExised) {
+      toast.success("corect");
+      setCurrent(current + 1);
+    }
+    else {
+      toast.error("incorect");
+      dispatch(mfaSlice.actions.setUserSelectedImages([]))
+      dispatch(mfaSlice.actions.setAuthenticationDisplayImages([]))
+      getAuthenticationData();
+    }
+    dispatch(mfaSlice.actions.setIsLoading(false))
+
   };
 
-  const prev = () => {
-    setCurrent(current - 1);
+  const confirmRelationType = () => {
+    if(userSelectedRelationType == randomSelectedRelationType.relationtype) {
+      toast.success("corect");
+      let newCurrentUser = {...currentUser}
+      newCurrentUser.isMFA = true;
+      dispatch(userSlice.actions.setCurrentUser(newCurrentUser))
+      if (searchParams.get('redirect')) {
+        navigate(`${searchParams.get('redirect')}`);
+      }
+      else {
+        navigate(`/`); //home
+      }
+    }
+    else {
+      toast.error("incorect");
+      dispatch(mfaSlice.actions.setUserSelectedImages([]))
+      dispatch(mfaSlice.actions.setUserSelectedRelationType(''))
+      getAuthenticationData();
+      setCurrent(current - 1);
+    }
   };
 
   const items = steps.map((item) => ({ key: item.title, title: item.title }));
@@ -73,7 +144,7 @@ const userSelectedRelationType = useSelector(state => state.mfa.userSelectedRela
           {current === steps.length - 1 && (
             <Button
               type="primary"
-              onClick={() => message.success("Processing complete!")}
+              onClick={() => confirmRelationType()}
               // disabled={true}
               disabled={!userSelectedRelationType ? true : false}
             >

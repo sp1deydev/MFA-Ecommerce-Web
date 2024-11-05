@@ -1,5 +1,6 @@
 const express = require('express')
 const User = require('./../models/user')
+const SystemConfig = require('../models/systemConfig');
 const mongoose = require('mongoose');
 const bcrypt = require('bcrypt');
 
@@ -155,6 +156,31 @@ const userController = {
             }
         })
         .catch(err => console.error(err))
+    },
+    getRandomUserImages: (req, res) => {
+        let systemConfig = {}
+        SystemConfig.findOne()
+            .then((result) => {
+                if (!result) {
+                    return res.status(200).json({ data: {}, success: true });
+                }
+                systemConfig = {...result._doc};
+                User.findOne({_id: new mongoose.Types.ObjectId(req.userId)})
+        .then(result => {
+            if (result) {
+                let data = result.images.sort(() => 0.5 - Math.random());
+                const response = data.slice(0, systemConfig.numOfAuthenticatedImages);
+                // const response = result.images.slice(0, systemConfig.numOfAuthenticatedImages);
+                res.status(200).json({result: response, success: true, massage: "Get random user successfully" });
+                }
+            else {
+                res.json({ message: "User not found", success: false})
+            }
+        })
+        .catch(err => console.error(err))
+            })
+            .catch((err) => console.error(err));
+        
     },
 }
 

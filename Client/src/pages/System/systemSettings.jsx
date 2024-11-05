@@ -73,6 +73,7 @@ const SystemSettings = () => {
         }
         await systemApi.config(payload);
         toast.success('System Config Successfully');
+        navigate('/system/settings')
 
       } catch (err) {
         toast.error(err.response.data.message || "System Config Error");

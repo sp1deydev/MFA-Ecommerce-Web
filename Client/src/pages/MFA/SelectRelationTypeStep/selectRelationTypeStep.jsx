@@ -13,26 +13,13 @@ const { Option } = Select;
 function SelectRelationTypeStep(props) {
     const dispatch = useDispatch();
     const RelationTypes = useSelector(state => state.mfa.relationTypes)
+    const randomSelectedRelationType = useSelector(state => state.mfa.randomSelectedRelationType)
     let options = []
     RelationTypes.map((relationType) => {
       options.push({title: relationType, value: relationType})
     })
     const [selectedRelationType, setSelectedRelationType] = useState()
-    
-    const [selectedImagesInfo, setSelectedImagesInfo] = useState([
-        {
-            "uid": "rc-upload-1730085909393-2",
-            "name": "1730085912346-275097726_354306753276397_3570733209895545930_n.jpg",
-            "status": "done",
-            "url": "http://localhost:3001/uploads\\1730085912346-275097726_354306753276397_3570733209895545930_n.jpg"
-        },
-        {
-            "uid": "rc-upload-1730085909393-4",
-            "name": "1730085914666-399405994_904004437962999_8837288258346405781_n.jpg",
-            "status": "done",
-            "url": "http://localhost:3001/uploads\\1730085914666-399405994_904004437962999_8837288258346405781_n.jpg"
-        },
-    ]);
+    const [selectedImagesInfo, setSelectedImagesInfo] = useState(randomSelectedRelationType.images);
 
 
     const handleChange = (value) => {
