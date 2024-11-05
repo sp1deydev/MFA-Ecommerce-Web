@@ -96,7 +96,7 @@ export const configRoutes = [
     },
     {
         path: '/system/profile',
-        component: Profile,
+        component: UserInfo,
         layout: SYSTEM_LAYOUT,
         protected: true,
         rolePermissions: ['system'],

@@ -9,6 +9,8 @@ import { userApi } from '../../api/userApi';
 import { EditOutlined, DeleteOutlined, QuestionCircleOutlined } from '@ant-design/icons';
 import { useNavigate } from 'react-router-dom';
 import { capitalizeFirstLetter } from '../../helpers/toUpperCase';
+import checkAuth from '../../utils/checkAuth';
+import { mfaSlice } from '../../redux/mfaSlice';
 
 UserInfo.propTypes = {
     
@@ -18,7 +20,9 @@ function UserInfo(props) {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const [changePasswordForm] = Form.useForm(); // change password form
+  const [change2FAForm] = Form.useForm(); // change password form
   const [isModalChangePasswordOpen, setIsModalChangePasswordOpen] = useState(false);
+  const [isModalChange2FAOpen, setIsModalChange2FAOpen] = useState(false);
   const [messageApi, contextHolder] = message.useMessage();
   const currentUser = useSelector((state) => state.user.currentUser) || {};
   const [editElement, setEditElement] = useState();
@@ -53,6 +57,14 @@ function UserInfo(props) {
     changePasswordForm.resetFields()
     setIsModalChangePasswordOpen(false);
   };
+  //change 2fa modal
+  const show2FAModal = () => {
+    setIsModalChange2FAOpen(true);
+  };
+  const handleCancel2FA = () => {
+    change2FAForm.resetFields()
+    setIsModalChange2FAOpen(false);
+  };
   //submit change password form
   const onChangePasswordFromFinish = async (values) => {
     if (values.newPassword === values.password) {
@@ -85,6 +97,38 @@ function UserInfo(props) {
       dispatch(userSlice.actions.setIsLoading(false));
       changePasswordForm.resetFields()
     }
+  }
+  //submit change 2fa form
+  const onChange2FAFromFinish = async (values) => {
+      try {
+        const res = await userApi.checkPassword({password: values.password});
+        if (!res.data.success) {
+          toast.error(res.data.message);
+          return;
+        }
+        setIsModalChange2FAOpen(false);
+        change2FAForm.resetFields()
+        toast.success(res.data.message)
+        const responese = await userApi.getConfig();
+        dispatch(mfaSlice.actions.setImageList(responese.data.result.images))
+        dispatch(mfaSlice.actions.setRelationTypes(responese.data.result.relationtypes))
+        dispatch(mfaSlice.actions.setRelationships(responese.data.result.relationships))
+        if(window.location.pathname.includes('system')) {
+          navigate('/system/mfa-configuration')
+
+        }
+        else {
+          navigate('/mfa-configuration')
+        }
+        console.log(responese)
+      }
+      catch (err) {
+        const errorMessage =
+        err.response.data.message ||
+        "Có lỗi xảy ra phía máy chủ, vui lòng thử lại!";
+        toast.error(errorMessage);
+        change2FAForm.resetFields()
+      }
   }
 
 
@@ -157,8 +201,8 @@ function UserInfo(props) {
   }
 
   return (
-    <div className="form-container">
-      <div className="sub-info-container">
+    <div className={currentUser.role == "user" ? "form-container":""}>
+      <div className={currentUser.role == "user" ? "sub-info-container":""}>
         {contextHolder} {/* message validate form */}
         <Card>
           <Card.Meta
@@ -275,53 +319,12 @@ function UserInfo(props) {
             <Button type="primary" icon={<EditOutlined />} onClick={showModal}>
               Change Password
             </Button>
-            <Modal
-              centered
-              title="Change Password"
-              open={isModalChangePasswordOpen}
-              onOk={()=>changePasswordForm.submit()}
-              onCancel={handleCancelChangePassword}
-              okText="Change"
+            <Button type="primary" icon={<EditOutlined />} 
+            onClick={show2FAModal}
             >
-              <Form
-                form={changePasswordForm}
-                labelCol={{ span: 8 }}
-                // wrapperCol={{ span: 16 }}
-                style={{ maxWidth: 600 }}
-                initialValues={{ remember: true }}
-                onFinish={onChangePasswordFromFinish}
-                // onFinishFailed={onFinishFailed}
-                autoComplete="off"
-              >
-                <Form.Item
-                  label="Current Password"
-                  name="password"
-                  rules={[
-                    { required: true, min: 6, message: "Please input valid current password!" },
-                  ]}
-                >
-                  <Input.Password />
-                </Form.Item>
-                <Form.Item
-                  label="New password"
-                  name="newPassword"
-                  rules={[
-                    { required: true, min: 6, message: "Please input valid current password!" },
-                  ]}
-                >
-                  <Input.Password />
-                </Form.Item>
-                <Form.Item
-                  label="Confirm Password"
-                  name="confirmPassword"
-                  rules={[
-                    { required: true, min: 6, message: "Please input valid current password!" },
-                  ]}
-                >
-                  <Input.Password />
-                </Form.Item>
-              </Form>
-            </Modal>
+              Change 2FA
+            </Button>
+            
             {/* delete account */}
             <Popconfirm
               title="Delete account"
@@ -340,6 +343,82 @@ function UserInfo(props) {
           </Flex>
         </Card>
       </div>
+      <Modal
+        centered
+        title="Change Password"
+        open={isModalChangePasswordOpen}
+        onOk={()=>changePasswordForm.submit()}
+        onCancel={handleCancelChangePassword}
+        okText="Change"
+      >
+        <Form
+          form={changePasswordForm}
+          labelCol={{ span: 8 }}
+          // wrapperCol={{ span: 16 }}
+          style={{ maxWidth: 600 }}
+          initialValues={{ remember: true }}
+          onFinish={onChangePasswordFromFinish}
+          // onFinishFailed={onFinishFailed}
+          autoComplete="off"
+        >
+          <Form.Item
+            label="Current Password"
+            name="password"
+            rules={[
+              { required: true, min: 6, message: "Please input valid current password!" },
+            ]}
+          >
+            <Input.Password />
+          </Form.Item>
+          <Form.Item
+            label="New password"
+            name="newPassword"
+            rules={[
+              { required: true, min: 6, message: "Please input valid current password!" },
+            ]}
+          >
+            <Input.Password />
+          </Form.Item>
+          <Form.Item
+            label="Confirm Password"
+            name="confirmPassword"
+            rules={[
+              { required: true, min: 6, message: "Please input valid current password!" },
+            ]}
+          >
+            <Input.Password />
+          </Form.Item>
+        </Form>
+      </Modal>
+      <Modal
+        centered
+        title="Change 2FA"
+        open={isModalChange2FAOpen}
+        onOk={()=>change2FAForm.submit()}
+        onCancel={handleCancel2FA}
+        okText="Confirm"
+      >
+        <Form
+          form={change2FAForm}
+          labelCol={{ span: 8 }}
+          // wrapperCol={{ span: 16 }}
+          style={{ maxWidth: 600 }}
+          initialValues={{ remember: true }}
+          onFinish={onChange2FAFromFinish}
+          // onFinishFailed={onFinishFailed}
+          autoComplete="off"
+        >
+          <Form.Item
+            label="Current Password"
+            name="password"
+            rules={[
+              { required: true, min: 6, message: "Please input valid current password!" },
+            ]}
+          >
+            <Input.Password />
+          </Form.Item>
+        </Form>
+      </Modal>
     </div>
   );
 }

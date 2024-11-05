@@ -89,7 +89,7 @@ const SystemSettings = () => {
   console.log('configured', isSystemConfig);
 
   return (
-    <Card style={{ maxWidth: 400, margin: '100px auto', padding: '20px', boxShadow: '0px 4px 12px rgba(0, 102, 204, 0.2)'}}>
+    <Card style={{ maxWidth: 500, margin: '100px auto', padding: '20px', boxShadow: '0px 4px 12px rgba(0, 102, 204, 0.2)'}}>
       <Text style={{ color: '#0066CC', fontSize: 24, textAlign: 'center', display: 'block', marginBottom: 20 }}>
         2nd Authentication Factor Requirements
       </Text>

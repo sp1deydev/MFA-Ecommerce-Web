@@ -49,10 +49,12 @@ const getAuthenticationData = async () => {
   if(checkAuth()) {
     try {
       const response = await userApi.getRandomUserImages();
+      const response2 = await userApi.getRandomUserRelationType();
       let displayImages = [...randomSystemImages, ...response.data.result];
       displayImages = displayImages.sort(() => Math.random() - 0.5);
       dispatch(mfaSlice.actions.setAuthenticationDisplayImages(displayImages))
       dispatch(mfaSlice.actions.setRandomSelectedImages(response.data.result));
+      dispatch(mfaSlice.actions.setRandomSelectedRelationType(response2.data.result));
     } catch (err) {
       toast.error(err.response.data.message || "Get System Configuration Error");
     }
@@ -64,6 +66,8 @@ useEffect(() => {
     try {
       const systemConfig = await systemApi.getSystemConfig();
       dispatch(mfaSlice.actions.setSystemConfiguration(systemConfig.data.data));
+      const responese = await userApi.getConfig();
+      dispatch(mfaSlice.actions.setRelationTypes(responese.data.result.relationtypes))
     } catch (err) {
       toast.error(err.response.data.message || "Get System Configuration Error");
     }
@@ -99,6 +103,10 @@ useEffect(() => {
         navigate(`${searchParams.get('redirect')}`);
       }
       else {
+        if(window.location.pathname.includes('system')) {
+          navigate(`/system/settings`); //home
+
+        }
         navigate(`/`); //home
       }
     }
@@ -116,7 +124,7 @@ useEffect(() => {
   const contentStyle  = {
     marginLeft: 'auto',
     marginRight: 'auto',
-    width: '40%',
+    width: currentUser.role == 'user' ? '40%' : '50%',
     // lineHeight: '440px',
     textAlign: 'center',
     color: token.colorTextTertiary,

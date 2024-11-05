@@ -56,8 +56,8 @@ const SystemLayout = (props) => {
         <Header className="site-layout-background" style={{ backgroundColor:'#fff',padding: 0 }} />
         <Content style={{ margin: '0 16px' }}>
           <Breadcrumb style={{ margin: '16px 0' }}>
-            <Breadcrumb.Item>Dashboard</Breadcrumb.Item>
-            <Breadcrumb.Item>Overview</Breadcrumb.Item>
+            <Breadcrumb.Item>System</Breadcrumb.Item>
+            <Breadcrumb.Item>Test</Breadcrumb.Item>
           </Breadcrumb>
           <div>
             {props.children}

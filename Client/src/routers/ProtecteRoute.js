@@ -35,13 +35,11 @@ function ProtectedRoute(props) {
             
           }
           else {
-            if(systemConfiguration.id && !isSystemConfigLoading && currentUser.role == 'system' 
-              // && !currentUser.isConfig
+            if(systemConfiguration.id && !isSystemConfigLoading && currentUser.role == 'system' && !currentUser.isConfig
             ) {
               navigate(`/system/settings/`);
             }
-            if(!systemConfiguration.id && !isSystemConfigLoading && currentUser.role == 'system' 
-              // && !currentUser.isConfig
+            if(!systemConfiguration.id && !isSystemConfigLoading && currentUser.role == 'system' && !currentUser.isConfig
             ) {
               navigate(`/system/first-login/settings`)
             }

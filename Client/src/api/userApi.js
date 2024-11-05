@@ -10,6 +10,9 @@ export const userApi = {
     changePassword: (data) => {
         return axiosClient.put('/users/change-password', data);
     },
+    checkPassword: (data) => {
+        return axiosClient.post('/users/check-password', data);
+    },
     deleteUser: (data) => {
         return axiosClient.delete('/users/delete', data);
     },
@@ -21,5 +24,8 @@ export const userApi = {
     },
     getRandomUserImages: () => {
         return axiosClient.get('/users/random-user-images');
+    },
+    getRandomUserRelationType: () => {
+        return axiosClient.get('/users/random-user-relation-type');
     },
 }

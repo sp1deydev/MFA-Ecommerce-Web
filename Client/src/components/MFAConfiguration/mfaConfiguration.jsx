@@ -139,8 +139,13 @@ const relationshipsCondition = (imageList, relationships) => {
           navigate(`${searchParams.get('redirect')}`);
       }
       else {
-        toast.info('Please config 2nd factor authentication first')
-        navigate(`/mfa-authentication`); //home
+        if(window.location.pathname.includes('system')) {
+          navigate(`/system/mfa-authentication`); //home
+
+        }
+        else {
+          navigate(`/mfa-authentication`); //home
+        }
       }
 
 
@@ -158,7 +163,7 @@ const relationshipsCondition = (imageList, relationships) => {
   const contentStyle  = {
     marginLeft: 'auto',
     marginRight: 'auto',
-    width: '30%',
+    width: currentUser.role == 'user' ? '30%' : '40%',
     // lineHeight: '440px',
     textAlign: 'center',
     color: token.colorTextTertiary,
@@ -176,6 +181,15 @@ const relationshipsCondition = (imageList, relationships) => {
         />
         <div style={contentStyle}>{steps[current].content}</div>
         <div style={{ marginTop: 24, marginLeft: "auto", marginRight: "auto", textAlign: 'center' }}>
+          {currentUser.isConfig ?
+        <Button style={{ margin: "0 8px" }} onClick={() => navigate(-1)} 
+        // icon={<LeftOutlined />}
+        >
+              Back to Profile
+            </Button>
+            :
+            ""  
+        }
           {current > 0 && (
             <Button style={{ margin: "0 8px" }} onClick={() => prev()} icon={<LeftOutlined />}>
               Previous
@@ -201,7 +215,7 @@ const relationshipsCondition = (imageList, relationships) => {
               // disabled={true}
               disabled={relationshipsCondition(imageList, relationships) == false ? true : false}
             >
-              Register 
+              {currentUser.isConfig ? "Change 2FA": "Register"} 
             </Button>
           )}
         </div>
