@@ -3,7 +3,6 @@ const speakeasy = require('speakeasy');
 const OTP = require('../models/otp');
 const nodemailer = require('nodemailer');
 const exprire_time = 60000
-console.log(process.env)
 
 function generateOTP() {
     const otp = speakeasy.totp({
@@ -20,12 +19,70 @@ async function sendOTPEmail(email, otp) {
             pass: process.env.OTP_SERVER_EMAIL_PASS
         }
     });
+
+    const htmlContent = `
+    <!DOCTYPE html>
+    <html>
+    <head>
+        <style>
+            body {
+                font-family: Arial, sans-serif;
+                background-color: #f4f4f4;
+                margin: 0;
+                padding: 0;
+            }
+            .container {
+                width: 100%;
+                padding: 20px;
+                background-color: #ffffff;
+                max-width: 600px;
+                margin: auto;
+                border-radius: 8px;
+                box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            }
+            .header {
+                text-align: center;
+                padding: 10px 0;
+            }
+            .otp {
+                font-size: 24px;
+                font-weight: bold;
+                text-align: center;
+                color: #0066cc; /* Adjust this to your main color */
+                margin: 24px 0;
+            }
+            .message {
+                color: #333;
+            }
+            .footer {
+                font-size: 14px;
+                color: #777;
+                margin-top: 20px;
+            }
+        </style>
+    </head>
+    <body>
+        <div class="container">
+            <div class="header">
+                <h1>OTP Verification Code</h1>
+            </div>
+            <p class="message">Hello,</p>
+            <p class="message">Please use the following One-Time Password (OTP) to complete your action. For security reasons, do not share this code with anyone.</p>
+            <div class="otp">${otp}</div>
+            <p class="message">This OTP is valid for the next ${exprire_time/1000} seconds.</p>
+            <div class="footer">
+                <p>Thank you,<br>Thien Tran</p>
+            </div>
+        </div>
+    </body>
+    </html>
+`;
     
     let info = await transporter.sendMail({
         from: '"OTP Service" emthienmatma@gmail.com',
         to: email,
-        subject: 'Your OTP Code',
-        text: `Your OTP code is: ${otp}`
+        subject: 'OTP Verification Code',
+        html: htmlContent,
     });
     
     console.log('Message sent: %s', otp);

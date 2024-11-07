@@ -91,11 +91,18 @@ const OTP = () => {
   // Function to show the modal
   const showModal = () => {
     setVisible(true);
+    setIsSetEmail(false);
+    setotpEmail('')
+    setIsCounting(false);
   };
 
   // Function to handle modal cancel
   const handleCancel = () => {
     setVisible(false);
+    setIsLoading(false);
+    setIsSetEmail(false);
+    setotpEmail('')
+    setIsCounting(false);
   };
 
   const onChange = (text) => {
@@ -217,6 +224,7 @@ const OTP = () => {
       <Modal
         // title="Input your email"
         visible={visible}
+        maskClosable={false}
         onCancel={handleCancel}
         footer={null} // To avoid the default footer and customize the button
         width={400}
