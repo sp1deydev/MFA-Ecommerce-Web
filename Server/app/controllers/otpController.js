@@ -1,6 +1,7 @@
 const express = require('express');
 const speakeasy = require('speakeasy');
 const OTP = require('../models/otp');
+const bcrypt = require("bcrypt");
 const nodemailer = require('nodemailer');
 const exprire_time = 60000
 
@@ -33,8 +34,8 @@ async function sendOTPEmail(email, otp) {
             }
             .container {
                 width: 100%;
-                padding: 20px;
-                background-color: #ffffff;
+                padding: 16px;
+                background-color: #f4f4f4;
                 max-width: 600px;
                 margin: auto;
                 border-radius: 8px;
@@ -42,14 +43,16 @@ async function sendOTPEmail(email, otp) {
             }
             .header {
                 text-align: center;
-                padding: 10px 0;
+                color: #000;
             }
             .otp {
                 font-size: 24px;
                 font-weight: bold;
                 text-align: center;
+                background-color: #ffffff;
                 color: #0066cc; /* Adjust this to your main color */
                 margin: 24px 0;
+                border-radius: 12px;
             }
             .message {
                 color: #333;
@@ -57,7 +60,6 @@ async function sendOTPEmail(email, otp) {
             .footer {
                 font-size: 14px;
                 color: #777;
-                margin-top: 20px;
             }
         </style>
     </head>
@@ -78,31 +80,18 @@ async function sendOTPEmail(email, otp) {
     </html>
 `;
     
-    let info = await transporter.sendMail({
+    await transporter.sendMail({
         from: '"OTP Service" emthienmatma@gmail.com',
         to: email,
         subject: 'OTP Verification Code',
         html: htmlContent,
     });
-    
-    console.log('Message sent: %s', otp);
-}
-
-function verifyOTP(token) {
-    const verified = speakeasy.totp.verify({
-        secret: 'secret_key',  // Use a secure key in production
-        encoding: 'base32',
-        token: token,
-        window: 0
-    });
-    return verified;
 }
 
 const otpController = {
     
     generateEmailOTP: async (req, res) => {
         const { email } = req.body;
-        console.log(`generate`, email);
         if (!email) {
             return res.status(400).json({ error: 'Email is required', message:"error" });
         }
@@ -114,7 +103,8 @@ const otpController = {
                     try {
                         await sendOTPEmail(email, otp);
                         OTP.deleteOne({_id: result._id}).then().catch(err => res.status(500).json(err))
-                        const otpRecord = new OTP({email: email, otp: otp});
+                        const salt = bcrypt.genSaltSync(10);
+                        const otpRecord = new OTP({email: email, otp: bcrypt.hashSync(otp, salt)});
                         otpRecord.save() 
                             .then(result => {
                                 res.status(200).json({ message: 'OTP sent to your email', expires: exprire_time, success: true });
@@ -133,7 +123,8 @@ const otpController = {
                 else {
                     try {
                         await sendOTPEmail(email, otp);
-                        const otpRecord = new OTP({email: email, otp: otp});
+                        const salt = bcrypt.genSaltSync(10);
+                        const otpRecord = new OTP({email: email, otp: bcrypt.hashSync(otp, salt)});
                         otpRecord.save() 
                             .then(result => {
                                 res.status(200).json({ message: 'OTP sent to your email', expires: exprire_time, success: true });
@@ -155,10 +146,18 @@ const otpController = {
     },
     verifyEmailOTP: (req, res) => {
         const { otp, email } = req.body;
-        OTP.findOne({email: email, otp: otp})
+        OTP.findOne({email: email})
         .then(result => {
             if (result) {
-                res.status(200).json({ message: 'Verify OTP succesfully', success: true });
+                const isValidOTP = bcrypt.compareSync(otp, result.otp)
+                console.log(result)
+                console.log(isValidOTP)
+                if (isValidOTP) {
+                    res.status(200).json({ message: 'Verify OTP succesfully', success: true });
+                }
+                else {
+                    res.status(400).json({ message: 'Failed to verify OTP. Please input valid OTP',  success: false });
+                }
                 }
             else {
                 res.status(400).json({ message: 'Failed to verify OTP. Please input valid OTP',  success: false });
