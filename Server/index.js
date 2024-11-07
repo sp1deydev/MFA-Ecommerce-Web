@@ -49,6 +49,7 @@ const authRoute = require('./app/routers/auth');
 const userRoute = require('./app/routers/user'); 
 const imageRoute = require('./app/routers/image'); 
 const systemRoute = require('./app/routers/systemConfig'); 
+const otpRoute = require('./app/routers/otp'); 
 
 
 
@@ -58,6 +59,7 @@ app.use('/auth', authRoute);
 app.use('/users', userRoute);
 app.use('/images', imageRoute);
 app.use('/system', systemRoute);
+app.use('/otp', otpRoute);
 
 
 

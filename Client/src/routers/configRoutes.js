@@ -14,6 +14,7 @@ import Dashboard from "../pages/Admin/Dashboard";
 import LoginSystem from "../pages/System/login";
 import SystemSettings from "../pages/System/systemSettings";
 import Profile from "../pages/System/profile";
+import OTP from "../components/OTP/otp";
 
 export const configRoutes = [
     {
@@ -114,6 +115,10 @@ export const configRoutes = [
         layout: SYSTEM_LAYOUT,
         protected: true,
         rolePermissions: ['system'],
+    },
+    {
+        path: '/otp',
+        component: OTP,
     },
     
 ]
