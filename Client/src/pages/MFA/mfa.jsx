@@ -87,6 +87,8 @@ useEffect(() => {
     }
   }
   handleSystemConfig();
+  dispatch(mfaSlice.actions.setUserSelectedImages([]))
+  dispatch(mfaSlice.actions.setUserSelectedRelationType(''))
   getAuthenticationData();
 }, []);
 
