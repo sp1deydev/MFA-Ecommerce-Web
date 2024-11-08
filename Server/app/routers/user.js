@@ -7,6 +7,8 @@ const { checkLogin } = require('../middleware/auth');
 router.get('/', checkLogin, userController.getAllUsers);
 router.put('/change-password', checkLogin, userController.changePassword);
 router.post('/check-password', checkLogin, userController.checkPassword);
+router.post('/check-username', userController.checkUsername);
+router.post('/forgot-password', userController.forgotPassword);
 router.put('/update', checkLogin, userController.updateUser);
 router.delete('/delete', checkLogin, userController.deleteUser);
 router.post('/config', checkLogin, userController.configUserMfaConfiguration);

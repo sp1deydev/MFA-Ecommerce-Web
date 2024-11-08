@@ -5,6 +5,8 @@ export const userSlice = createSlice({
     initialState: {
         isLoading: true,
         currentUser: {},
+        forgotFactor: '',
+        isAuthenticated2FA: false,
     },
     reducers: {
         setIsLoading: (state, action) => {
@@ -18,6 +20,12 @@ export const userSlice = createSlice({
         },
         editUser: (state, action) => {
             state.currentUser = action.payload
+        },
+        setForgotFactor: (state, action) => {
+            state.forgotFactor = action.payload
+        },
+        setIsAuthenticated2FA: (state, action) => {
+            state.isAuthenticated2FA = action.payload
         },
     },
 })

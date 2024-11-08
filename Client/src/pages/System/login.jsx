@@ -11,6 +11,7 @@ import handleAuthToken from '../../utils/handleAuthToken';
 import { handleSessionStorage } from '../../utils/handleSessionStorage';
 import Loading from '../../components/loading';
 import { mfaSlice } from '../../redux/mfaSlice';
+import OTP from '../../components/OTP/otp';
 
 LoginSystem.propTypes = {
     
@@ -168,20 +169,12 @@ function LoginSystem(props) {
               <Input.Password placeholder="Password" />
             </Form.Item>
 
-            {/* <Form.Item
+           <Form.Item
               style={{
-                marginLeft: "33%",
+                marginLeft: "63%",
                 width: "700px",
-                marginBottom: "-8px",
               }}
             >
-              <Form.Item
-                name="remember"
-                valuePropName="checked"
-                style={{ display: "inline-block", width: "calc(50% - 8px)" }}
-              >
-                <Checkbox>Remember me</Checkbox>
-              </Form.Item>
               <Link
                 style={{
                   display: "inline-block",
@@ -189,12 +182,17 @@ function LoginSystem(props) {
                   lineHeight: "32px",
                   margin: "0px 0px 0px 8px",
                 }}
+                onClick={() => dispatch(userSlice.actions.setForgotFactor('password'))}
               >
                 Forgot Password?
               </Link>
-            </Form.Item> */}
+            </Form.Item>
 
-            <Form.Item {...tailLayout}>
+            <Form.Item {...tailLayout}  style={{
+                marginLeft: "30%",
+                width:'fit-content',
+                marginTop: "-54px",
+              }}>
                 <Button type="primary" htmlType="submit">
                   {isLoading && <Loading color="#fff" bgColor="#1677ff" />}
                   Login
@@ -202,6 +200,7 @@ function LoginSystem(props) {
             </Form.Item>
           </Form>
         </div>
+        <OTP/>
       </div>
     );
 }

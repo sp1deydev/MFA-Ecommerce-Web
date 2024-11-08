@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import { Button, Form, Input, Space, Checkbox, Typography } from 'antd';
 import { useDispatch, useSelector } from 'react-redux';
@@ -10,6 +10,7 @@ import { handleLocalStorage } from '../../utils/handleLocalStorage';
 import handleAuthToken from '../../utils/handleAuthToken';
 import { handleSessionStorage } from '../../utils/handleSessionStorage';
 import Loading from '../../components/loading';
+import OTP from '../../components/OTP/otp';
 
 Login.propTypes = {
     
@@ -30,11 +31,13 @@ const tailLayout = {
 function Login(props) {
     const navigate = useNavigate();
     const currentUser = useSelector((state)=> state.user.currentUser) || {};
+    const forgotFactor = useSelector((state)=> state.user.forgotFactor);
     const isLoading = useSelector((state)=> state.user.isLoading)
     const [form] = Form.useForm();
     const dispatch = useDispatch()
 
     const [searchParams, setSearchParams] = useSearchParams();
+
 
   useEffect(() => {
     if (Object.keys(currentUser).length !== 0 && searchParams.get('redirect')) {
@@ -177,6 +180,7 @@ function Login(props) {
                   lineHeight: "32px",
                   margin: "0px 0px 0px 8px",
                 }}
+                onClick={() => dispatch(userSlice.actions.setForgotFactor('password'))}
               >
                 Forgot Password?
               </Link>
@@ -202,6 +206,8 @@ function Login(props) {
             </Form.Item>
           </Form>
         </div>
+        {/* OTP Modal */}
+        <OTP />
       </div>
     );
 }

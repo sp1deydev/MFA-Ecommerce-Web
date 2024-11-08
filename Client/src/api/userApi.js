@@ -13,6 +13,12 @@ export const userApi = {
     checkPassword: (data) => {
         return axiosClient.post('/users/check-password', data);
     },
+    forgotPassword: (data) => {
+        return axiosClient.post('/users/forgot-password', data);
+    },
+    checkUsername: (data) => {
+        return axiosClient.post('/users/check-username', data);
+    },
     deleteUser: (data) => {
         return axiosClient.delete('/users/delete', data);
     },

@@ -12,7 +12,7 @@ function generateOTP() {
     });
     return otp;
 }
-async function sendOTPEmail(email, otp) {
+async function sendOTPEmail(email, otp, username) {
     let transporter = nodemailer.createTransport({
         service: 'gmail',  // Adjust this according to your email service
         auth: {
@@ -68,7 +68,7 @@ async function sendOTPEmail(email, otp) {
             <div class="header">
                 <h1>OTP Verification Code</h1>
             </div>
-            <p class="message">Hello,</p>
+            <p class="message">Hello, <b><i>${username}</i></b></p>
             <p class="message">Please use the following One-Time Password (OTP) to complete your action. For security reasons, do not share this code with anyone.</p>
             <div class="otp">${otp}</div>
             <p class="message">This OTP is valid for the next ${exprire_time/1000} seconds.</p>
@@ -91,7 +91,7 @@ async function sendOTPEmail(email, otp) {
 const otpController = {
     
     generateEmailOTP: async (req, res) => {
-        const { email } = req.body;
+        const { email, username } = req.body;
         if (!email) {
             return res.status(400).json({ error: 'Email is required', message:"error" });
         }
@@ -101,7 +101,7 @@ const otpController = {
             .then(async (result) => {
                 if (result) {
                     try {
-                        await sendOTPEmail(email, otp);
+                        await sendOTPEmail(email, otp, username);
                         OTP.deleteOne({_id: result._id}).then().catch(err => res.status(500).json(err))
                         const salt = bcrypt.genSaltSync(10);
                         const otpRecord = new OTP({email: email, otp: bcrypt.hashSync(otp, salt)});
@@ -122,7 +122,7 @@ const otpController = {
                 }
                 else {
                     try {
-                        await sendOTPEmail(email, otp);
+                        await sendOTPEmail(email, otp, username);
                         const salt = bcrypt.genSaltSync(10);
                         const otpRecord = new OTP({email: email, otp: bcrypt.hashSync(otp, salt)});
                         otpRecord.save() 

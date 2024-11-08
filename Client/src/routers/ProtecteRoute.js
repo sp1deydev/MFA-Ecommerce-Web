@@ -18,8 +18,6 @@ function ProtectedRoute(props) {
     const isRolePermissions = props.rolePermissions && props.rolePermissions.includes(currentUser?.role)
     const navigate = useNavigate();
     useEffect(()=> {
-        //system config
-        //authorization 
         if (Object.keys(currentUser).length !== 0 && !isLoading && !isRolePermissions) {
           toast.error("Bạn không có quyền truy cập trang này");
           if (window.location.pathname.includes('admin')) {
@@ -29,7 +27,8 @@ function ProtectedRoute(props) {
             } else {
               navigate(`/`);
             }
-      }
+        }
+
         if(window.location.pathname.includes('system')) {
           if(window.location.pathname.includes('system/login')) {
             
@@ -43,12 +42,9 @@ function ProtectedRoute(props) {
             ) {
               navigate(`/system/first-login/settings`)
             }
-            //config first time login
-            // if(systemConfiguration.id && currentUser.role == 'system' && !currentUser.isConfig) {
-
-            // }
           }
         }
+
         if (Object.keys(currentUser).length !== 0 && !isLoading && !currentUser.isMFA && systemConfiguration.id) {
           if (window.location.pathname.includes('admin')) {
             navigate(`/admin/login?redirect=${window.location.pathname}`);
@@ -59,6 +55,7 @@ function ProtectedRoute(props) {
           }
       }
         
+      
         if (Object.keys(currentUser).length === 0 && !isLoading && !currentUser.isMFA) {
             toast.info('Please login first');
             if (window.location.pathname.includes('admin')) {

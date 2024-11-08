@@ -37,7 +37,8 @@ const steps = [
 function MFAConfiguration(props) {
   const [searchParams, setSearchParams] = useSearchParams();
   const navigate = useNavigate();
-  const dispatch = useDispatch();
+  const dispatch = useDispatch()
+
   useEffect(() => {
     const handleSystemConfig = async () => {
       try {
@@ -56,6 +57,28 @@ const imageList = useSelector(state => state.mfa.imageList)
 const relationTypes = useSelector(state => state.mfa.relationTypes)
 const relationships = useSelector(state => state.mfa.relationships)
 const currentUser = useSelector(state => state.user.currentUser)
+const isLoading = useSelector(state => state.user.isLoading)
+const isAuthenticated2FA = useSelector((state)=> state.user.isAuthenticated2FA);
+  useEffect(() => {
+      if (!currentUser.isMFA && window.location.pathname.includes('forgot')) {
+        console.log('here')
+        if(currentUser.role == 'system') {
+        navigate(`/system/mfa-authentication`); //home
+        
+      }
+      }
+      if(!currentUser.isMFA && currentUser.isConfig) {
+        toast.warn(`You have to authenticate 2FA before and go to Profile to config 2FA`)
+        if (window.location.pathname.includes('admin')) {
+          navigate(`/admin/mfa-authentication`);
+        } else if (window.location.pathname.includes('system')) {
+          navigate(`/system/mfa-authentication`);
+        } else {
+          navigate(`/mfa-authentication`);
+        }
+      }
+  }, [currentUser.isMFA, currentUser.isConfig, navigate])
+
 const relationshipsCondition = (imageList, relationships) => {
   let newImageList = [...imageList];
   for (const image of imageList) {
@@ -113,40 +136,43 @@ const relationshipsCondition = (imageList, relationships) => {
       dispatch(userSlice.actions.setIsLoading(false))
       let newCurrentUser = {...currentUser}
       newCurrentUser.isConfig = true;
+      newCurrentUser.isMFA = false;
       dispatch(userSlice.actions.setCurrentUser(newCurrentUser))
       console.log('test',newCurrentUser)
-      try {
         const newData = await userApi.getConfig();
         if (!newData.data.success) {
           toast.error(newData.data.message);
           dispatch(userSlice.actions.setIsLoading(false))
           return;
         }
-        console.log('respones', newData);
         toast.success(newData.data.message);
-        dispatch(mfaSlice.actions.setImageList(newData.data.result.images))
-        dispatch(mfaSlice.actions.setRelationTypes(newData.data.result.relationtypes))
-        dispatch(mfaSlice.actions.setRelationships(newData.data.result.relationships))
-  
-      } catch (error) {
-        const errorMessage =
-        error.response.data?.message ||
-        'Có lỗi xảy ra phía máy chủ, vui lòng thử lại!';
-        toast.error(errorMessage);
-        dispatch(userSlice.actions.setIsLoading(false))
-      }
-      if (searchParams.get('redirect')) {
-          navigate(`${searchParams.get('redirect')}`);
-      }
-      else {
-        if(window.location.pathname.includes('system')) {
-          navigate(`/system/mfa-authentication`); //home
-
-        }
-        else {
-          navigate(`/mfa-authentication`); //home
-        }
-      }
+        
+      //   console.log(currentUser)
+      //   if (searchParams.get('redirect')) {
+      //     navigate(`${searchParams.get('redirect')}`);
+      //   }
+      //   else {
+      //     if(window.location.pathname.includes('system')) {
+      //     navigate(`/system/mfa-authentication`); //home
+          
+      //   }
+      //   else {
+      //     navigate(`/mfa-authentication`); //home
+      //   }
+      // }
+      // if (!isLoading && window.location.pathname.includes('forgot')) {
+      //   console.log('here')
+      //   if(currentUser.role == 'system') {
+      //   navigate(`/system/mfa-authentication`); //home
+        
+      // }
+      // else {
+      //   navigate(`/mfa-authentication`); //home
+      // }
+      // }
+      dispatch(mfaSlice.actions.setImageList(newData.data.result.images))
+      dispatch(mfaSlice.actions.setRelationTypes(newData.data.result.relationtypes))
+      dispatch(mfaSlice.actions.setRelationships(newData.data.result.relationships))
 
 
     } catch (error) {
@@ -181,7 +207,7 @@ const relationshipsCondition = (imageList, relationships) => {
         />
         <div style={contentStyle}>{steps[current].content}</div>
         <div style={{ marginTop: 24, marginLeft: "auto", marginRight: "auto", textAlign: 'center' }}>
-          {currentUser.isConfig ?
+          {currentUser.isConfig && !window.location.pathname.includes('forgot') ?
         <Button style={{ margin: "0 8px" }} onClick={() => navigate(-1)} 
         // icon={<LeftOutlined />}
         >

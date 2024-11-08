@@ -14,6 +14,7 @@ import { useNavigate, useSearchParams } from 'react-router-dom';
 import { userSlice } from '../../redux/userSlice';
 import { userApi } from '../../api/userApi';
 import checkAuth from '../../utils/checkAuth';
+import OTP from '../../components/OTP/otp';
 
 MFA.propTypes = {
     
@@ -68,7 +69,20 @@ useEffect(() => {
       dispatch(mfaSlice.actions.setSystemConfiguration(systemConfig.data.data));
       const responese = await userApi.getConfig();
       dispatch(mfaSlice.actions.setRelationTypes(responese.data.result.relationtypes))
+      dispatch(mfaSlice.actions.setImageList(responese.data.result.images))
+      dispatch(mfaSlice.actions.setRelationships(responese.data.result.relationships))
     } catch (err) {
+      if(err.response.data.message == 'access denied') {
+        toast.wa("You must be logged in");
+        if (window.location.pathname.includes('admin')) {
+          navigate(`/admin/login`);
+        } else if (window.location.pathname.includes('system')) {
+          navigate(`/system/login`);
+        } else {
+          navigate(`/login`);
+        }
+        return;
+      }
       toast.error(err.response.data.message || "Get System Configuration Error");
     }
   }
@@ -80,7 +94,7 @@ useEffect(() => {
     dispatch(mfaSlice.actions.setIsLoading(true))
     const isExised = isEqual(sortBy(randomSelectedImages, 'name'), sortBy(userSelectedImages, 'name'))
     if(isExised) {
-      toast.success("corect");
+      toast.success("Correct");
       setCurrent(current + 1);
     }
     else {
@@ -95,17 +109,19 @@ useEffect(() => {
 
   const confirmRelationType = () => {
     if(userSelectedRelationType == randomSelectedRelationType.relationtype) {
-      toast.success("corect");
+      toast.success("Correct");
       let newCurrentUser = {...currentUser}
       newCurrentUser.isMFA = true;
       dispatch(userSlice.actions.setCurrentUser(newCurrentUser))
+      dispatch(userSlice.actions.setIsAuthenticated2FA(true))
       if (searchParams.get('redirect')) {
         navigate(`${searchParams.get('redirect')}`);
       }
       else {
+        console.log(window.location.pathname)
         if(window.location.pathname.includes('system')) {
           navigate(`/system/settings`); //home
-
+          return;
         }
         navigate(`/`); //home
       }
@@ -142,6 +158,12 @@ useEffect(() => {
         />
         <div style={contentStyle}>{steps[current].content}</div>
         <div style={{ marginTop: 24, marginLeft: "auto", marginRight: "auto", textAlign: 'center' }}>
+          <Button
+              type="link"
+              onClick={() => dispatch(userSlice.actions.setForgotFactor('2fa'))}
+            >
+              Forgot 2FA?
+            </Button>
           {/* choose images step */}
            {current < steps.length - 1 && current == 0 && (
             <Button type="primary" onClick={() => confirmSelectImage()} icon={<RightOutlined />} iconPosition='end' disabled={systemConfig.numOfAuthenticatedImages == userSelectedImages.length ? false : true}>
@@ -160,6 +182,7 @@ useEffect(() => {
             </Button>
           )}
         </div>
+        <OTP/>
       </div>
     );
 }

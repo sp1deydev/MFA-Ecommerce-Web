@@ -11,62 +11,7 @@ export const mfaSlice = createSlice({
           numOfRelationTypes: 0,
           numOfImageEachRelationType: 0,
         },
-        imageList: [
-            {
-                "uid": "rc-upload-1730660552903-3",
-                "name": "1730660596150-download.png",
-                "status": "done",
-                "url": "http://localhost:3001/uploads\\1730660596150-download.png"
-            },
-            {
-                "uid": "rc-upload-1730660552903-5",
-                "name": "1730660604617-images.jpeg",
-                "status": "done",
-                "url": "http://localhost:3001/uploads\\1730660604617-images.jpeg"
-            },
-            {
-                "uid": "rc-upload-1730660552903-7",
-                "name": "1730660606851-download (1).png",
-                "status": "done",
-                "url": "http://localhost:3001/uploads\\1730660606851-download (1).png"
-            },
-            {
-                "uid": "rc-upload-1730660552903-9",
-                "name": "1730660609580-download.png",
-                "status": "done",
-                "url": "http://localhost:3001/uploads\\1730660609580-download.png"
-            },
-            {
-                "uid": "rc-upload-1730660552903-11",
-                "name": "1730660611881-download.png",
-                "status": "done",
-                "url": "http://localhost:3001/uploads\\1730660611881-download.png"
-            },
-            {
-                "uid": "rc-upload-1730660552903-13",
-                "name": "1730660614498-download.png",
-                "status": "done",
-                "url": "http://localhost:3001/uploads\\1730660614498-download.png"
-            },
-            {
-                "uid": "rc-upload-1730660552903-15",
-                "name": "1730660616673-download.png",
-                "status": "done",
-                "url": "http://localhost:3001/uploads\\1730660616673-download.png"
-            },
-            {
-                "uid": "rc-upload-1730660552903-17",
-                "name": "1730660618803-download.png",
-                "status": "done",
-                "url": "http://localhost:3001/uploads\\1730660618803-download.png"
-            },
-            {
-                "uid": "rc-upload-1730660552903-19",
-                "name": "1730660621272-download.png",
-                "status": "done",
-                "url": "http://localhost:3001/uploads\\1730660621272-download.png"
-            }
-        ],
+        imageList: [],
         relationTypes: [
             'Relation Type 1',
             'Relation Type 2',

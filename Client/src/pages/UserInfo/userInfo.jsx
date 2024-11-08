@@ -374,7 +374,7 @@ function UserInfo(props) {
             label="New password"
             name="newPassword"
             rules={[
-              { required: true, min: 6, message: "Please input valid current password!" },
+              { required: true, min: 6, message: "Please input valid new password!" },
             ]}
           >
             <Input.Password />
@@ -383,7 +383,7 @@ function UserInfo(props) {
             label="Confirm Password"
             name="confirmPassword"
             rules={[
-              { required: true, min: 6, message: "Please input valid current password!" },
+              { required: true, min: 6, message: "Please input valid confirm password!" },
             ]}
           >
             <Input.Password />

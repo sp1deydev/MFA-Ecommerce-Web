@@ -1,20 +1,50 @@
 import React, { useEffect, useState } from 'react';
 import { Modal, Form, Input, Button } from 'antd';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { Flex, Typography } from 'antd';
 import { otpApi } from '../../api/otpApi';
 import { toast } from 'react-toastify';
 import Loading from '../loading';
+import { userSlice } from '../../redux/userSlice';
+import { userApi } from '../../api/userApi';
+import ForgotPassword from '../ForgotPassword/forgotPassword';
+import { useNavigate } from 'react-router-dom';
 const { Title } = Typography;
 
-const OTP = () => {
+const OTP = (props) => {
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const forgotFactor = useSelector((state)=> state.user.forgotFactor);
+  const currentUser = useSelector((state)=> state.user.currentUser);
   const [visible, setVisible] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [isSetEmail, setIsSetEmail] = useState(false);
+  const [isOTPVerified, setIsOTPVerified] = useState(false);
   const [otpEmail, setotpEmail] = useState('');
+  const [username, setUsername] = useState('');
+  const [isSetUsername, setIsSetUsername] = useState(false);
   const [otp, setOtp] = useState('');
   const [countdown, setCountdown] = useState(30); // 30-second timer
   const [isCounting, setIsCounting] = useState(true);
+
+  useEffect(() => {
+    if(!forgotFactor) {
+      setVisible(false)
+      setIsLoading(false);
+      setIsSetEmail(false);
+      setotpEmail('')
+      setIsCounting(false);
+      setIsOTPVerified(false);
+      setIsSetUsername(false)
+      setUsername('');
+    }
+    else {
+      // if(forgotFactor == '2fa') {
+      //   setUsername(currentUser.username);
+      // }
+      setVisible(true)
+    }
+  }, [forgotFactor]);
 
   // Start countdown on component mount or when 'isCounting' changes
   useEffect(() => {
@@ -59,15 +89,18 @@ const OTP = () => {
     setIsSetEmail(false);
     setotpEmail('')
     setIsCounting(false);
+    setIsOTPVerified(false)
   };
 
   // Function to handle form submission
   const onSendmail = async (values) => {
     console.log('Received values:', values);
+    let payload = {...values}
+    payload.username = username;
     try {
         setIsLoading(true);
         setotpEmail(values.email)
-        const response = await otpApi.generateOTP(values);
+        const response = await otpApi.generateOTP(payload);
         if(!response.data.success) {
             setIsLoading(false);
             toast.error(response.data.message);
@@ -88,12 +121,30 @@ const OTP = () => {
     }
   };
 
-  // Function to show the modal
-  const showModal = () => {
-    setVisible(true);
-    setIsSetEmail(false);
-    setotpEmail('')
-    setIsCounting(false);
+  const onConfirmUsername = async (values) => {
+    console.log('Received values:', values);
+    try {
+        setIsLoading(true);
+        const response = await userApi.checkUsername(values);
+        if(!response.data.success) {
+            setIsLoading(false);
+            toast.error(response.data.message);
+            return;
+        }
+        else {
+            toast.success(response.data.message);
+            setUsername(response.data.result);
+            setIsSetUsername(true)
+            setIsLoading(false);
+        }
+    }
+    catch (err) {
+      const errorMessage =
+            err.response.data?.message ||
+            'Internal Server Error';
+        toast.error(errorMessage);
+        setIsLoading(false);
+    }
   };
 
   // Function to handle modal cancel
@@ -103,12 +154,15 @@ const OTP = () => {
     setIsSetEmail(false);
     setotpEmail('')
     setIsCounting(false);
+    setIsOTPVerified(false);
+    setIsSetUsername(false)
+    setUsername('');
+    dispatch(userSlice.actions.setForgotFactor(''))
   };
 
   const onChange = (text) => {
     const onlyNumbers = text.target.value.replace(/\D/g, '');
     setOtp(onlyNumbers);
-    // setOtp(text); // Store OTP value in state
   };
 
   const handleOTP = async (e) => {
@@ -124,11 +178,25 @@ const OTP = () => {
         }
         else {
             toast.success(response.data.message);
-            setIsSetEmail('');
             setCountdown(0);
             setIsCounting(false);
             setIsLoading(false);
-            setVisible(false);
+            setIsOTPVerified(true)
+            if(forgotFactor == '2fa') {
+              setVisible(false);
+              let newCurrentUser = {...currentUser}
+              newCurrentUser.isMFA = true;
+              dispatch(userSlice.actions.setCurrentUser(newCurrentUser))
+              dispatch(userSlice.actions.setForgotFactor(''));
+              // if (window.location.pathname.includes('admin')) {
+              //   navigate(`/admin/mfa-configuration`);
+              // } else if (window.location.pathname.includes('system')) {
+                //   navigate(`/system/mfa-configuration`);
+                // } else {
+                  //   navigate(`/mfa-configuration`);
+                  // }
+                navigate(`/forgot/mfa-configuration`);
+            }
         }
     }
     catch (err) {
@@ -141,7 +209,7 @@ const OTP = () => {
 
   const emailElement = (
         <Form
-          name="username-form"
+          name="email-form"
           onFinish={onSendmail}
           layout="vertical"
           initialValues={{ username: '' }}
@@ -155,7 +223,7 @@ const OTP = () => {
               { type: 'email', message: 'Please enter a valid email!' }
             ]}
           >
-            <Input placeholder="Enter your username"/>
+            <Input placeholder="Enter your email"/>
           </Form.Item>
 
           <Form.Item>
@@ -212,14 +280,41 @@ const OTP = () => {
     </Flex>
   );
 
+  const usernameElement = (
+    <Form
+    name="username-form"
+    onFinish={onConfirmUsername}
+    layout="vertical"
+    initialValues={{ username: '' }}
+    >
+      <Typography.Title level={5}>Input Your Username</Typography.Title>
+    <Form.Item
+      // label="Username"
+      name="username"
+      rules={[
+        { required: true, message: 'Please input your username!' },
+      ]}
+    >
+      <Input placeholder="Enter your username"/>
+    </Form.Item>
+
+    <Form.Item>
+      <Button type="primary" htmlType="submit" style={{ width: '100%' }} disabled={isLoading}>
+       {isLoading && <Loading color="#fff" bgColor="#1677ff" size="50"/>}
+        Confirm
+      </Button>
+    </Form.Item>
+  </Form>
+  )
+
+
+  
+  // const forgotPassword = ()
+  // const forgot2FA = ()
+
 
   return (
     <div>
-      {/* Button to trigger the modal */}
-      <Button type="primary" onClick={showModal}>
-        Open Modal Form
-      </Button>
-
       {/* Modal containing the form */}
       <Modal
         // title="Input your email"
@@ -235,9 +330,22 @@ const OTP = () => {
             textAlign: 'center',
           }: ""}
       >
-        {isLoading ? 
+        {!isSetUsername && forgotFactor == 'password' ? 
+          (isLoading ? 
             <Loading color="#fff" bgColor="#1677ff" size='64'/> : 
-            isSetEmail ? otpElement : emailElement
+            usernameElement
+          ) 
+        :
+        (!isOTPVerified ? 
+          (isLoading ? 
+            <Loading color="#fff" bgColor="#1677ff" size='64'/> : 
+            (isSetEmail ? otpElement : emailElement)
+          ) : 
+          (isLoading ? 
+          <Loading color="#fff" bgColor="#1677ff" size='64'/> : 
+          (forgotFactor == 'password' ? <ForgotPassword username={username}/> : '')
+          )
+        )
         }
       </Modal>
     </div>

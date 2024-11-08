@@ -55,6 +55,12 @@ export const configRoutes = [
         
     },
     {
+        path: 'forgot/mfa-configuration',
+        component: MFAConfiguration,
+        layout: NO_LAYOUT,
+        
+    },
+    {
         path: '/mfa-authentication',
         component: MFA,
         
