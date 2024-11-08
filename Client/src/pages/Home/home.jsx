@@ -14,23 +14,25 @@ Home.propTypes = {};
 const carouselItems = [
   <div key="1">
     <img
-      src="https://placehold.co/692x423"
+      // src="https://placehold.co/692x423"
+      src="https://consumer.huawei.com/content/dam/huawei-cbg-site/common/mkt/plp/phones-20230509/nova-series/img-0314/nova-series-1.jpg"
       alt="Slide 1"
-      style={{ width: "100%",  borderRadius: "8px" }}
+      style={{ width: "100%",  borderRadius: "8px", width: '692px', height: '423px' }}
     />
   </div>,
   <div key="2">
     <img
-      src="https://placehold.co/692x423"
+      // src="https://placehold.co/692x423"
+      src="https://consumer.huawei.com/content/dam/huawei-cbg-site/common/mkt/plp/phones-20230509/mate-series/mate-series-card-1.jpg"
       alt="Slide 2"
-      style={{ width: "100%",  borderRadius: "8px" }}
+      style={{ width: "100%",  borderRadius: "8px", width: '692px', height: '423px' }}
     />
   </div>,
   <div key="3">
     <img
-      src="https://placehold.co/692x423"
+      src="https://consumer.huawei.com/content/dam/huawei-cbg-site/common/mkt/plp-x/laptops/matebook-series/matebook-14-2024-card-1.jpg"
       alt="Slide 3"
-      style={{ width: "100%",  borderRadius: "8px" }}
+      style={{ width: "100%",  borderRadius: "8px", width: '692px', height: '423px' }}
     />
   </div>,
 ];
@@ -52,23 +54,23 @@ function Home(props) {
             <Row gutter={[4, 4]}>
               <Col span={24}>
                 <img
-                  src="https://placehold.co/272x136"
+                  src="https://consumer.huawei.com/content/dam/huawei-cbg-site/common/mkt/plp-x/laptops/matebook-series/matebook-14-2024-card-4.jpg"
                   alt="Image 4"
-                  style={{ borderRadius: '8px', padding: '0px' }}
+                  style={{ borderRadius: '8px', padding: '0px', width: '272px', height: '136px' }}
                 />
               </Col>
               <Col span={24}>
                 <img
-                  src="https://placehold.co/272x136"
+                  src="https://consumer.huawei.com/content/dam/huawei-cbg-site/common/mkt/plp/audio-new/freebuds-pro-3-card-3.jpg"
                   alt="Image 5"
-                  style={{ borderRadius: '8px', padding: '0px' }}
+                  style={{ borderRadius: '8px', padding: '0px', width: '272px', height: '136px' }}
                 />
               </Col>
               <Col span={24}>
                 <img
-                  src="https://placehold.co/272x136"
+                  src="https://consumer.huawei.com/content/dam/huawei-cbg-site/common/mkt/plp-x/wearable/autumn-2024-wearable-launch/watch-ultimate-series/watch-ultimate-card-3.jpg"
                   alt="Image 6"
-                  style={{ borderRadius: '8px', padding: '0px' }}
+                  style={{ borderRadius: '8px', padding: '0px', width: '272px', height: '136px' }}
                 />
               </Col>
             </Row>
@@ -109,9 +111,10 @@ function Home(props) {
       </div>
       <div style={{marginTop: '8px', width:'986px', margin:'auto'}}>
         <img
-          src="https://placehold.co/986x136"
+          // src="https://placehold.co/986x136"
+          src="https://i02.appmifile.com/202_operator_global/28/08/2024/bd585f8f64bb75569136e0b90e4e8cda.jpg?thumb=1&w=2560&f=webp&q=85"
           alt="Image"
-          style={{ borderRadius: '8px', padding: '0px' }}
+          style={{ borderRadius: '8px', padding: '0px', width: '986px', height: '136px' }}
         />
       </div>
       <div className="home-sub-container">
@@ -134,23 +137,23 @@ function Home(props) {
       <div className="home-sub-container" style={{paddingBottom:'16px'}}>
         <Title level={2}>New Arrivals</Title>
         <img
-          src="https://placehold.co/986x136"
+          src="https://i02.appmifile.com/837_operator_global/27/09/2024/d867a3b42393c00cab1f9ef8b63c5cbc.jpg?thumb=1&w=2560&f=webp&q=85"
           alt="Image"
-          style={{ borderRadius: '8px', padding: '0px', marginBottom: '12px' }}
+          style={{ borderRadius: '8px', padding: '0px', marginBottom: '12px', width: '986px', height: '136px' }}
         />
         <Row gutter={[16, 16]}>
          <Col span={12}>
             <img
-              src="https://placehold.co/485x136"
+              src="https://i02.appmifile.com/701_operator_global/21/08/2024/02faef4dce1c8e7cb86f77f457f164c3.jpg?thumb=1&w=660&f=webp&q=85"
               alt="Image"
-              style={{ borderRadius: '8px', padding: '0px' }}
+              style={{ borderRadius: '8px', padding: '0px', width: '485px', height: '136px' }}
             />
          </Col>
          <Col span={12}>
             <img
-              src="https://placehold.co/485x136"
+              src="https://i02.appmifile.com/979_operator_global/21/08/2024/1c273703a8605ff2bd08b6ef3660f9c8.jpg?thumb=1&w=660&f=webp&q=85"
               alt="Image"
-              style={{ borderRadius: '8px', padding: '0px' }}
+              style={{ borderRadius: '8px', padding: '0px', width: '485px', height: '136px' }}
             />
          </Col>
        </Row>

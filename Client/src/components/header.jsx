@@ -1,6 +1,7 @@
 import React, { useState, Fragment  } from 'react';
 import PropTypes from 'prop-types';
 import { Layout, Menu } from 'antd';
+import logo from '../assets/image/bluelogo.png'
 import { 
     HomeOutlined, 
     InfoCircleOutlined,
@@ -19,6 +20,9 @@ import { handleLocalStorage } from '../utils/handleLocalStorage';
 import handleAuthToken from '../utils/handleAuthToken';
 import { toast } from 'react-toastify';
 import { handleSessionStorage } from '../utils/handleSessionStorage';
+import { Typography } from 'antd';
+
+const { Text } = Typography;
 
 HeaderBar.propTypes = {
     
@@ -127,18 +131,42 @@ function HeaderBar(props) {
       ];
       
     return (
+      <Header
+        style={{
+          background: "#0066CC",
+          color: "#fff",
+          position: "fixed",
+          zIndex: 1000,
+          width: "100vw",
+          top: 0,
+        }}
+      >
+        <div
+          className="logo"
+          style={{ width: "200px", float: "left", }}
+        >
+          <img
+            src={logo} // Replace with your logo image path
+            alt="Logo"
+            style={{
+              width: "200px",
+              marginTop:'8px'
+            }}
+          />
+        </div>
 
-        <Header style={{ background: '#0066CC', color: '#fff', position: 'fixed', zIndex: 1000, width: '100vw', top: 0}}>
-            <div className="logo" style={{ width: '120px', height: '31px', background: '#2412', margin: '16px 28px 16px 0', float: 'left' }} >
-                Logo
-            </div>
-
-            <Menu
-            mode="horizontal"
-            style={{ display: 'flex', justifyContent: 'flex-end', alignItems: 'center', background: '#0066CC', color: '#fff' }}
-            items={menuItems}
+        <Menu
+          mode="horizontal"
+          style={{
+            display: "flex",
+            justifyContent: "flex-end",
+            alignItems: "center",
+            background: "#0066CC",
+            color: "#fff",
+          }}
+          items={menuItems}
         />
-        </Header>
+      </Header>
     );
 }
 
