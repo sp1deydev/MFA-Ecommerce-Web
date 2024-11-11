@@ -1,5 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faFacebookF, faTwitter, faInstagram, faLinkedinIn } from '@fortawesome/free-brands-svg-icons';
+
 
 Footer.propTypes = {
     
@@ -40,10 +43,10 @@ function Footer(props) {
         <div class="footer-col">
           <h4>follow us</h4>
           <div class="social-links">
-            <a href="#"><i class="fab fa-facebook-f"></i></a>
-            <a href="#"><i class="fab fa-twitter"></i></a>
-            <a href="#"><i class="fab fa-instagram"></i></a>
-            <a href="#"><i class="fab fa-linkedin-in"></i></a>
+          <a href="#"><FontAwesomeIcon icon={faFacebookF} /></a>
+          <a href="#"><FontAwesomeIcon icon={faTwitter} /></a>
+          <a href="#"><FontAwesomeIcon icon={faInstagram} /></a>
+          <a href="#"><FontAwesomeIcon icon={faLinkedinIn} /></a>
           </div>
         </div>
       </div>
