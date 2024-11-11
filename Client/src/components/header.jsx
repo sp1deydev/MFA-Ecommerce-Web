@@ -40,7 +40,7 @@ function HeaderBar(props) {
        navigate('/home');  
     }
     const handleAbout = () => {
-       navigate('/about');  
+       navigate('/contact-us');  
     }
     const handleCart = () => {
        navigate('/cart');  
@@ -74,7 +74,7 @@ function HeaderBar(props) {
         {
           key: '2',
           icon: <InfoCircleOutlined style={{ color: '#fff' }} />,
-          label: 'About',
+          label: 'Contact Us',
           onClick: handleAbout,
           style: { color: '#fff' },
         },

@@ -1,7 +1,6 @@
 import MFAConfiguration from "../components/MFAConfiguration";
 import UploadImage from "../components/uploadImage";
 import { ADMIN_LAYOUT, NO_LAYOUT, SYSTEM_LAYOUT } from "../constants/layout";
-import About from "../pages/About/about";
 import LoginAdmin from "../pages/Admin/Login";
 import Cart from "../pages/Cart/cart";
 import Home from "../pages/Home/home";
@@ -15,6 +14,7 @@ import LoginSystem from "../pages/System/login";
 import SystemSettings from "../pages/System/systemSettings";
 import Profile from "../pages/System/profile";
 import OTP from "../components/OTP/otp";
+import ContactUs from "../pages/ContactUs/contactus";
 
 export const configRoutes = [
     {
@@ -26,8 +26,8 @@ export const configRoutes = [
         component: Home,
     },
     {
-        path: '/about',
-        component: About,
+        path: '/contact-us',
+        component: ContactUs,
     },
     {
         path: '/login',
