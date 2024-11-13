@@ -1,35 +1,62 @@
 import React, { useState } from 'react';
 import { Layout, Menu, Breadcrumb, Card, Row, Col } from 'antd';
+import logo from '../../assets/image/whitelogo.png'
 import {
   PieChartOutlined,
   DesktopOutlined,
   UserOutlined,
   TeamOutlined,
   FileOutlined,
+  LogoutOutlined
 } from '@ant-design/icons';
+import handleAuthToken from '../../utils/handleAuthToken';
+import { handleSessionStorage } from '../../utils/handleSessionStorage';
+import { useDispatch } from 'react-redux';
+import { userSlice } from '../../redux/userSlice';
+import { useNavigate } from 'react-router-dom';
 
 const { Header, Content, Footer, Sider } = Layout;
 const { SubMenu } = Menu;
 
 const AdminLayout = (props) => {
+  const navigate = useNavigate();
+  const dispatch = useDispatch()
   const [collapsed, setCollapsed] = useState(false);
 
   const onCollapse = (collapsed) => {
     setCollapsed(collapsed);
   };
+  const handleLogout = () => {
+    // navigate('/system/login');
+    handleAuthToken();
+    handleSessionStorage.remove('access_token');
+    dispatch(userSlice.actions.removeCurrentUser());
+    }
 
   return (
     <Layout style={{ minHeight: '100vh' }}>
       <Sider theme='light' collapsible collapsed={collapsed} onCollapse={onCollapse}>
-        <div className="logo" style={{ height: '32px', background: '#2412', margin: '16px' }}>Admin</div>
+      <div
+          className="logo"
+          style={{ width: "200px", float: "left", marginLeft:'24px' }}
+        >
+          <img
+            src={logo} // Replace with your logo image path
+            alt="Logo"
+            style={{
+              width: "200px",
+              marginTop:'8px'
+            }}
+          />
+        </div>
         <Menu theme="light" defaultSelectedKeys={['1']} mode="inline">
-          <Menu.Item key="1" icon={<PieChartOutlined />}>
+          <Menu.Item key="1" icon={<PieChartOutlined />} onClick={() => navigate('/admin/dashboard')}>
             Dashboard
           </Menu.Item>
           <Menu.Item key="2" icon={<DesktopOutlined />}>
-            Product
+            Products
           </Menu.Item>
-          <SubMenu key="sub1" icon={<UserOutlined />} title="User Management">
+          <SubMenu key="sub1" icon={<UserOutlined />} title="Users">
             <Menu.Item key="3">Users</Menu.Item>
             <Menu.Item key="4">Roles</Menu.Item>
           </SubMenu>
@@ -38,10 +65,13 @@ const AdminLayout = (props) => {
             <Menu.Item key="8">Team 2</Menu.Item>
           </SubMenu>
           <Menu.Item key="9" icon={<FileOutlined />}>
-            Category
+            Categories
           </Menu.Item>
           <Menu.Item key="10" icon={<FileOutlined />}>
-            Purchase Order
+            Purchase Orders
+          </Menu.Item>
+          <Menu.Item key="11" icon={<LogoutOutlined />} danger onClick={handleLogout}>
+            Log out
           </Menu.Item>
         </Menu>
       </Sider>
@@ -56,7 +86,7 @@ const AdminLayout = (props) => {
             {props.children}
           </div>
         </Content>
-        <Footer style={{ textAlign: 'center' }}>Ant Design Dashboard ©2024</Footer>
+        <Footer style={{ textAlign: 'center' }}>Spidey Shop 2024</Footer>
       </Layout>
     </Layout>
   );
