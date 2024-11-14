@@ -3,11 +3,12 @@ import { Layout, Menu, Breadcrumb, Card, Row, Col } from 'antd';
 import logo from '../../assets/image/whitelogo.png'
 import {
   PieChartOutlined,
-  DesktopOutlined,
+  ShopOutlined,
   UserOutlined,
-  TeamOutlined,
-  FileOutlined,
-  LogoutOutlined
+  TagsOutlined ,
+  ShoppingOutlined,
+  LogoutOutlined,
+  InfoCircleOutlined
 } from '@ant-design/icons';
 import handleAuthToken from '../../utils/handleAuthToken';
 import { handleSessionStorage } from '../../utils/handleSessionStorage';
@@ -53,22 +54,20 @@ const AdminLayout = (props) => {
           <Menu.Item key="1" icon={<PieChartOutlined />} onClick={() => navigate('/admin/dashboard')}>
             Dashboard
           </Menu.Item>
-          <Menu.Item key="2" icon={<DesktopOutlined />} onClick={() => navigate('/admin/products')}>
+          <Menu.Item key="10" icon={<ShoppingOutlined />}>
+            Purchase Orders
+          </Menu.Item>
+          <Menu.Item key="2" icon={<ShopOutlined />} onClick={() => navigate('/admin/products')}>
             Products
           </Menu.Item>
-          <SubMenu key="sub1" icon={<UserOutlined />} title="Users">
-            <Menu.Item key="3">Users</Menu.Item>
-            <Menu.Item key="4">Roles</Menu.Item>
-          </SubMenu>
-          <SubMenu key="sub2" icon={<TeamOutlined />} title="Teams">
-            <Menu.Item key="6">Team 1</Menu.Item>
-            <Menu.Item key="8">Team 2</Menu.Item>
-          </SubMenu>
-          <Menu.Item key="9" icon={<FileOutlined />}>
+          <Menu.Item key="9" icon={<TagsOutlined  />}>
             Categories
           </Menu.Item>
-          <Menu.Item key="10" icon={<FileOutlined />}>
-            Purchase Orders
+          <Menu.Item key="3" icon={<UserOutlined />}>
+            Users
+          </Menu.Item>
+          <Menu.Item key="5" icon={<InfoCircleOutlined />}>
+            Profile
           </Menu.Item>
           <Menu.Item key="11" icon={<LogoutOutlined />} danger onClick={handleLogout}>
             Log out
