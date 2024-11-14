@@ -1,17 +1,19 @@
 import React, { useState } from 'react';
-import { Table, Button, Modal, Form, Input, Space, message, Row, Col } from 'antd';
-import { EditOutlined, DeleteOutlined, PlusOutlined } from '@ant-design/icons';
+import { Table, Button, Modal, Form, Input, Space, message, Row, Col, Upload, Popconfirm } from 'antd';
+import { EditOutlined, DeleteOutlined, PlusOutlined, UploadOutlined, EyeOutlined } from '@ant-design/icons';
 
 const AdminProduct = () => {
   const [data, setData] = useState([
-    { key: '1', name: 'John Brown', age: 32, address: 'New York No. 1 Lake Park' },
-    { key: '2', name: 'Jim Green', age: 42, address: 'London No. 1 Lake Park' },
-    { key: '3', name: 'Joe Black', age: 29, address: 'Sidney No. 1 Lake Park' },
+    { key: '1', name: 'John Brown', age: 32, address: 'New York No. 1 Lake Park', image: null },
+    { key: '2', name: 'Jim Green', age: 42, address: 'London No. 1 Lake Park', image: null },
+    { key: '3', name: 'Joe Black', age: 29, address: 'Sidney No. 1 Lake Park', image: null },
   ]);
-  
+
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [isAddModalVisible, setIsAddModalVisible] = useState(false);
+  const [isViewDetailVisible, setIsViewDetailVisible] = useState(false);
   const [editingRecord, setEditingRecord] = useState(null);
+  const [viewingRecord, setViewingRecord] = useState(null);
   const [form] = Form.useForm();
   const [searchText, setSearchText] = useState('');
 
@@ -28,14 +30,16 @@ const AdminProduct = () => {
   const handleCancel = () => {
     setIsModalVisible(false);
     setIsAddModalVisible(false);
+    setIsViewDetailVisible(false);
     form.resetFields();
   };
 
   const handleSave = () => {
     form.validateFields().then((values) => {
-      setData((prevData) =>
-        prevData.map((item) => (item.key === editingRecord.key ? { ...item, ...values } : item))
+      const updatedData = data.map((item) =>
+        item.key === editingRecord.key ? { ...item, ...values } : item
       );
+      setData(updatedData);
       message.success('Record updated successfully!');
       handleCancel();
     }).catch((info) => {
@@ -57,6 +61,20 @@ const AdminProduct = () => {
     });
   };
 
+  const handleDelete = (key) => {
+    setData(data.filter((item) => item.key !== key));
+    message.success('Record deleted successfully!');
+  };
+
+  const handleViewDetail = (record) => {
+    setViewingRecord(record);
+    setIsViewDetailVisible(true);
+  };
+
+  const handleImageChange = ({ fileList }) => {
+    form.setFieldsValue({ image: fileList });
+  };
+
   const columns = [
     {
       title: 'Name',
@@ -74,10 +92,24 @@ const AdminProduct = () => {
       key: 'address',
     },
     {
+      title: 'Image',
+      dataIndex: 'image',
+      key: 'image',
+      render: (image) =>
+        image ? <img src={URL.createObjectURL(image)} alt="product" style={{ width: 50 }} /> : 'No Image',
+    },
+    {
       title: 'Actions',
       key: 'actions',
       render: (text, record) => (
         <Space size="middle">
+          <Button
+            type="text"
+            icon={<EyeOutlined />}
+            onClick={() => handleViewDetail(record)}
+            shape="circle"
+            title="View Detail"
+          />
           <Button
             type="text"
             icon={<EditOutlined />}
@@ -85,23 +117,24 @@ const AdminProduct = () => {
             shape="circle"
             title="Edit"
           />
-          <Button
-            danger
-            type="text"
-            icon={<DeleteOutlined />}
-            onClick={() => handleDelete(record.key)}
-            shape="circle"
-            title="Delete"
-          />
+          <Popconfirm
+            title="Are you sure you want to delete this record?"
+            onConfirm={() => handleDelete(record.key)}
+            okText="Yes"
+            cancelText="No"
+          >
+            <Button
+              danger
+              type="text"
+              icon={<DeleteOutlined />}
+              shape="circle"
+              title="Delete"
+            />
+          </Popconfirm>
         </Space>
       ),
     },
   ];
-
-  const handleDelete = (key) => {
-    setData(data.filter((item) => item.key !== key));
-    message.success('Record deleted successfully!');
-  };
 
   return (
     <>
@@ -112,7 +145,7 @@ const AdminProduct = () => {
             enterButton
             onSearch={(value) => setSearchText(value)}
             onChange={(e) => setSearchText(e.target.value)}
-            style={{ width: 200 }}
+            style={{ width: 360 }}
           />
         </Col>
         <Col>
@@ -159,6 +192,16 @@ const AdminProduct = () => {
           >
             <Input />
           </Form.Item>
+          <Form.Item name="image" label="Upload Image">
+            <Upload
+              listType="picture"
+              maxCount={1}
+              onChange={handleImageChange}
+              beforeUpload={() => false} // Prevents automatic upload
+            >
+              <Button icon={<UploadOutlined />}>Select Image</Button>
+            </Upload>
+          </Form.Item>
         </Form>
       </Modal>
 
@@ -193,7 +236,46 @@ const AdminProduct = () => {
           >
             <Input />
           </Form.Item>
+          <Form.Item name="image" label="Upload Image">
+            <Upload
+              listType="picture"
+              maxCount={1}
+              onChange={handleImageChange}
+              beforeUpload={() => false} // Prevents automatic upload
+            >
+              <Button icon={<UploadOutlined />}>Select Image</Button>
+            </Upload>
+          </Form.Item>
         </Form>
+      </Modal>
+
+      {/* View Detail Modal */}
+      <Modal
+        title="View Record Details"
+        visible={isViewDetailVisible}
+        onCancel={handleCancel}
+        footer={[
+          <Button key="close" onClick={handleCancel}>
+            Close
+          </Button>,
+        ]}
+      >
+            <p>Comming soon...</p>
+        {/* {viewingRecord && (
+          <>
+            <p><strong>Name:</strong> {viewingRecord.name}</p>
+            <p><strong>Age:</strong> {viewingRecord.age}</p>
+            <p><strong>Address:</strong> {viewingRecord.address}</p>
+            <p>
+              <strong>Image:</strong>{' '}
+              {viewingRecord.image ? (
+                <img src={URL.createObjectURL(viewingRecord.image)} alt="product" style={{ width: 100 }} />
+              ) : (
+                'No Image'
+              )}
+            </p>
+          </>
+        )} */}
       </Modal>
     </>
   );
