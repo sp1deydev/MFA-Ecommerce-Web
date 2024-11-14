@@ -15,6 +15,7 @@ import SystemSettings from "../pages/System/systemSettings";
 import Profile from "../pages/System/profile";
 import OTP from "../components/OTP/otp";
 import ContactUs from "../pages/ContactUs/contactus";
+import AdminProduct from "../pages/Admin/Products";
 
 export const configRoutes = [
     {
@@ -94,6 +95,11 @@ export const configRoutes = [
     {
         path: '/admin/dashboard',
         component: Dashboard,
+        layout: ADMIN_LAYOUT
+    },
+    {
+        path: '/admin/products',
+        component: AdminProduct,
         layout: ADMIN_LAYOUT
     },
     {

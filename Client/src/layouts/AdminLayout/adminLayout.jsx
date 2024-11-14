@@ -53,7 +53,7 @@ const AdminLayout = (props) => {
           <Menu.Item key="1" icon={<PieChartOutlined />} onClick={() => navigate('/admin/dashboard')}>
             Dashboard
           </Menu.Item>
-          <Menu.Item key="2" icon={<DesktopOutlined />}>
+          <Menu.Item key="2" icon={<DesktopOutlined />} onClick={() => navigate('/admin/products')}>
             Products
           </Menu.Item>
           <SubMenu key="sub1" icon={<UserOutlined />} title="Users">
