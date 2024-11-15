@@ -60,7 +60,7 @@ const AdminLayout = (props) => {
           <Menu.Item key="2" icon={<ShopOutlined />} onClick={() => navigate('/admin/products')}>
             Products
           </Menu.Item>
-          <Menu.Item key="9" icon={<TagsOutlined  />}>
+          <Menu.Item key="9" icon={<TagsOutlined  />} onClick={() => navigate('/admin/categories')}>
             Categories
           </Menu.Item>
           <Menu.Item key="3" icon={<UserOutlined />}>

@@ -16,6 +16,7 @@ import Profile from "../pages/System/profile";
 import OTP from "../components/OTP/otp";
 import ContactUs from "../pages/ContactUs/contactus";
 import AdminProduct from "../pages/Admin/Products";
+import AdminCategory from "../pages/Admin/Categories";
 
 export const configRoutes = [
     {
@@ -100,6 +101,11 @@ export const configRoutes = [
     {
         path: '/admin/products',
         component: AdminProduct,
+        layout: ADMIN_LAYOUT
+    },
+    {
+        path: '/admin/categories',
+        component: AdminCategory,
         layout: ADMIN_LAYOUT
     },
     {
