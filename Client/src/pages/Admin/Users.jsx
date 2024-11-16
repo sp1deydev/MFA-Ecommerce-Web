@@ -1,21 +1,13 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { Table, Button, Modal, Form, Input, Space, message, Row, Col, Popconfirm } from 'antd';
 import { EditOutlined, DeleteOutlined, PlusOutlined, EyeOutlined } from '@ant-design/icons';
-import { categoryApi } from '../../api/categoryApi';
 
-const AdminCategory = () => {
-  const [data, setData] = useState([]);
-  const getCategories = async () => {
-    try {
-      const response = await categoryApi.getAllCategories();
-      console.log(response);
-      setData(response.data.data);
-    }  catch (err) {
-    }
-  }
-  useEffect(() => {
-    getCategories()
-  }, []);
+const AdminUser = () => {
+  const [data, setData] = useState([
+    { key: '1', id: '101', name: 'Electronics', description: 'Category for electronic items' },
+    { key: '2', id: '102', name: 'Furniture', description: 'Category for furniture items' },
+    { key: '3', id: '103', name: 'Clothing', description: 'Category for clothing and apparel' },
+  ]);
 
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [isAddModalVisible, setIsAddModalVisible] = useState(false);
@@ -30,7 +22,7 @@ const AdminCategory = () => {
   );
 
   const generateUniqueId = () => {
-    const maxId = data.reduce((max, item) => Math.max(max, parseInt(item._id, 10)), 0);
+    const maxId = data.reduce((max, item) => Math.max(max, parseInt(item.id, 10)), 0);
     return (maxId + 1).toString();
   };
 
@@ -48,16 +40,12 @@ const AdminCategory = () => {
   };
 
   const handleSave = () => {
-    form.validateFields().then(async (values) => {
-      try {
-        console.log(values);
-        let payload = {...values, id: editingRecord._id}
-        await categoryApi.update(payload);
-        getCategories();
-        message.success('Update category successfully!');
-      }  catch (err) {
-        message.error('Update error');
-      }
+    form.validateFields().then((values) => {
+      const updatedData = data.map((item) =>
+        item.key === editingRecord.key ? { ...item, ...values } : item
+      );
+      setData(updatedData);
+      message.success('Record updated successfully!');
       handleCancel();
     }).catch((info) => {
       console.log('Validate Failed:', info);
@@ -65,28 +53,23 @@ const AdminCategory = () => {
   };
 
   const handleAdd = () => {
-    form.validateFields().then(async (values) => {
-      try {
-        await categoryApi.create(values);
-        getCategories();
-        message.success('New category added successfully!');
-      }  catch (err) {
-        message.error('Add error');
-      }
+    form.validateFields().then((values) => {
+      const newRecord = {
+        key: (data.length + 1).toString(),
+        id: generateUniqueId(),
+        ...values,
+      };
+      setData([...data, newRecord]);
+      message.success('New record added successfully!');
       handleCancel();
     }).catch((info) => {
       console.log('Validate Failed:', info);
     });
   };
 
-  const handleDelete = async (id) => {
-    try {
-      await categoryApi.delete({id});
-      getCategories();
-      message.success('Delete category successfully!');
-    }  catch (err) {
-      message.error('Delete error');
-    }
+  const handleDelete = (key) => {
+    setData(data.filter((item) => item.key !== key));
+    message.success('Record deleted successfully!');
   };
 
   const handleViewDetail = (record) => {
@@ -95,11 +78,11 @@ const AdminCategory = () => {
   };
 
   const columns = [
-    // {
-    //   title: 'Index',
-    //   dataIndex: '_id',
-    //   key: '_id',
-    // },
+    {
+      title: 'ID',
+      dataIndex: 'id',
+      key: 'id',
+    },
     {
       title: 'Name',
       dataIndex: 'name',
@@ -131,7 +114,7 @@ const AdminCategory = () => {
           />
           <Popconfirm
             title="Are you sure you want to delete this record?"
-            onConfirm={() => handleDelete(record._id)}
+            onConfirm={() => handleDelete(record.key)}
             okText="Yes"
             cancelText="No"
           >
@@ -237,7 +220,7 @@ const AdminCategory = () => {
       >
         {viewingRecord && (
           <>
-            <p><strong>Id:</strong> {viewingRecord._id}</p>
+            <p><strong>ID:</strong> {viewingRecord.id}</p>
             <p><strong>Name:</strong> {viewingRecord.name}</p>
             <p><strong>Description:</strong> {viewingRecord.description}</p>
           </>
@@ -247,4 +230,4 @@ const AdminCategory = () => {
   );
 };
 
-export default AdminCategory;
+export default AdminUser;

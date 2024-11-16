@@ -17,6 +17,7 @@ import OTP from "../components/OTP/otp";
 import ContactUs from "../pages/ContactUs/contactus";
 import AdminProduct from "../pages/Admin/Products";
 import AdminCategory from "../pages/Admin/Categories";
+import AdminUser from "../pages/Admin/Users";
 
 export const configRoutes = [
     {
@@ -106,6 +107,11 @@ export const configRoutes = [
     {
         path: '/admin/categories',
         component: AdminCategory,
+        layout: ADMIN_LAYOUT
+    },
+    {
+        path: '/admin/users',
+        component: AdminUser,
         layout: ADMIN_LAYOUT
     },
     {

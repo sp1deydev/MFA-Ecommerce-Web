@@ -63,7 +63,7 @@ const AdminLayout = (props) => {
           <Menu.Item key="9" icon={<TagsOutlined  />} onClick={() => navigate('/admin/categories')}>
             Categories
           </Menu.Item>
-          <Menu.Item key="3" icon={<UserOutlined />}>
+          <Menu.Item key="3" icon={<UserOutlined />} onClick={() => navigate('/admin/users')}>
             Users
           </Menu.Item>
           <Menu.Item key="5" icon={<InfoCircleOutlined />}>

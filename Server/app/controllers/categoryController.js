@@ -22,7 +22,7 @@ const categoryController = {
             .catch(err => res.status(500).json(err))
     },
     deleteCategory: (req, res) => {
-        const { id } = req.params;
+        const { id } = req.body;
         if( !id ) {
             return res.status(400).json({message: "Id is required", success: false});
         }
@@ -37,6 +37,9 @@ const categoryController = {
     },
     updateCategory: (req, res) => {
         const { id, name, description,  } = req.body;
+        if( !id || !name || !description ) {
+            return res.status(400).json({message: "Id, Name and Description is required", success: false});
+        }
         const newCategory = {
             name: name,
             description: description
