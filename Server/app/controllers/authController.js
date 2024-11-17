@@ -28,7 +28,7 @@ const authController = {
         User.findOne({username: req.body.username})
             .then(result => {
                 if (result) {
-                    res.json({message: "username exists"})
+                    res.json({message: "Username exists"})
                 }
                 else {
                     const user = new User(newUser);
@@ -61,11 +61,11 @@ const authController = {
                         res.status(200).json({ user: result, token, success: true, message: "success" });
                     }
                     else {
-                        res.json({message: 'incorrect password'});
+                        res.json({message: 'Incorrect password'});
                     }
                 }
                 else {
-                    res.json({message: "username notfound"})
+                    res.json({message: "Username notfound"})
                 }
             })
             .catch(err => console.error(err))
@@ -84,7 +84,7 @@ const authController = {
                     res.status(200).json({user: result, success: true, massage: "Get user successfully" });
                 }
             else {
-                res.json({ message: "id notfound", success: false})
+                res.json({ message: "Id notfound", success: false})
             }
         })
         .catch(err => console.error(err))

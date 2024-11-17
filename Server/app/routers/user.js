@@ -2,9 +2,11 @@ const express = require('express');
 const router = express.Router();
 const userController = require('../controllers/userController');
 const { checkLogin } = require('../middleware/auth');
+const { isAdmin } = require('../middleware/isAdmin');
 
 
-router.get('/', checkLogin, userController.getAllUsers);
+router.get('/', checkLogin, isAdmin, userController.getAllUsers);
+router.put('/update-role', checkLogin, isAdmin, userController.updateRole);
 router.put('/change-password', checkLogin, userController.changePassword);
 router.post('/check-password', checkLogin, userController.checkPassword);
 router.post('/check-username', userController.checkUsername);

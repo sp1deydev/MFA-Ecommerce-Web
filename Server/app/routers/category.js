@@ -6,8 +6,8 @@ const { isAdmin }= require('../middleware/isAdmin');
 
 
 router.get('/', categoryController.getAllCategories);
-router.post('/', categoryController.createCategory);
-router.post('/delete', categoryController.deleteCategory);
-router.put('/', categoryController.updateCategory);
+router.post('/', checkLogin, isAdmin, categoryController.createCategory);
+router.post('/delete', checkLogin, isAdmin, categoryController.deleteCategory);
+router.put('/', checkLogin, isAdmin, categoryController.updateCategory);
 
 module.exports = router;

@@ -1,8 +1,14 @@
 import axiosClient from "./axiosClient";
 
 export const userApi = {
+    getAllUsers: () => {
+        return axiosClient.get('/users');
+    },
     updateUser: (data) => {
         return axiosClient.put('/users/update', data);
+    },
+    updateRole: (data) => {
+        return axiosClient.put('/users/update-role', data);
     },
     getUserById: (data) => {
         return axiosClient.get('/users/:id', data);

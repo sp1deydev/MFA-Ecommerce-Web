@@ -1,22 +1,34 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Table, Button, Modal, Form, Input, Space, message, Row, Col, Popconfirm, Select, Tag } from 'antd';
 import { EditOutlined, DeleteOutlined, PlusOutlined } from '@ant-design/icons';
 import { v4 as uuidv4 } from 'uuid';
+import { userApi } from '../../api/userApi';
+import { capitalizeFirstLetter } from '../../helpers/toUpperCase';
+import { authApi } from '../../api/authApi';
 
 const { Option } = Select;
 
 const roleColors = {
-  Admin: 'volcano',
-  User: 'blue',
-  System: 'green',
+  admin: 'volcano',
+  user: 'blue',
+  system: 'green',
 };
 
 const AdminUser = () => {
-  const [data, setData] = useState([
-    { key: '1', _id: uuidv4(), username: 'jdoe', firstname: 'John', lastname: 'Doe', email: 'jdoe@example.com', role: 'Admin' },
-    { key: '2', _id: uuidv4(), username: 'asmith', firstname: 'Anna', lastname: 'Smith', email: 'asmith@example.com', role: 'User' },
-    { key: '3', _id: uuidv4(), username: 'bwhite', firstname: 'Bob', lastname: 'White', email: 'bwhite@example.com', role: 'System' },
-  ]);
+  const [data, setData] = useState([]);
+
+  const getAllUsers = async function() {
+    try {
+        await authApi.getCurrentUser();
+        const response = await userApi.getAllUsers();
+        console.log(response);
+        setData(response.data.data);
+      }  catch (err) {
+      }
+  }
+  useEffect(() => {
+    getAllUsers()
+  }, [])
 
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [isAddModalVisible, setIsAddModalVisible] = useState(false);
@@ -81,7 +93,7 @@ const AdminUser = () => {
       dataIndex: 'role',
       key: 'role',
       render: (role) => (
-        <Tag color={roleColors[role]}>{role}</Tag>
+        <Tag color={roleColors[role]}>{capitalizeFirstLetter(role)}</Tag>
       ),
     },
     {
@@ -167,9 +179,9 @@ const AdminUser = () => {
             rules={[{ required: true, message: 'Please select a role' }]}
           >
             <Select>
-              <Option value="Admin">Admin</Option>
-              <Option value="User">User</Option>
-              <Option value="System">System</Option>
+              <Option value="admin">Admin</Option>
+              <Option value="user">User</Option>
+              <Option value="system">System</Option>
             </Select>
           </Form.Item>
         </Form>

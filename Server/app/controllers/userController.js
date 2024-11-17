@@ -8,7 +8,33 @@ const bcrypt = require('bcrypt');
 
 const userController = {
     getAllUsers: (req, res) => {
-
+        User.find().select('_id username firstname lastname email role')
+        .then(result => {
+            if (result) {
+                return res.status(200).json({ data: result, status: true });
+            } else {
+                return res.status(400).json({ message: "Bad Request", status: false });
+            }
+        })
+        .catch(err => res.status(400).json({ message: "Internal Server Err" }));
+    },
+    updateRole: (req, res) => {
+        const { id, role } = req.body;
+        User.findByIdAndUpdate(id,
+            { role },
+            {
+                returnDocument: "after" // Return the updated document
+            }
+        )
+        .then(result => {
+            if (result) {
+                    res.status(200).json({ message: "Role updated",  success: true});
+                }
+            else {
+                res.status(500).json({message: "User information not updated yet"})
+            }
+        })
+        .catch(err => console.error(err))
     },
     getUserById: (req, res) => {
         User.findOne({_id: new mongoose.Types.ObjectId(req.params.id)})
