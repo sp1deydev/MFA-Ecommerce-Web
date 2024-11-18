@@ -13,6 +13,7 @@ router.post('/check-username', userController.checkUsername);
 router.post('/forgot-password', userController.forgotPassword);
 router.put('/update', checkLogin, userController.updateUser);
 router.delete('/delete', checkLogin, userController.deleteUser);
+router.post('/delete-by-admin', checkLogin, isAdmin, userController.deleteUserByAdmin);
 router.post('/config', checkLogin, userController.configUserMfaConfiguration);
 router.get('/config', checkLogin, userController.getUserMfaConfiguration);
 router.get('/random-user-images', checkLogin, userController.getRandomUserImages);

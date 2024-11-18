@@ -17,7 +17,7 @@ ProductDetails.propTypes = {
 function ProductDetails(props) {
     const {productId} = useParams()
     const products = useSelector(state => state.product.productList)
-    const product =  products.find(product => product.id == productId); //use find() instead of filter() beacause I just want product object not a array
+    const product =  products.find(product => product._id == productId); //use find() instead of filter() beacause I just want product object not a array
     const [recommendProducts, setRecommendProducts] = useState([]);
     useEffect(()=> {
         let arr = products.filter(product => product.id != productId)

@@ -115,6 +115,11 @@ export const configRoutes = [
         layout: ADMIN_LAYOUT
     },
     {
+        path: '/admin/profile',
+        component: UserInfo,
+        layout: ADMIN_LAYOUT
+    },
+    {
         path: '/system/login',
         component: LoginSystem,
         layout: NO_LAYOUT

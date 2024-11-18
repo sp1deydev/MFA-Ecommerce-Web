@@ -1,11 +1,13 @@
 import PropTypes from "prop-types";
 import Loading from "../../components/loading";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Row, Col, Card, Button, Typography, Input } from "antd";
 import { ShoppingCartOutlined, GiftOutlined } from "@ant-design/icons";
 import { Carousel, Image } from "antd";
 import ProductCard from "../../components/productCard/productCard";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { productApi } from "../../api/productApi";
+import { productSlice } from "../../redux/productSlice";
 
 const { Title, Text } = Typography;
 const { Search } = Input;
@@ -36,8 +38,24 @@ const carouselItems = [
     />
   </div>,
 ];
+
 function Home(props) {
-  const products = useSelector((state)=>state.product.productList) || []
+  const [products, setProducts] = useState([])
+  const dispatch = useDispatch()
+  // const products = useSelector((state)=>state.product.productList) || []
+  const getAllProducts = async () => {
+    try {
+      const response = await productApi.getAllProducts();
+      const res = await productApi.getAllProducts({order: 'desc', limit: 12});
+      setProducts(res.data.data);
+      dispatch(productSlice.actions.setProductList(response.data.data))
+    } catch (err) {
+      console.error(err);
+    }
+  }
+  useEffect(() => {
+    getAllProducts();
+  }, [])
   return (
     <div style={{backgroundColor: '#e5e7eb',}}>
       <div className="home-sub-container">
@@ -119,7 +137,7 @@ function Home(props) {
       </div>
       <div className="home-sub-container">
         {/* <h1>Popular Products</h1> */}
-        <Title level={2}>Featured Products</Title>
+        <Title level={2}>Newest Products</Title>
         <Row gutter={[8, 8]}>
           {products.map((product, index) => (
             <Col key={index} span={6}>

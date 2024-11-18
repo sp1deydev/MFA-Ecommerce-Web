@@ -63,23 +63,33 @@ const AdminUser = () => {
   };
 
   const handleAdd = () => {
-    addForm.validateFields().then((values) => {
+    addForm.validateFields().then(async (values) => {
+        console.log('Validate', values);
       const newUser = {
-        key: uuidv4(),
-        _id: uuidv4(),
         ...values,
+        password: '123456'
       };
-      setData([...data, newUser]);
-      message.success('User added successfully!');
+      try {
+        const res = await authApi.register(newUser);
+        console.log('res',res);
+        setData([...data, res.data.data]);
+        message.success('User added successfully!');
+      }  catch (err) {
+      }
       handleCancel();
     }).catch((info) => {
       console.log('Validate Failed:', info);
     });
   };
 
-  const handleDelete = (key) => {
-    setData(data.filter((item) => item.key !== key));
-    message.success('Record deleted successfully!');
+  const handleDelete = async (id) => {
+    try {
+        const res = await userApi.deleteUserByAdmin({id});
+        message.success('Record deleted successfully!');
+        getAllUsers()
+      }  catch (err) {
+      }
+   
   };
 
   const columns = [
@@ -110,7 +120,7 @@ const AdminUser = () => {
           />
           <Popconfirm
             title="Are you sure you want to delete this record?"
-            onConfirm={() => handleDelete(record.key)}
+            onConfirm={() => handleDelete(record._id)}
             okText="Yes"
             cancelText="No"
           >
@@ -234,9 +244,9 @@ const AdminUser = () => {
             rules={[{ required: true, message: 'Please select a role' }]}
           >
             <Select>
-              <Option value="Admin">Admin</Option>
-              <Option value="User">User</Option>
-              <Option value="System">System</Option>
+              <Option value="admin">Admin</Option>
+              <Option value="user">User</Option>
+              <Option value="system">System</Option>
             </Select>
           </Form.Item>
         </Form>

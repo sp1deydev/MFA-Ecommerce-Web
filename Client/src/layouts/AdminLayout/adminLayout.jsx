@@ -66,7 +66,7 @@ const AdminLayout = (props) => {
           <Menu.Item key="3" icon={<UserOutlined />} onClick={() => navigate('/admin/users')}>
             Users
           </Menu.Item>
-          <Menu.Item key="5" icon={<InfoCircleOutlined />}>
+          <Menu.Item key="5" icon={<InfoCircleOutlined />}  onClick={() => navigate('/admin/profile')}>
             Profile
           </Menu.Item>
           <Menu.Item key="11" icon={<LogoutOutlined />} danger onClick={handleLogout}>

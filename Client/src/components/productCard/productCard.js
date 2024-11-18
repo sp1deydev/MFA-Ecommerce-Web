@@ -10,7 +10,7 @@ const { Meta } = Card;
 const ProductCard = ({ product }) => {
   const navigate = useNavigate();
   const onViewProductDetail = () => {
-    navigate(`/products/${product.id}`);
+    navigate(`/products/${product._id}`);
     window.scrollTo({
       top: 0,
       behavior: 'smooth',

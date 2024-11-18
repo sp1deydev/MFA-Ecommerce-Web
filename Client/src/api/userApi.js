@@ -28,6 +28,9 @@ export const userApi = {
     deleteUser: (data) => {
         return axiosClient.delete('/users/delete', data);
     },
+    deleteUserByAdmin: (data) => {
+        return axiosClient.post('/users/delete-by-admin', data);
+    },
     config: (data) => {
         return axiosClient.post('/users/config', data);
     },

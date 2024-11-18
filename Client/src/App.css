@@ -50,10 +50,13 @@ html {
 }
 .product-card-price {
   margin-top: 4px;
+  color: #0066CC !important;
 }
 .product-card-name {
   margin-top: -8px;
-  height: 44px;
+  height: 46px;
+  font-size: 16px;
+  font-weight: 600;
   display: -webkit-box;
   -webkit-line-clamp: 2; /* Limit to 2 lines */
   -webkit-box-orient: vertical;
