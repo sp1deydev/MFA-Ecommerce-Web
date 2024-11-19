@@ -1,7 +1,10 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import { List, Card, Row, Col, InputNumber, Button, Space, Input } from "antd";
 import { DeleteOutlined, ShoppingOutlined } from "@ant-design/icons";
+import { cartApi } from '../../api/cartApi';
+import { vietnamCurrency } from '../../helpers/currency';
+import { toast } from 'react-toastify';
 
 const items = [
   {
@@ -76,16 +79,38 @@ Cart.propTypes = {
 
 function Cart(props) {
     const [cartItems, setCartItems] = useState(items);
+    const [cartId, setCartId] = useState();
+    const getCartItems = async () => {
+      try {
+        const cartData = await cartApi.getCartData();
+        setCartItems(cartData.data.data.products);
+        setCartId(cartData.data.data._id);
+        console.log(cartData)
+      }
+      catch (err) {
+
+      }
+    }
+    useEffect(() => {
+      getCartItems();
+    }, [])
 
   const updateQuantity = (id, value) => {
     const updatedItems = cartItems.map((item) =>
-      item.id === id ? { ...item, quantity: value } : item
+      item.productId === id ? { ...item, quantity: value } : item
     );
     setCartItems(updatedItems);
   };
 
-  const removeItem = (id) => {
-    setCartItems(cartItems.filter((item) => item.id !== id));
+  const removeItem = async (id) => {
+    try {
+      await cartApi.deleteProduct({ id: cartId, productId: id});
+      getCartItems();
+      toast.success('Delete product in cart successfully')
+    }
+    catch (err) {
+      toast.success('Delete error')
+    }
   };
 
   return (
@@ -98,9 +123,9 @@ function Cart(props) {
           renderItem={(item) => (
             <Card style={{ marginBottom: "10px" }}>
               <Row align="middle">
-                <Col span={4}>
+                <Col span={3}>
                   <img
-                    src={item.img}
+                    src={`http://localhost:3001/${item.image}`}
                     alt={item.name}
                     style={{ width: "100%", maxWidth: "80px" }}
                   />
@@ -109,10 +134,13 @@ function Cart(props) {
                   <h3>{item.name}</h3>
                   <p>{item.description}</p>
                 </Col>
+                <Col span={3}>
+                  <h3>{vietnamCurrency(item.price)}</h3>
+                </Col>
                 <Col span={5}>
                   <Row>
                     <Button
-                      onClick={() => updateQuantity(item.id, item.quantity - 1)}
+                      onClick={() => updateQuantity(item.productId, item.quantity - 1)}
                       disabled={item.quantity === 1}
                     >
                       -
@@ -120,24 +148,24 @@ function Cart(props) {
                     <InputNumber
                       min={1}
                       value={item.quantity}
-                      onChange={(value) => updateQuantity(item.id, value)}
+                      onChange={(value) => updateQuantity(item.productId, value)}
                     />
                     <Button
-                      onClick={() => updateQuantity(item.id, item.quantity + 1)}
+                      onClick={() => updateQuantity(item.productId, item.quantity + 1)}
                     >
                       +
                     </Button>
                   </Row>
                 </Col>
-                <Col span={4}>
-                  <h3>$ {item.price.toFixed(2)}</h3>
+                <Col span={3}>
+                  <h3>{vietnamCurrency(item.price*item.quantity)}</h3>
                 </Col>
-                <Col span={2}>
+                <Col span={1}>
                   <Button
                     style={{color:'red'}}
                     type="text"
                     icon={<DeleteOutlined />}
-                    onClick={() => removeItem(item.id)}
+                    onClick={() => removeItem(item.productId)}
                   />
                 </Col>
               </Row>
@@ -165,7 +193,7 @@ function Cart(props) {
                 Discount
             </div>
             <div>
-                - $0
+                - 0
             </div>
         </div>
         <div className='cart-check-out-info' style={{padding:'20px 0px 20px 0px'}}>

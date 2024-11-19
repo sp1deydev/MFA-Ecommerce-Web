@@ -4,6 +4,9 @@ export const productApi = {
     getAllProducts: (data) => {
         return axiosClient.get('/products', {params: data});
     },
+    getProdutById: (data) => {
+        return axiosClient.get('/products/details', {params: data});
+    },
     updateProduct: (data) => {
         return axiosClient.put('/products', data);
     },

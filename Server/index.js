@@ -51,6 +51,7 @@ const imageRoute = require('./app/routers/image');
 const systemRoute = require('./app/routers/systemConfig'); 
 const otpRoute = require('./app/routers/otp'); 
 const categoryRoute = require('./app/routers/category'); 
+const cartRoute = require('./app/routers/cart'); 
 
 
 
@@ -62,6 +63,7 @@ app.use('/images', imageRoute);
 app.use('/system', systemRoute);
 app.use('/otp', otpRoute);
 app.use('/categories', categoryRoute);
+app.use('/carts', cartRoute);
 
 
 

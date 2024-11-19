@@ -11,6 +11,7 @@ import handleAuthToken from '../../utils/handleAuthToken';
 import { handleSessionStorage } from '../../utils/handleSessionStorage';
 import Loading from '../../components/loading';
 import OTP from '../../components/OTP/otp';
+import { cartApi } from '../../api/cartApi';
 
 Login.propTypes = {
     
@@ -92,6 +93,7 @@ function Login(props) {
               handleLocalStorage.set('access_token', res.data.token);
             }
             handleSessionStorage.set('access_token', res.data.token);
+            await cartApi.getCartData()
             toast.success(res.data.message);
             dispatch(userSlice.actions.setIsLoading(false))
             

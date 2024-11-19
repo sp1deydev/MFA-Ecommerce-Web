@@ -7,6 +7,9 @@ import { vietnamCurrency } from '../../helpers/currency';
 import { GiftOutlined, PlusOutlined, ShoppingOutlined, FileProtectOutlined, InfoCircleOutlined, ShopOutlined } from '@ant-design/icons';
 import { Button, Row, Col } from 'antd';
 import ProductCard from '../../components/productCard/productCard';
+import { productApi } from '../../api/productApi';
+import { cartApi } from '../../api/cartApi';
+import { toast } from 'react-toastify';
 
 const { Title } = Typography;
 
@@ -17,6 +20,7 @@ ProductDetails.propTypes = {
 function ProductDetails(props) {
     const {productId} = useParams()
     const products = useSelector(state => state.product.productList)
+    const currentUser = useSelector(state => state.user.currentUser)
     const product =  products.find(product => product._id == productId); //use find() instead of filter() beacause I just want product object not a array
     const [recommendProducts, setRecommendProducts] = useState([]);
     useEffect(()=> {
@@ -25,6 +29,28 @@ function ProductDetails(props) {
         arr = arr.slice(0, 4);
         setRecommendProducts(arr);
     }, [product])
+    const handleAddToCart = async () => {
+        console.log(currentUser)
+        if(!currentUser.id) {
+            toast.error('Please login first');
+            return;
+        }
+        try {
+            const response = await productApi.getProdutById({id: productId});
+            const addedProduct = {
+                productId: productId,
+                name: response.data.data.name,
+                price: response.data.data.price,
+                image: response.data.data.image,
+                quantity: 1,
+            }
+            await cartApi.addToCart({product: addedProduct})
+            toast.success(`Add ${response.data.data.name} to cart successfully`);
+        }
+        catch (err) {
+            toast.error(`Get Error`);
+        }
+    };
     return (
         <div className='product-detail-container'>
             <div className='product-detail-sub-container'>
@@ -37,7 +63,7 @@ function ProductDetails(props) {
                         <div className='product-detail-promotion-content'>Shop your favorite items and enjoy 25% off on your entire purchase! Whether you're looking for the latest trends or timeless classics, now is the perfect time to refresh your wardrobe or stock up on essentials.</div>
                     </div>
                     <div className='product-detail-btn-group'>
-                        <Button type="" icon={<PlusOutlined />} style={{ height: "48px", width: "100%", fontSize: '16px'}}>
+                        <Button type="" icon={<PlusOutlined />} style={{ height: "48px", width: "100%", fontSize: '16px'}} onClick={handleAddToCart}>
                             Add To Cart
                         </Button>
                         <Button type="primary" icon={<ShoppingOutlined />} style={{backgroundColor: '#0066CC', height: "48px", width: "100%", fontSize: '16px'}}>
