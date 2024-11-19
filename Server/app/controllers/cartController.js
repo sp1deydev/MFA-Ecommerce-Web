@@ -38,12 +38,14 @@ const otpController = {
     },
     updateCart: async (req, res) => {
         const {id, products} = req.body
+        console.log(id, products)
         try {
             const updatedCart = await Cart.findByIdAndUpdate(
                 id, 
                 { products: products },
                 { new: true } // Return the updated document
             );
+            console.log(updatedCart)
             return res.status(200).json({data: updatedCart, success: true})
         } catch (error) {
             return res.status(500).json(err)

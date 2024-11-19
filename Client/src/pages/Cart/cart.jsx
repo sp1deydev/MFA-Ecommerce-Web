@@ -1,91 +1,34 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import PropTypes from 'prop-types';
 import { List, Card, Row, Col, InputNumber, Button, Space, Input } from "antd";
 import { DeleteOutlined, ShoppingOutlined } from "@ant-design/icons";
 import { cartApi } from '../../api/cartApi';
 import { vietnamCurrency } from '../../helpers/currency';
 import { toast } from 'react-toastify';
+import { debounce } from '../../utils/debounce';
 
-const items = [
-  {
-    id: 1,
-    name: "T Shirt ",
-    description: "Cotton Shirt Test",
-    price: 44.0,
-    quantity: 1,
-    img: "https://shopdunk.com/images/thumbs/0000569_alpine-green.webp",
-  },
-  {
-    id: 2,
-    name: "Smart Tivi Samsung Crystal UHD 4K 55 inch UA55AU7002 2 ",
-    description: "Cotton Shirt Test",
-    price: 44.0,
-    quantity: 1,
-    img: "https://shopdunk.com/images/thumbs/0000569_alpine-green.webp",
-  },
-  {
-    id: 3,
-    name: "Smart Tivi Samsung Crystal UHD 4K 55 inch UA55AU7002 2 ",
-    description: "Cotton Shirt Test",
-    price: 44.0,
-    quantity: 1,
-    img: "https://shopdunk.com/images/thumbs/0000569_alpine-green.webp",
-  },
-  {
-    id: 3,
-    name: "Smart Tivi Samsung Crystal UHD 4K 55 inch UA55AU7002 2 ",
-    description: "Cotton Shirt Test",
-    price: 44.0,
-    quantity: 1,
-    img: "https://shopdunk.com/images/thumbs/0000569_alpine-green.webp",
-  },
-  {
-    id: 3,
-    name: "Smart Tivi Samsung Crystal UHD 4K 55 inch UA55AU7002 2 ",
-    description: "Cotton Shirt Test",
-    price: 44.0,
-    quantity: 1,
-    img: "https://shopdunk.com/images/thumbs/0000569_alpine-green.webp",
-  },
-  {
-    id: 3,
-    name: "Smart Tivi Samsung Crystal UHD 4K 55 inch UA55AU7002 2 ",
-    description: "Cotton Shirt Test",
-    price: 44.0,
-    quantity: 1,
-    img: "https://shopdunk.com/images/thumbs/0000569_alpine-green.webp",
-  },
-  {
-    id: 3,
-    name: "Smart Tivi Samsung Crystal UHD 4K 55 inch UA55AU7002 2 ",
-    description: "Cotton Shirt Test",
-    price: 44.0,
-    quantity: 1,
-    img: "https://shopdunk.com/images/thumbs/0000569_alpine-green.webp",
-  },
-  {
-    id: 3,
-    name: "Smart Tivi Samsung Crystal UHD 4K 55 inch UA55AU7002 2 ",
-    description: "Cotton Shirt Test",
-    price: 44.0,
-    quantity: 1,
-    img: "https://shopdunk.com/images/thumbs/0000569_alpine-green.webp",
-  },
-];
+const items = [];
 
 Cart.propTypes = {
     
 };
 
+
 function Cart(props) {
     const [cartItems, setCartItems] = useState(items);
     const [cartId, setCartId] = useState();
+
+    const countTotalPrice = (products) => {
+        const total = products.reduce((total, item) => {
+          return total + (item.price*item.quantity);
+        }, 0)
+        return total;
+    }
     const getCartItems = async () => {
       try {
         const cartData = await cartApi.getCartData();
         setCartItems(cartData.data.data.products);
         setCartId(cartData.data.data._id);
-        console.log(cartData)
       }
       catch (err) {
 
@@ -95,11 +38,29 @@ function Cart(props) {
       getCartItems();
     }, [])
 
+  const updateCart = async (id, products) => {
+    try {
+      await cartApi.updateCart({id, products});
+      toast.success('Update quantity successfully')
+    }
+    catch (err) {
+      console.log(err)
+      toast.error('Update quantity error')
+    }
+  }
+  
+  const onChangeQuantity = useMemo(() => {
+    return debounce((id, products)=> updateCart(id, products), 1000)
+  }, [])
   const updateQuantity = (id, value) => {
+    const quantity = value ?? 1
     const updatedItems = cartItems.map((item) =>
-      item.productId === id ? { ...item, quantity: value } : item
-    );
-    setCartItems(updatedItems);
+      item.productId === id ? { ...item, quantity: quantity } : item
+  );
+  setCartItems(updatedItems);
+  if(quantity) {
+    onChangeQuantity(cartId, updatedItems)
+  }
   };
 
   const removeItem = async (id) => {
@@ -210,7 +171,7 @@ function Cart(props) {
                 Estimated Total
             </div>
             <div className='cart-bold-text'>
-                TBD
+                {vietnamCurrency(countTotalPrice(cartItems))}
             </div>
         </div>
         <div style={{textAlign: 'center', paddingTop:'40px'}}>
