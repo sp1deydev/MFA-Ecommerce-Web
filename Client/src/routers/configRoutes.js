@@ -18,6 +18,8 @@ import ContactUs from "../pages/ContactUs/contactus";
 import AdminProduct from "../pages/Admin/Products";
 import AdminCategory from "../pages/Admin/Categories";
 import AdminUser from "../pages/Admin/Users";
+import CheckOut from "../pages/CheckOut/Checkout";
+import ThankYou from "../pages/ThankYou/ThankYou";
 
 export const configRoutes = [
     {
@@ -45,6 +47,18 @@ export const configRoutes = [
         component: Cart,
         protected: true,
         rolePermissions: ['user', 'admin'],
+    },
+    {
+        path: '/checkout',
+        component: CheckOut,
+        // protected: true,
+        // rolePermissions: ['user', 'admin'],
+    },
+    {
+        path: '/thankyou',
+        component: ThankYou,
+        // protected: true,
+        // rolePermissions: ['user', 'admin'],
     },
     {
         path: '/userInfo/:userId',

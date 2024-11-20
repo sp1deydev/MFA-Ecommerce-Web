@@ -6,6 +6,7 @@ import { cartApi } from '../../api/cartApi';
 import { vietnamCurrency } from '../../helpers/currency';
 import { toast } from 'react-toastify';
 import { debounce } from '../../utils/debounce';
+import { useNavigate } from 'react-router-dom';
 
 const items = [];
 
@@ -13,8 +14,8 @@ Cart.propTypes = {
     
 };
 
-
 function Cart(props) {
+    const navigate = useNavigate()
     const [cartItems, setCartItems] = useState(items);
     const [cartId, setCartId] = useState();
 
@@ -180,7 +181,7 @@ function Cart(props) {
                     type='primary' 
                     style={{backgroundColor:'#0066CC'}}
                     icon={<ShoppingOutlined />}
-                    onClick={()=>alert('checkout')}
+                    onClick={()=>navigate('/checkout')}
                 >Check Out</Button>
         </div>
       </div>

@@ -1,11 +1,17 @@
 import { useState, useEffect, Fragment } from "react";
 import { Form, Input, Select, Button, Radio, Card, Row, Col, Typography, Divider, message } from "antd";
 import axios from "axios";
+import { cartApi } from "../../api/cartApi";
+import { vietnamCurrency } from "../../helpers/currency";
+import { useNavigate } from "react-router-dom";
 
 const { Title, Text } = Typography;
 
 const CheckOut = () => {
+  const navigate = useNavigate()
   const [form] = Form.useForm();
+  const [cartItems, setCartItems] = useState([]);
+  const [cartId, setCartId] = useState();
   const [cityOptions, setCityOptions] = useState([]);
   const [districtOptions, setDistrictOptions] = useState([]);
   const [wardOptions, setWardOptions] = useState([]);
@@ -17,14 +23,29 @@ const CheckOut = () => {
   const [loading, setLoading] = useState(false);
 
   const cart = {
-    products: [
-      { id: 1, name: "Franklin Merino Wool V-Neck Knit", price: 199.0, quantity: 1 },
-      { id: 2, name: "Judd Slim Dress Chino Pant", price: 159.0, quantity: 1 },
-      { id: 3, name: "Angus Shawl Cardigan", price: 199.99, quantity: 1 },
-    ],
     totalPrice: 557.99,
     discount: 0,
   };
+
+  const countTotalPrice = (products) => {
+    const total = products.reduce((total, item) => {
+      return total + (item.price*item.quantity);
+    }, 0)
+    return total;
+  }
+  const getCartItems = async () => {
+    try {
+      const cartData = await cartApi.getCartData();
+      setCartItems(cartData.data.data.products);
+      setCartId(cartData.data.data._id);
+    }
+    catch (err) {
+
+    }
+  }
+  useEffect(() => {
+    getCartItems();
+  }, [])
 
   useEffect(() => {
     const getCities = async () => {
@@ -70,11 +91,12 @@ const CheckOut = () => {
     const submissionData = {
         address: values.address,
         paymentMethod: values.paymentMethod,
+        status: 'pending',
         cityName,
         districtName,
         wardName,
-        totalPrice: 1200,
-        products: cart.products,
+        totalPrice: countTotalPrice(cartItems),
+        products: cartItems,
     };
 
     setTimeout(() => {
@@ -90,7 +112,7 @@ const CheckOut = () => {
         {/* Left Column */}
         <Col xs={24} lg={16}>
           <Card bordered={false} style={{ marginBottom: "24px" }}>
-            <Button type="link" style={{ marginBottom: "12px" }}>← Back</Button>
+            <Button type="link" style={{ marginBottom: "12px" }} onClick={() => navigate(-1)}>← Back</Button>
             <Form
               form={form}
               layout="vertical"
@@ -173,7 +195,7 @@ const CheckOut = () => {
                 style={{ width: "100%", marginTop: "16px" }}
                 loading={loading}
               >
-                Confirm Payment ${cart.totalPrice}
+                Confirm Payment {vietnamCurrency(countTotalPrice(cartItems))}
               </Button>
             </Form>
           </Card>
@@ -183,25 +205,29 @@ const CheckOut = () => {
         <Col xs={24} lg={8}>
           <Card bordered={false}>
             <Title level={4}>Order Summary</Title>
-            {cart.products.map((product) => (
-              <Row key={product.id} justify="space-between" style={{ marginBottom: "8px" }}>
-                <Text>{product.name}</Text>
-                <Text>${product.price.toFixed(2)}</Text>
+            {cartItems?.map((product) => (
+              <Row key={product._id} justify="space-between" style={{ marginBottom: "8px" }}>
+                <Col span={12}>
+                  <Text>{product.name}</Text>
+                </Col>
+                <Col>
+                  <Text>{vietnamCurrency(product.price)} x {product.quantity}</Text>
+                </Col>
               </Row>
             ))}
             <Divider />
             <Row justify="space-between">
               <Text>Delivery</Text>
-              <Text>${0}</Text>
+              <Text>{vietnamCurrency(0)}</Text>
             </Row>
             <Row justify="space-between">
               <Text>Tax</Text>
-              <Text>${0}</Text>
+              <Text>{vietnamCurrency(0)}</Text>
             </Row>
             <Divider />
             <Row justify="space-between" style={{ fontWeight: "bold" }}>
               <Text>Total</Text>
-              <Text>${(cart.totalPrice).toFixed(2)}</Text>
+              <Text>{vietnamCurrency(countTotalPrice(cartItems))}</Text>
             </Row>
           </Card>
         </Col>
