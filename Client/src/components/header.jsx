@@ -12,6 +12,7 @@ import {
     SmileOutlined,
     FrownOutlined,
     ShoppingCartOutlined,
+    ShoppingOutlined,
 } from '@ant-design/icons';
 import { useDispatch, useSelector } from 'react-redux';
 import { userSlice } from '../redux/userSlice';
@@ -53,6 +54,9 @@ function HeaderBar(props) {
     }
     const handleProfile = () => {
        navigate(`/userInfo/${currentUser.id}`);  
+    }
+    const handleOrder = () => {
+       navigate(`/purchase-order`);  
     }
     const handleLogout = () => {
         handleAuthToken();
@@ -105,6 +109,12 @@ function HeaderBar(props) {
                   icon: <UserOutlined />,
                   label: 'My Profile',
                   onClick: handleProfile,
+                },
+                {
+                  key: '8',
+                  icon: <ShoppingOutlined />,
+                  label: 'My Orders',
+                  onClick: handleOrder,
                 },
                 {
                   key: '5',
