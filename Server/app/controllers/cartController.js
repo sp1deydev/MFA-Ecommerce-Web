@@ -2,7 +2,7 @@ const express = require('express');
 const Cart = require('../models/cart');
 const bcrypt = require("bcrypt");
 
-const otpController = {
+const cartController = {
     
     getCartByUserId: async (req, res) => {
         const {userId} = req 
@@ -82,4 +82,4 @@ const otpController = {
     },
 }
 
-module.exports = otpController;
+module.exports = cartController;

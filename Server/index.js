@@ -52,6 +52,7 @@ const systemRoute = require('./app/routers/systemConfig');
 const otpRoute = require('./app/routers/otp'); 
 const categoryRoute = require('./app/routers/category'); 
 const cartRoute = require('./app/routers/cart'); 
+const orderRoute = require('./app/routers/order'); 
 
 
 
@@ -64,6 +65,7 @@ app.use('/system', systemRoute);
 app.use('/otp', otpRoute);
 app.use('/categories', categoryRoute);
 app.use('/carts', cartRoute);
+app.use('/orders', orderRoute);
 
 
 

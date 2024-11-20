@@ -20,6 +20,8 @@ import AdminCategory from "../pages/Admin/Categories";
 import AdminUser from "../pages/Admin/Users";
 import CheckOut from "../pages/CheckOut/Checkout";
 import ThankYou from "../pages/ThankYou/ThankYou";
+import AdminPurchaseOrder from "../pages/Admin/PurchaseOrder";
+import PurchaseOrder from "../pages/Orders/order";
 
 export const configRoutes = [
     {
@@ -112,6 +114,15 @@ export const configRoutes = [
         path: '/admin/dashboard',
         component: Dashboard,
         layout: ADMIN_LAYOUT
+    },
+    {
+        path: '/admin/purchase-order',
+        component: AdminPurchaseOrder,
+        layout: ADMIN_LAYOUT
+    },
+    {
+        path: '/purchase-order',
+        component: PurchaseOrder,
     },
     {
         path: '/admin/products',

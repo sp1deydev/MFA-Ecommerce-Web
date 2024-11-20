@@ -4,6 +4,8 @@ import axios from "axios";
 import { cartApi } from "../../api/cartApi";
 import { vietnamCurrency } from "../../helpers/currency";
 import { useNavigate } from "react-router-dom";
+import { orderApi } from "../../api/orderApi";
+import { toast } from "react-toastify";
 
 const { Title, Text } = Typography;
 
@@ -80,7 +82,7 @@ const CheckOut = () => {
     }
   };
 
-  const handleOrderSubmit = (values) => {
+  const handleOrderSubmit = async (values) => {
     setLoading(true);
 
     // Extract selected city, district, and ward names
@@ -98,12 +100,18 @@ const CheckOut = () => {
         totalPrice: countTotalPrice(cartItems),
         products: cartItems,
     };
-
-    setTimeout(() => {
-      console.log("Order submitted with values:", submissionData);
-      message.success("Order placed successfully!");
+    try {
+      await orderApi.create({requestOrder: submissionData, cartId: cartId});
+      setTimeout(() => {
+        message.success("Order placed successfully!");
+        navigate('/thankyou')
+        setLoading(false);
+      }, 1000)
+    }
+    catch (err) {
+      toast.error('Order error: ' + err.message);
       setLoading(false);
-    }, 2000);
+    }
   };
 
   return (
@@ -194,6 +202,7 @@ const CheckOut = () => {
                 htmlType="submit"
                 style={{ width: "100%", marginTop: "16px" }}
                 loading={loading}
+                disabled={!cartItems.length}
               >
                 Confirm Payment {vietnamCurrency(countTotalPrice(cartItems))}
               </Button>

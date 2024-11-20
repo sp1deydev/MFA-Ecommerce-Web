@@ -19,7 +19,7 @@ const ThankYou = () => {
         <Button type="primary" key="home" onClick={handleBackToHome}>
           Back to Home
         </Button>,
-        <Button key="orders">View My Orders</Button>,
+        <Button key="orders" onClick={()=>navigate('/purchase-order')}>View My Orders</Button>,
       ]}
     />
   );

@@ -54,7 +54,7 @@ const AdminLayout = (props) => {
           <Menu.Item key="1" icon={<PieChartOutlined />} onClick={() => navigate('/admin/dashboard')}>
             Dashboard
           </Menu.Item>
-          <Menu.Item key="10" icon={<ShoppingOutlined />}>
+          <Menu.Item key="10" icon={<ShoppingOutlined />} onClick={() => navigate('/admin/purchase-order')}>
             Purchase Orders
           </Menu.Item>
           <Menu.Item key="2" icon={<ShopOutlined />} onClick={() => navigate('/admin/products')}>
