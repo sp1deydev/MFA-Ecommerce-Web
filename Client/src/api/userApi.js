@@ -4,6 +4,9 @@ export const userApi = {
     getAllUsers: () => {
         return axiosClient.get('/users');
     },
+    getUserCount: () => {
+        return axiosClient.get('/users/count');
+    },
     updateUser: (data) => {
         return axiosClient.put('/users/update', data);
     },

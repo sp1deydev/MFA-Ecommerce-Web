@@ -125,6 +125,10 @@ useEffect(() => {
           navigate(`/system/settings`); //home
           return;
         }
+        if(window.location.pathname.includes('admin')) {
+          navigate(`/admin/dashboard`); //home
+          return;
+        }
         navigate(`/`); //home
       }
     }

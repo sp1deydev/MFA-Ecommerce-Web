@@ -6,6 +6,7 @@ const { isAdmin } = require('../middleware/isAdmin');
 
 
 router.get('/', checkLogin, isAdmin, userController.getAllUsers);
+router.get('/count', checkLogin, isAdmin, userController.getUserCount);
 router.put('/update-role', checkLogin, isAdmin, userController.updateRole);
 router.put('/change-password', checkLogin, userController.changePassword);
 router.post('/check-password', checkLogin, userController.checkPassword);

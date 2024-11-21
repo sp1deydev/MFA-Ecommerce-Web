@@ -61,11 +61,14 @@ const isLoading = useSelector(state => state.user.isLoading)
 const isAuthenticated2FA = useSelector((state)=> state.user.isAuthenticated2FA);
   useEffect(() => {
       if (!currentUser.isMFA && window.location.pathname.includes('forgot')) {
-        console.log('here')
         if(currentUser.role == 'system') {
         navigate(`/system/mfa-authentication`); //home
-        
+        }
       }
+      if (!currentUser.isMFA && window.location.pathname.includes('forgot')) {
+        if(currentUser.role == 'admin') {
+        navigate(`/admin/mfa-authentication`); //home
+        }
       }
       if(!currentUser.isMFA && currentUser.isConfig) {
         toast.warn(`You have to authenticate 2FA before and go to Profile to config 2FA`)

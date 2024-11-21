@@ -4,15 +4,35 @@ const Cart = require('../models/cart');
 
 const orderController = {
     getAllOrders: (req, res) => {
-        Order.find().select('_id address cityName districtName wardName status paymentMethod totalPrice')
-        .then(result => {
-            if (result) {
-                return res.status(200).json({ data: result, status: true });
-            } else {
-                return res.status(400).json({ message: "Bad Request", status: false });
-            }
-        })
-        .catch(err => res.status(400).json({ message: "Internal Server Err" }));
+        const page = parseInt(req.query.page) || 1; 
+        const limit = req.query.limit ? parseInt(req.query.limit) : null;
+        const order = req.query.order === 'desc' ? -1 : 1;
+    
+        const skip = limit ? (page - 1) * limit : 0;
+        let query = Order.find().sort({ createdAt: order }).skip(skip).select('_id address cityName districtName wardName status paymentMethod totalPrice');
+    
+        if (limit) {
+            query = query.limit(limit);
+        }
+    
+        query
+            .then(result => {
+                Order.countDocuments()
+                    .then(totalCount => {
+                        const totalPages = limit ? Math.ceil(totalCount / limit) : 1;
+                        res.status(200).json({
+                            data: result,
+                            meta: {
+                                totalCount, 
+                                totalPages, 
+                                currentPage: limit ? page : 1,
+                                limit: limit || 'all',
+                            }
+                        });
+                    })
+                    .catch(err => res.status(500).json(err));
+            })
+            .catch(err => res.status(500).json(err));
     },
     getOrdersByUserId: async (req, res) => {
         const {userId} = req 

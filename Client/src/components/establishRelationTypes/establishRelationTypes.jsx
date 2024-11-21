@@ -93,10 +93,11 @@ const EstablishRelationTypes = () => {
         const newSelectedImagesInfo = [...selectedImagesInfo];
         newSelectedImagesInfo.push(images[index])
         setSelectedImagesInfo(newSelectedImagesInfo);
-    }
-    if(!newSelectedImages[index]) {
+      }
+      if(!newSelectedImages[index]) {
         let newSelectedImagesInfo = [...selectedImagesInfo];
-        newSelectedImagesInfo.splice(index, 1)
+        const subIndex =  newSelectedImagesInfo.findIndex(image => image.uid == images[index].uid)
+        newSelectedImagesInfo.splice(subIndex, 1)
         setSelectedImagesInfo(newSelectedImagesInfo);
     }
 
@@ -155,7 +156,6 @@ const EstablishRelationTypes = () => {
   };
 
   const handleChange = (value) => {
-    console.log(`Selected: ${value}`);
     setSelectedRelationType(value)
   };
   const handleReset = (value) => {

@@ -115,7 +115,9 @@ function UserInfo(props) {
         dispatch(mfaSlice.actions.setRelationships(responese.data.result.relationships))
         if(window.location.pathname.includes('system')) {
           navigate('/system/mfa-configuration')
-
+        }
+        if(window.location.pathname.includes('admin')) {
+          navigate('/admin/mfa-configuration')
         }
         else {
           navigate('/mfa-configuration')

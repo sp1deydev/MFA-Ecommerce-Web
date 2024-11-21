@@ -342,6 +342,16 @@ const userController = {
         })
         .catch(err => console.error(err))
     },
+    getUserCount: (req, res) => {
+        User.countDocuments()
+            .then(totalCount => {
+                res.status(200).json({
+                    data: totalCount, 
+                    success: true,
+                });
+            })
+            .catch(err => res.status(500).json(err));
+    }
 }
 
 module.exports = userController;

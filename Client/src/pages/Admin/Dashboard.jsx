@@ -1,85 +1,82 @@
-import React from 'react';
 import {
-    Col, Row, Typography, Spin, Card, Empty, Table, Breadcrumb, BackTop
-} from 'antd';
-import {
-    DashboardOutlined, HomeOutlined, ContactsTwoTone, ShopTwoTone, HddTwoTone, ShoppingTwoTone
+    ContactsTwoTone,
+    HddTwoTone, ShoppingTwoTone,
+    ShopTwoTone
 } from '@ant-design/icons';
 import {
-    ComposedChart,
-    Line,
-    Area,
+    BackTop,
+    Card,
+    Col, Row,
+    Spin,
+    Table,
+    Tag,
+    Typography
+} from 'antd';
+import React, { useEffect, useState } from 'react';
+import {
     Bar,
-    XAxis,
-    YAxis,
     CartesianGrid,
-    Tooltip,
+    ComposedChart,
     Legend,
+    Line,
     ResponsiveContainer,
-  } from 'recharts';
+    Tooltip,
+    XAxis,
+    YAxis
+} from 'recharts';
+import { orderApi } from '../../api/orderApi';
+import { vietnamCurrency } from '../../helpers/currency';
+import { userApi } from '../../api/userApi';
+import { categoryApi } from '../../api/categoryApi';
+import { productApi } from '../../api/productApi';
 
 
 const { Title } = Typography;
 
 const Dashboard = () => {
-    const statisticList = {
-        userTotal: 150,
-        productTotal: 200,
-        categoryTotal: 20,
-        orderTotal: 120
-    };
-
-    const order = [
-        {
-            key: '1',
-            user: { username: 'John Doe', email: 'john@example.com' },
-            orderTotal: '100.00',
-            billing: 'Credit Card',
-            status: 'Pending',
-        },
-        {
-            key: '2',
-            user: { username: 'Jane Smith', email: 'jane@example.com' },
-            orderTotal: '250.00',
-            billing: 'PayPal',
-            status: 'Completed',
-        },
-        {
-            key: '3',
-            user: { username: 'Jane Smith', email: 'jane@example.com' },
-            orderTotal: '250.00',
-            billing: 'PayPal',
-            status: 'Completed',
-        },
-        {
-            key: '4',
-            user: { username: 'Jane Smith', email: 'jane@example.com' },
-            orderTotal: '250.00',
-            billing: 'PayPal',
-            status: 'Completed',
-        },
-        {
-            key: '5',
-            user: { username: 'Jane Smith', email: 'jane@example.com' },
-            orderTotal: '250.00',
-            billing: 'PayPal',
-            status: 'Completed',
-        },
-        {
-            key: '6',
-            user: { username: 'Jane Smith', email: 'jane@example.com' },
-            orderTotal: '250.00',
-            billing: 'PayPal',
-            status: 'Completed',
-        },
-        {
-            key: '7',
-            user: { username: 'Jane Smith', email: 'jane@example.com' },
-            orderTotal: '250.00',
-            billing: 'PayPal',
-            status: 'Completed',
-        },
-    ];
+    const [statisticList, setStatisticList] = useState({
+        userTotal: 0,
+        productTotal: 0,
+        categoryTotal: 0,
+        orderTotal: 0
+    })
+    console.log('list', statisticList)
+    const statusColors = {
+        pending: 'orange',
+        completed: 'green',
+        cancelled: 'red',
+        delivered: 'blue',
+      };
+      const paymentMethodColors = {
+        cod: 'purple',
+        paypal: 'cyan',
+      };
+     const [purchaseOrders, setPurchaseOrders] = useState([]);
+     const getData = async () => {
+        try {
+          const response = await orderApi.getAllOrders({limit: 3, order: 'desc'});
+          const userCount = await userApi.getUserCount();
+          const categoryCount = await categoryApi.getCategoryCount();
+          const productCount = await productApi.getProductCount();
+          setStatisticList({
+            ...statisticList,
+            productTotal:productCount.data.data,
+            categoryTotal: categoryCount.data.data,
+            orderTotal:response.data.meta.totalCount,
+            userTotal:userCount.data.data
+          });
+          setPurchaseOrders(response.data.data);
+        } catch (err) {}
+      };
+     const getUserCount = async () => {
+        try {
+        } catch (err) {}
+      };
+    
+      useEffect(() => {
+        getData();
+      }, []);
+    
 
     const data = [
         { name: 'Jan', total: 30 },
@@ -97,47 +94,34 @@ const Dashboard = () => {
     ];
 
     const columns = [
+        // { title: 'ID', dataIndex: '_id', key: '_id' },
+        // { title: 'Address', dataIndex: 'address', key: 'address' },
+        { title: 'City', dataIndex: 'cityName', key: 'cityName' },
+        { title: 'District', dataIndex: 'districtName', key: 'districtName' },
+        { title: 'Ward', dataIndex: 'wardName', key: 'wardName' },
+        { title: 'Total Price', dataIndex: 'totalPrice', key: 'totalPrice', 
+            render: (totalPrice) => (
+                <Tag color={'#3C3D37'}>{vietnamCurrency(totalPrice)}</Tag>
+              ),
+         },
         {
-            title: 'ID',
-            key: 'index',
-            render: (text, record, index) => index + 1,
+          title: 'Payment Method',
+          dataIndex: 'paymentMethod',
+          key: 'paymentMethod',
+          render: (paymentMethod) => (
+            <Tag color={paymentMethodColors[paymentMethod]}>{paymentMethod}</Tag>
+          ),
         },
         {
-            title: 'Tên',
-            dataIndex: 'user',
-            key: 'user',
-            render: (text) => <a>{text.username}</a>,
+          title: 'Status',
+          dataIndex: 'status',
+          key: 'status',
+          render: (status) => (
+            <Tag color={statusColors[status]}>{status}</Tag>
+          ),
         },
-        {
-            title: 'Email',
-            dataIndex: 'user',
-            key: 'user',
-            render: (text) => <a>{text.email}</a>,
-        },
-        {
-            title: 'Tổng tiền',
-            dataIndex: 'orderTotal',
-            key: 'orderTotal',
-            render: (text) => <a>{text}</a>,
-        },
-        {
-            title: 'Hình thức thanh toán',
-            dataIndex: 'billing',
-            key: 'billing',
-        },
-        {
-            title: 'Trạng thái',
-            key: 'status',
-            dataIndex: 'status',
-            render: (slugs) => (
-                <span>
-                    <span key={slugs}>
-                        {slugs?.toUpperCase()}
-                    </span>
-                </span>
-            ),
-        },
-    ];
+    
+      ];
 
     return (
         <div>
@@ -223,12 +207,7 @@ const Dashboard = () => {
                             <div className='chart'>
                                 <Typography.Title level={4}>Newest Purchase Orders</Typography.Title>
                                 <div style={{ marginTop: 10 }}>
-                                    <Table columns={columns} 
-                                      pagination={{
-                                        pageSize: 3,
-                                        position: ['bottomCenter']
-                                      }}
-                                    dataSource={order} />
+                                <Table columns={columns} dataSource={purchaseOrders} pagination={false}/>
                                 </div>
                             </div>
                         </Col>
