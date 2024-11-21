@@ -7,6 +7,16 @@ const categoryController = {
             .then(result => res.status(200).json({data: result, success: true}))
             .catch(err => res.status(500).json(err))
     },
+    getCategoryCount: (req, res) => {
+        Category.countDocuments()
+        .then(totalCount => {
+            res.status(200).json({
+                data: totalCount, 
+                success: true,
+            });
+        })
+        .catch(err => res.status(500).json(err));
+    },
     createCategory: (req, res) => {
         const { name, description } = req.body
         if( !name || !description ) {

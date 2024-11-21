@@ -63,7 +63,17 @@ const productController = {
         Product.findByIdAndUpdate(id, { name, price, description, image, quantity, category }, {new: true})
             .then(result => res.status(200).json(result))
             .catch(err => res.status(500).json(err))
-    }
+    },
+    getProductCount: (req, res) => {
+        Product.countDocuments()
+        .then(totalCount => {
+            res.status(200).json({
+                data: totalCount, 
+                success: true
+            });
+        })
+        .catch(err => res.status(500).json(err));
+    },
 }
 
 module.exports = productController;

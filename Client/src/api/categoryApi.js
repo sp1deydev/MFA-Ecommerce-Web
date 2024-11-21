@@ -4,6 +4,9 @@ export const categoryApi = {
     getAllCategories: () => {
         return axiosClient.get('/categories/');
     },
+    getCategoryCount: () => {
+        return axiosClient.get('/categories/count');
+    },
     create: (data) => {
         return axiosClient.post('/categories/', data);
     },
