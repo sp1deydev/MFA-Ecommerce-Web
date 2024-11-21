@@ -97,6 +97,18 @@ export const configRoutes = [
         rolePermissions: ['system'],
     },
     {
+        path: '/admin/mfa-configuration',
+        component: MFAConfiguration,
+        layout: ADMIN_LAYOUT,
+        rolePermissions: ['admin'],
+    },
+    {
+        path: '/admin/mfa-authentication',
+        component: MFA,
+        layout: ADMIN_LAYOUT,
+        rolePermissions: ['admin'],
+    },
+    {
         path: '/products/:productId',
         component: ProductDetails,
     },
@@ -106,19 +118,18 @@ export const configRoutes = [
         layout: NO_LAYOUT
     },
     {
-        path: '/admin/test',
-        component: LoginAdmin,
-        layout: ADMIN_LAYOUT
-    },
-    {
         path: '/admin/dashboard',
         component: Dashboard,
-        layout: ADMIN_LAYOUT
+        layout: ADMIN_LAYOUT,
+        protected: true,
+        rolePermissions: ['admin'],
     },
     {
         path: '/admin/purchase-order',
         component: AdminPurchaseOrder,
-        layout: ADMIN_LAYOUT
+        layout: ADMIN_LAYOUT,
+        protected: true,
+        rolePermissions: ['admin'],
     },
     {
         path: '/purchase-order',
@@ -127,22 +138,30 @@ export const configRoutes = [
     {
         path: '/admin/products',
         component: AdminProduct,
-        layout: ADMIN_LAYOUT
+        layout: ADMIN_LAYOUT,
+        protected: true,
+        rolePermissions: ['admin'],
     },
     {
         path: '/admin/categories',
         component: AdminCategory,
-        layout: ADMIN_LAYOUT
+        layout: ADMIN_LAYOUT,
+        protected: true,
+        rolePermissions: ['admin'],
     },
     {
         path: '/admin/users',
         component: AdminUser,
-        layout: ADMIN_LAYOUT
+        layout: ADMIN_LAYOUT,
+        protected: true,
+        rolePermissions: ['admin'],
     },
     {
         path: '/admin/profile',
         component: UserInfo,
-        layout: ADMIN_LAYOUT
+        layout: ADMIN_LAYOUT,
+        protected: true,
+        rolePermissions: ['admin'],
     },
     {
         path: '/system/login',

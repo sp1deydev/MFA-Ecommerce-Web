@@ -22,6 +22,7 @@ import handleAuthToken from '../utils/handleAuthToken';
 import { toast } from 'react-toastify';
 import { handleSessionStorage } from '../utils/handleSessionStorage';
 import { Typography } from 'antd';
+import { mfaSlice } from '../redux/mfaSlice';
 
 const { Text } = Typography;
 
@@ -63,6 +64,9 @@ function HeaderBar(props) {
         handleLocalStorage.remove('access_token');
         handleSessionStorage.remove('access_token');
         dispatch(userSlice.actions.removeCurrentUser());
+        dispatch(mfaSlice.actions.setImageList([]));
+        dispatch(mfaSlice.actions.setRelationTypes([]));
+        dispatch(mfaSlice.actions.setRelationships([]));
         navigate('/home');
     }
 

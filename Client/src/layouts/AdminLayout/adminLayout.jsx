@@ -15,6 +15,8 @@ import { handleSessionStorage } from '../../utils/handleSessionStorage';
 import { useDispatch } from 'react-redux';
 import { userSlice } from '../../redux/userSlice';
 import { useNavigate } from 'react-router-dom';
+import { mfaSlice } from '../../redux/mfaSlice';
+import { handleLocalStorage } from '../../utils/handleLocalStorage';
 
 const { Header, Content, Footer, Sider } = Layout;
 const { SubMenu } = Menu;
@@ -28,10 +30,14 @@ const AdminLayout = (props) => {
     setCollapsed(collapsed);
   };
   const handleLogout = () => {
-    // navigate('/system/login');
     handleAuthToken();
+    handleLocalStorage.remove('access_token');
     handleSessionStorage.remove('access_token');
     dispatch(userSlice.actions.removeCurrentUser());
+    dispatch(mfaSlice.actions.setImageList([]));
+    dispatch(mfaSlice.actions.setRelationTypes([]));
+    dispatch(mfaSlice.actions.setRelationships([]));
+    navigate('/admin/login');
     }
 
   return (

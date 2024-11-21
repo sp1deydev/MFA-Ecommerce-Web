@@ -50,12 +50,14 @@ const AdminUser = () => {
   };
 
   const handleSave = () => {
-    form.validateFields().then((values) => {
-      const updatedData = data.map((item) =>
-        item.key === editingRecord.key ? { ...item, role: values.role } : item
-      );
-      setData(updatedData);
-      message.success('Role updated successfully!');
+    form.validateFields().then(async (values) => {
+      try {
+        await userApi.updateRole({ role: values.role, id: editingRecord._id });
+        getAllUsers();
+        message.success('Role updated successfully!');
+      } catch (err) {
+        message.error('Role update failed!');
+      }
       handleCancel();
     }).catch((info) => {
       console.log('Validate Failed:', info);

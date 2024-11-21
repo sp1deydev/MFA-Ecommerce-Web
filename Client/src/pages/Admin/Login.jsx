@@ -10,6 +10,8 @@ import { handleLocalStorage } from '../../utils/handleLocalStorage';
 import handleAuthToken from '../../utils/handleAuthToken';
 import { handleSessionStorage } from '../../utils/handleSessionStorage';
 import Loading from '../../components/loading';
+import { mfaSlice } from '../../redux/mfaSlice';
+import OTP from '../../components/OTP/otp';
 
 LoginAdmin.propTypes = {
     
@@ -31,34 +33,36 @@ function LoginAdmin(props) {
     const navigate = useNavigate();
     const currentUser = useSelector((state)=> state.user.currentUser) || {};
     const isLoading = useSelector((state)=> state.user.isLoading)
+    const systemConfiguration = useSelector((state) => state.mfa.systemConfiguration)
     const [form] = Form.useForm();
     const dispatch = useDispatch()
 
     const [searchParams, setSearchParams] = useSearchParams();
 
     useEffect(() => {
-      if (Object.keys(currentUser).length !== 0 && searchParams.get('redirect')) {
+      if (Object.keys(currentUser).length !== 0 && searchParams.get('redirect') && systemConfiguration.id && currentUser.role == 'admin') {
         if(currentUser.isConfig) {
           toast.info('Please authenticate 2nd factor authentication first')
-          navigate(`${`/mfa-authentication?redirect=`}${searchParams.get('redirect')}`);
+          navigate(`${`/admin/mfa-authentication?redirect=`}${searchParams.get('redirect')}`);
         }
         else {
           toast.info('Please config 2nd factor authentication first')
-          navigate(`${`/mfa-configuration?redirect=`}${searchParams.get('redirect')}`);
+          navigate(`${`/admin/mfa-configuration?redirect=`}${searchParams.get('redirect')}`);
         }
       }
       
-      if (Object.keys(currentUser).length !== 0 && !searchParams.get('redirect')) {
+      if (Object.keys(currentUser).length !== 0 && !searchParams.get('redirect') && systemConfiguration.id && currentUser.role == 'admin') {
         if(currentUser.isConfig) {
           toast.info('Please authenticate 2nd factor authentication first')
-          navigate(`/mfa-authentication`);
+          navigate(`/admin/mfa-authentication`);
         }
         else {
           toast.info('Please config 2nd factor authentication first')
-          navigate(`/mfa-configuration`);
+          navigate(`/admin/mfa-configuration`);
         }
       }
     }, [currentUser, searchParams, navigate]);
+
 
       const onFinish = (values) => {
         form.validateFields().then(async (values) => {
@@ -80,44 +84,64 @@ function LoginAdmin(props) {
               lastname: user.lastname,
               email: user.email,
               role: user.role,
+              isConfig: user.isConfig,
               createdAt: user.createdAt,
             };
             dispatch(userSlice.actions.setCurrentUser(currentUser));
             handleAuthToken(res.data.token);
+            if(currentUser.role != 'admin') {
+              toast.error('Please use admin account')
+              form.resetFields();
+            }
             if(values.remember) {
               handleLocalStorage.set('access_token', res.data.token);
             }
             handleSessionStorage.set('access_token', res.data.token);
-            toast.success(res.data.message);
             dispatch(userSlice.actions.setIsLoading(false))
+            dispatch(mfaSlice.actions.setIsLoading(false))
             
-            if (searchParams.get('redirect')) {
-              navigate(searchParams.get('redirect'));
-            } else {
-              navigate('/');
-            }
+            // if (searchParams.get('redirect')) {
+            //   navigate(searchParams.get('redirect'));
+            // } else {
+            //   navigate('/admin/dashboard');
+            // }
           } catch (error) {
             const errorMessage =
             error.response.data?.message ||
             'Có lỗi xảy ra phía máy chủ, vui lòng thử lại!';
             toast.error(errorMessage);
+            dispatch(mfaSlice.actions.setIsLoading(false))
             dispatch(userSlice.actions.setIsLoading(false))
           }
-            //
+            if(currentUser.role == 'admin' && !isLoading) {
             if (searchParams.get('redirect')) {
-              navigate(searchParams.get('redirect'));
+              if(currentUser.isConfig) {
+                toast.info('Please authenticate 2nd factor authentication first')
+                navigate(`${`/admin/mfa-authentication?redirect=`}${searchParams.get('redirect')}`);
+              }
+              else {
+                toast.info('Please config 2nd factor authentication first')
+                navigate(`${`/admin/mfa-configuration?redirect=`}${searchParams.get('redirect')}`);
+              }
             } else {
-              navigate('/');
+              if(currentUser.isConfig) {
+                toast.info('Please authenticate 2nd factor authentication first')
+                navigate(`/admin/mfa-authentication`);
+              }
+              else {
+                toast.info('Please config 2nd factor authentication first')
+                navigate(`/admin/mfa-configuration`);
+              }
             }
+          }
+          
+
       }).catch((err) => {
             // form validation failed
             console.log(err)
         })
       };
 
-      const handleRegiterClick = () => {
-        navigate('/register')
-      }
     
 
     return (
@@ -145,20 +169,12 @@ function LoginAdmin(props) {
               <Input.Password placeholder="Password" />
             </Form.Item>
 
-            <Form.Item
+           <Form.Item
               style={{
-                marginLeft: "33%",
+                marginLeft: "63%",
                 width: "700px",
-                marginBottom: "-8px",
               }}
             >
-              <Form.Item
-                name="remember"
-                valuePropName="checked"
-                style={{ display: "inline-block", width: "calc(50% - 8px)" }}
-              >
-                <Checkbox>Remember me</Checkbox>
-              </Form.Item>
               <Link
                 style={{
                   display: "inline-block",
@@ -166,12 +182,17 @@ function LoginAdmin(props) {
                   lineHeight: "32px",
                   margin: "0px 0px 0px 8px",
                 }}
+                onClick={() => dispatch(userSlice.actions.setForgotFactor('password'))}
               >
                 Forgot Password?
               </Link>
             </Form.Item>
 
-            <Form.Item {...tailLayout}>
+            <Form.Item {...tailLayout}  style={{
+                marginLeft: "30%",
+                width:'fit-content',
+                marginTop: "-54px",
+              }}>
                 <Button type="primary" htmlType="submit">
                   {isLoading && <Loading color="#fff" bgColor="#1677ff" />}
                   Login
@@ -179,6 +200,7 @@ function LoginAdmin(props) {
             </Form.Item>
           </Form>
         </div>
+        <OTP/>
       </div>
     );
 }
