@@ -25,7 +25,7 @@ const AdminPurchaseOrder = () => {
 
   const getAllOrders = async () => {
     try {
-      const response = await orderApi.getAllOrders();
+      const response = await orderApi.getAllOrders({order:'desc'});
       setData(response.data.data);
     } catch (err) {}
   };
@@ -92,6 +92,23 @@ const AdminPurchaseOrder = () => {
         <Tag color={statusColors[status]}>{status}</Tag>
       ),
     },
+    { title: 'Order At', dataIndex: 'createdAt', key: 'createdAt', 
+      render: (date) => {
+        const orderAt = new Date(date);
+        const options = {
+          year: "numeric",
+          month: "short", // Use short month format (e.g., Nov)
+          day: "numeric",
+          hour: "2-digit",
+          minute: "2-digit",
+          hour12: true,
+        };
+        // Format the date and time
+        const formattedDate = new Intl.DateTimeFormat("en-US", options).format(orderAt);
+        // Remove "at" if present (just in case)
+        return formattedDate.replace(", at", ","); 
+      }
+    },
     {
       title: 'Actions',
       key: 'actions',
@@ -136,7 +153,9 @@ const AdminPurchaseOrder = () => {
         </Col>
       </Row>
 
-      <Table columns={columns} dataSource={data} rowKey="_id" />
+      <Table columns={columns} dataSource={data} rowKey="_id"  pagination={{
+          pageSize: '5',
+        }}/>
 
       {/* Edit Modal */}
       <Modal

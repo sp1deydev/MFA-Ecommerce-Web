@@ -9,7 +9,7 @@ const orderController = {
         const order = req.query.order === 'desc' ? -1 : 1;
     
         const skip = limit ? (page - 1) * limit : 0;
-        let query = Order.find().sort({ createdAt: order }).skip(skip).select('_id address cityName districtName wardName status paymentMethod totalPrice');
+        let query = Order.find().sort({ createdAt: order }).skip(skip).select('_id address cityName districtName wardName status paymentMethod totalPrice createdAt');
     
         if (limit) {
             query = query.limit(limit);

@@ -1,4 +1,4 @@
-import { useState, useEffect, Fragment } from "react";
+import { useState, useEffect, Fragment, useMemo } from "react";
 import { Form, Input, Select, Button, Radio, Card, Row, Col, Typography, Divider, message } from "antd";
 import axios from "axios";
 import { cartApi } from "../../api/cartApi";
@@ -6,6 +6,10 @@ import { vietnamCurrency } from "../../helpers/currency";
 import { useNavigate } from "react-router-dom";
 import { orderApi } from "../../api/orderApi";
 import { toast } from "react-toastify";
+import { PayPalButton } from "react-paypal-button-v2";
+import { API_URL } from "../../constants/api";
+import { EXCHANGE_DOLLAR_VND_RATE } from "../../constants/common";
+import { debounce } from "../../utils/debounce";
 
 const { Title, Text } = Typography;
 
@@ -21,8 +25,10 @@ const CheckOut = () => {
   const [selectedCity, setSelectedCity] = useState(null);
   const [selectedDistrict, setSelectedDistrict] = useState(null);
   const [selectedWard, setSelectedWard] = useState(null);
-
+  const [selectedPaymentMethod, setSelectedPaymentMethod] = useState('cod');
+  const [shippingAddress, setShippingAddress] = useState('');
   const [loading, setLoading] = useState(false);
+  const [sdkReady, setSdkReady] = useState(false);
 
   const cart = {
     totalPrice: 557.99,
@@ -49,6 +55,26 @@ const CheckOut = () => {
     getCartItems();
   }, [])
 
+  const addPaypalScript = async () => {
+    const response = await axios.get(`${API_URL}payment/config`)
+    console.log(response)
+    const script = document.createElement('script');
+    script.src = `https://sandbox.paypal.com/sdk/js?client-id=${response.data.clientId}`;
+    script.async = true;
+    script.onload = () => {
+      setSdkReady(true);
+    };
+    document.body.appendChild(script);
+    console.log(sdkReady)
+  }
+  useEffect(() => {
+    if(!window.script) {
+      addPaypalScript()
+    }
+    else {
+      setSdkReady(true);
+    }
+  }, [])
   useEffect(() => {
     const getCities = async () => {
       try {
@@ -113,7 +139,13 @@ const CheckOut = () => {
       setLoading(false);
     }
   };
-
+  const handleRadioChange = (e) => {
+    setSelectedPaymentMethod(e.target.value);
+  };
+  const handleAddressChange = useMemo(() => {
+      return debounce((e)=> {setShippingAddress(e.target.value)}, 1000)
+    }, [])
+    
   return (
     <Fragment>
       <Row gutter={24} style={{ padding: "24px", maxWidth: "1200px", margin: "0 auto" }}>
@@ -134,7 +166,7 @@ const CheckOut = () => {
                 name="address"
                 rules={[{ required: true, message: "Please enter your shipping address." }]}
               >
-                <Input.TextArea placeholder="Enter your shipping address" rows={2} />
+                <Input.TextArea placeholder="Enter your shipping address" rows={2} onChange={handleAddressChange}/>
               </Form.Item>
               <Form.Item
                 name="city"
@@ -191,25 +223,68 @@ const CheckOut = () => {
                 label="Payment Method"
                 rules={[{ required: true, message: "Please select a payment method." }]}
               >
-                <Radio.Group>
+                <Radio.Group onChange={handleRadioChange}>
                   <Radio value="cod">COD</Radio>
                   <Radio value="paypal">PayPal</Radio>
                 </Radio.Group>
               </Form.Item>
+              
+              {selectedPaymentMethod == 'paypal' && sdkReady ? (
+                <PayPalButton
+                  amount={(countTotalPrice(cartItems)/EXCHANGE_DOLLAR_VND_RATE).toFixed(2)}
+                  // shippingPreference="NO_SHIPPING" // default is "GET_FROM_FILE"
+                  onSuccess={async (details, data) => {
+                    toast.success("Transaction completed by " + details.payer.name.given_name);
+                    // OPTIONAL: Call your server to save the transaction
+                    setLoading(true);
 
-              <Button
-                type="primary"
-                htmlType="submit"
-                style={{ width: "100%", marginTop: "16px" }}
-                loading={loading}
-                disabled={!cartItems.length}
-              >
-                Confirm Payment {vietnamCurrency(countTotalPrice(cartItems))}
-              </Button>
+                      // Extract selected city, district, and ward names
+                      const cityName = selectedCity?.label || "N/A";
+                      const districtName = selectedDistrict?.label || "N/A";
+                      const wardName = selectedWard?.label || "N/A";
+
+                      const submissionData = {
+                          address: shippingAddress || "N/A",
+                          paymentMethod: selectedPaymentMethod,
+                          status: 'pending',
+                          cityName,
+                          districtName,
+                          wardName,
+                          totalPrice: countTotalPrice(cartItems),
+                          products: cartItems,
+                      };
+                      try {
+                        await orderApi.create({requestOrder: submissionData, cartId: cartId});
+                        setTimeout(() => {
+                          message.success("Order placed successfully!");
+                          navigate('/thankyou')
+                          setLoading(false);
+                        }, 1000)
+                      }
+                      catch (err) {
+                        toast.error('Order error: ' + err.message);
+                        setLoading(false);
+                      }
+                  }}
+                  onError={()=>{
+                    toast.error('Payment is not completed')
+                  }}
+                />
+              ):(
+                <Button
+                  type="primary"
+                  htmlType="submit"
+                  style={{ width: "100%", marginTop: "16px" }}
+                  loading={loading}
+                  disabled={!cartItems.length}
+                >
+                  Confirm Payment {vietnamCurrency(countTotalPrice(cartItems))}
+                </Button>
+              )}
             </Form>
           </Card>
         </Col>
-
+                
         {/* Right Column */}
         <Col xs={24} lg={8}>
           <Card bordered={false}>

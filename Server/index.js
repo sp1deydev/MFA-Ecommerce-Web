@@ -56,7 +56,12 @@ const orderRoute = require('./app/routers/order');
 
 
 
-
+app.get('/payment/config', (req, res) => {
+    res.status(200).json({
+        success: true,
+        clientId: process.env.CLIENT_ID
+    });
+}) //config client id for paypad payment
 app.use('/products', productsRoute);
 app.use('/auth', authRoute);
 app.use('/users', userRoute);

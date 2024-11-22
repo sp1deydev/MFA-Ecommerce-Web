@@ -1,0 +1,1 @@
+export const EXCHANGE_DOLLAR_VND_RATE = 22000;

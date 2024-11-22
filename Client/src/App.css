@@ -39,6 +39,11 @@ html {
   width: 986px;
   margin: auto;
 }
+.sub-container-1 {
+  padding-top: 20px;
+  width: 1240px;
+  margin: auto;
+}
 .product-card-image {
   margin-bottom: 12px;;
   display: flex;
