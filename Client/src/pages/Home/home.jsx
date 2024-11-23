@@ -8,6 +8,7 @@ import ProductCard from "../../components/productCard/productCard";
 import { useDispatch, useSelector } from "react-redux";
 import { productApi } from "../../api/productApi";
 import { productSlice } from "../../redux/productSlice";
+import { useNavigate } from "react-router-dom";
 
 const { Title, Text } = Typography;
 const { Search } = Input;
@@ -42,6 +43,7 @@ const carouselItems = [
 function Home(props) {
   const [products, setProducts] = useState([])
   const dispatch = useDispatch()
+  const navigate = useNavigate()
   // const products = useSelector((state)=>state.product.productList) || []
   const getAllProducts = async () => {
     try {
@@ -148,7 +150,7 @@ function Home(props) {
         </Row>
       </div>
       <div className="home-sub-container">
-        <div className="home-more-btn" onClick={()=>alert('click')}>
+        <div className="home-more-btn" onClick={() => navigate('/products')}>
           <a >More {'>'}</a>
         </div>
       </div>

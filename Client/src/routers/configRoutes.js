@@ -22,6 +22,7 @@ import CheckOut from "../pages/CheckOut/Checkout";
 import ThankYou from "../pages/ThankYou/ThankYou";
 import AdminPurchaseOrder from "../pages/Admin/PurchaseOrder";
 import PurchaseOrder from "../pages/Orders/order";
+import Product from "../pages/Product/Product";
 
 export const configRoutes = [
     {
@@ -31,6 +32,10 @@ export const configRoutes = [
     {
         path: '/home',
         component: Home,
+    },
+    {
+        path: '/products',
+        component: Product,
     },
     {
         path: '/contact-us',

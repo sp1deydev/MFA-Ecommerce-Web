@@ -56,16 +56,15 @@ const CheckOut = () => {
   }, [])
 
   const addPaypalScript = async () => {
-    const response = await axios.get(`${API_URL}payment/config`)
-    console.log(response)
-    const script = document.createElement('script');
-    script.src = `https://sandbox.paypal.com/sdk/js?client-id=${response.data.clientId}`;
-    script.async = true;
-    script.onload = () => {
-      setSdkReady(true);
-    };
-    document.body.appendChild(script);
-    console.log(sdkReady)
+    // const response = await axios.get(`${API_URL}payment/config`)
+    // const script = document.createElement('script');
+    // script.src = `https://sandbox.paypal.com/sdk/js?client-id=${response.data.clientId}`;
+    // script.async = true;
+    // script.onload = () => {
+    //   setSdkReady(true);
+    // };
+    // document.body.appendChild(script);
+    setSdkReady(true);
   }
   useEffect(() => {
     if(!window.script) {
@@ -269,6 +268,9 @@ const CheckOut = () => {
                   onError={()=>{
                     toast.error('Payment is not completed')
                   }}
+                  // options={{
+                  //   clientId: ‘YOUR_CLIENT_ID_HERE’,
+                  // }}
                 />
               ):(
                 <Button
