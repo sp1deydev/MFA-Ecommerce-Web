@@ -6,9 +6,15 @@ const productController = {
         const page = parseInt(req.query.page) || 1; 
         const limit = req.query.limit ? parseInt(req.query.limit) : null;
         const order = req.query.order === 'desc' ? -1 : 1;
-    
         const skip = limit ? (page - 1) * limit : 0;
-        let query = Product.find().sort({ createdAt: order }).skip(skip);
+        let filters = {};
+        const { categories } = req.query
+    
+        if(categories) {
+            filters.category = { $in: categories.split(',') }
+        }
+
+        let query = Product.find(filters).sort({ createdAt: order }).skip(skip);
     
         if (limit) {
             query = query.limit(limit);
@@ -22,7 +28,7 @@ const productController = {
                     }
                 });
     
-                Product.countDocuments()
+                Product.countDocuments(filters)
                     .then(totalCount => {
                         const totalPages = limit ? Math.ceil(totalCount / limit) : 1;
                         res.status(200).json({

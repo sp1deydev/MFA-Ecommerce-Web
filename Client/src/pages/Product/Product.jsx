@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Row, Col, Card, Tag, Typography, Button, Divider, Flex, Checkbox, Pagination } from "antd";
+import { Row, Col, Card, Tag, Typography, Button, Divider, Flex, Checkbox, Pagination, Empty } from "antd";
 import ProductCard from "../../components/productCard/productCard";
 import { productSlice } from "../../redux/productSlice";
 import { productApi } from "../../api/productApi";
@@ -12,7 +12,7 @@ function Product() {
     const [products, setProducts] = useState([]);
     const [productCount, setProductCount] = useState();
     const [categories, setCategories] = useState([]);
-    const [selectedTags, setSelectedTags] = useState(['Movies']);
+    const [selectedTags, setSelectedTags] = useState([]);
     const [selectedPrices, setSelectedPrices] = useState([]);
     const [selectedOS, setSelectedOS] = useState([]);
     const [selectedConnections, setSelectedConnections] = useState([]);
@@ -27,13 +27,6 @@ function Product() {
     ];
     const osOptions = ["All","Android", "iOS"];
     const connectionOptions = ["All","Wi-Fi", "Bluetooth", "NFC"];
-
-    const handleChange = (name, checked) => {
-        const nextSelectedTags = checked
-            ? [...selectedTags, name]
-            : selectedTags.filter((t) => t !== name);
-        setSelectedTags(nextSelectedTags);
-    };
 
     const handleCheckboxChange = (type, checkedValues) => {
         if (type === "price") setSelectedPrices(checkedValues);
@@ -66,6 +59,23 @@ function Product() {
             console.error(err);
         }
     };
+    const handleChange = async (name, checked) => {
+        const nextSelectedTags = checked
+            ? [...selectedTags, name]
+            : selectedTags.filter((t) => t !== name);
+        if(nextSelectedTags.length > 0) {
+            const res = await productApi.getAllProducts({ order: 'desc', limit: 8, categories: nextSelectedTags.join(',') });
+            const response = await productApi.getAllProducts({categories: nextSelectedTags.join(',')});
+            setProducts(res.data.data);
+            setProductCount(response.data.meta.totalCount)
+            dispatch(productSlice.actions.setProductList(response.data.data));
+        }
+        else {
+            getAllProducts();
+        }
+        setSelectedTags(nextSelectedTags);
+    };
+
 
     useEffect(() => {
         getAllProducts();
@@ -126,12 +136,16 @@ function Product() {
                             onChange={(checkedValues) => handleCheckboxChange("connection", checkedValues)}
                         />
                     </div>
-                    <Row gutter={[8, 8]}>
-                        {products.map((product, index) => (
-                            <Col key={index} span={6}>
-                                <ProductCard product={product} />
-                            </Col>
-                        ))}
+                    <Row gutter={[8, 8]} style={{minWidth:'976px'}}>
+                        {!products.length ? 
+                            <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} style={{margin: 'auto'}}/> 
+                            :
+                            (products.map((product, index) => (
+                                <Col key={index} span={6}>
+                                    <ProductCard product={product} />
+                                </Col>
+                            )))
+                        }
                         <div style={{width:'100%', marginTop:'12px'}}>
                             <Pagination align="center" onChange={handleChangePage} defaultCurrent={1} pageSize={8} total={productCount} />
                         </div>

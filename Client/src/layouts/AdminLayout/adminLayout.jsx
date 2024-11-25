@@ -17,6 +17,7 @@ import { userSlice } from '../../redux/userSlice';
 import { useNavigate } from 'react-router-dom';
 import { mfaSlice } from '../../redux/mfaSlice';
 import { handleLocalStorage } from '../../utils/handleLocalStorage';
+import AdminBreadCrumbs from '../../components/AdminBreadCrumbs/adminBreadCrumbs';
 
 const { Header, Content, Footer, Sider } = Layout;
 const { SubMenu } = Menu;
@@ -83,10 +84,11 @@ const AdminLayout = (props) => {
       <Layout className="site-layout">
         <Header className="site-layout-background" style={{ backgroundColor:'#fff',padding: 0 }} />
         <Content style={{ margin: '0 16px' }}>
-          <Breadcrumb style={{ margin: '16px 0' }}>
+          {/* <Breadcrumb style={{ margin: '16px 0' }}>
             <Breadcrumb.Item>Dashboard</Breadcrumb.Item>
             <Breadcrumb.Item>Overview</Breadcrumb.Item>
-          </Breadcrumb>
+          </Breadcrumb> */}
+          <AdminBreadCrumbs />
           <div>
             {props.children}
           </div>
