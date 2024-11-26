@@ -126,8 +126,6 @@ const relationshipsCondition = (imageList, relationships) => {
         relationships: relationships,
         relationtypes: relationTypes,
       }
-      console.log(payload);
-      console.log('test1',currentUser);
       const res = await userApi.config(payload);
       if (!res.data.success) {
         toast.error(res.data.message);

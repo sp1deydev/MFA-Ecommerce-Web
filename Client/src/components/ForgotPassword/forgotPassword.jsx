@@ -20,9 +20,6 @@ const ForgotPassword = (props) => {
           forgotPasswordForm.resetFields()
           return;
         }
-        console.log(values)
-        console.log(props.username)
-        // dispatch(userSlice.actions.setIsLoading(true));
         try {
           const res = await userApi.forgotPassword({username: props.username, newPassword: values.newPassword});
           if (!res.data.success) {
