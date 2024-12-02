@@ -23,6 +23,7 @@ import ThankYou from "../pages/ThankYou/ThankYou";
 import AdminPurchaseOrder from "../pages/Admin/PurchaseOrder";
 import PurchaseOrder from "../pages/Orders/order";
 import Product from "../pages/Product/Product";
+import UploadGeneralImage from "../pages/System/UploadGeneralImage";
 
 export const configRoutes = [
     {
@@ -197,6 +198,10 @@ export const configRoutes = [
     {
         path: '/otp',
         component: OTP,
+    },
+    {
+        path: '/general',
+        component: UploadGeneralImage,
     },
     
 ]

@@ -1,5 +1,6 @@
 const express = require('express');
 const SystemConfig = require('../models/systemConfig');
+const GeneralImage = require('../models/generalImage');
 
 const systemController = {
     
@@ -29,6 +30,33 @@ const systemController = {
            .then(result => res.status(200).json(result))
            .catch(err => res.status(500).json(err))
    },
+   uploadGeneralImage: (req, res) => {
+         GeneralImage.insertMany(req.body)
+            .then(result => res.status(200).json(result))
+            .catch(err => res.status(500).json(err))
+    },
+   getRandomSystemImage: (req, res) => {
+    let systemConfig = {}
+    SystemConfig.findOne()
+        .then((result) => {
+            if (!result) {
+                return res.status(200).json({ data: {}, success: true });
+            }
+            systemConfig = {...result._doc};
+            console.log(systemConfig)
+            GeneralImage.aggregate([{ $sample: { size: Number(12 - systemConfig.numOfAuthenticatedImages)} }])
+            .then(result => {
+        if (result) {
+            res.status(200).json({result: result, success: true, massage: "Get random system image successfully" });
+            }
+        else {
+            res.json({ message: "User not found", success: false})
+        }
+    })
+    .catch(err => console.error(err))
+        })
+        .catch((err) => console.error(err));
+    },
 }
 
 module.exports = systemController;

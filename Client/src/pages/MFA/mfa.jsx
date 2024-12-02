@@ -51,7 +51,9 @@ const getAuthenticationData = async () => {
     try {
       const response = await userApi.getRandomUserImages();
       const response2 = await userApi.getRandomUserRelationType();
-      let displayImages = [...randomSystemImages, ...response.data.result];
+      const systemImageResponse = await systemApi.getRandomSystemImage();
+      dispatch(mfaSlice.actions.setRandomSystemImages(systemImageResponse.data.result));
+      let displayImages = [...systemImageResponse.data.result, ...response.data.result];
       displayImages = displayImages.sort(() => Math.random() - 0.5);
       dispatch(mfaSlice.actions.setAuthenticationDisplayImages(displayImages))
       dispatch(mfaSlice.actions.setRandomSelectedImages(response.data.result));

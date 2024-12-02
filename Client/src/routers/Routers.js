@@ -2,7 +2,7 @@ import React, { Fragment } from 'react';
 import PropTypes from 'prop-types';
 import { Route, Routes } from 'react-router-dom';
 import { configRoutes } from './configRoutes';
-import ProtectedRoute from './ProtecteRoute';
+import ProtectedRoute from './ProtectedRoute';
 import { ADMIN_LAYOUT, NO_LAYOUT, SYSTEM_LAYOUT } from '../constants/layout';
 import AdminLayout from '../layouts/AdminLayout/adminLayout';
 import MainLayout from '../layouts/MainLayout/mainLayout';

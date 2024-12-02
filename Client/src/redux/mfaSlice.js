@@ -12,6 +12,7 @@ export const mfaSlice = createSlice({
           numOfImageEachRelationType: 0,
         },
         imageList: [],
+        uploadedGeneralImage: [],
         relationTypes: [
             'Relation Type 1',
             'Relation Type 2',
@@ -38,82 +39,8 @@ export const mfaSlice = createSlice({
             ],
             "relationtype": "Relation Type 4"
         },
-        randomSelectedImages: [
-            // {
-            //     "uid": "rc-upload-1730660552903-3",
-            //     "name": "1730660596150-download.png",
-            //     "status": "done",
-            //     "url": "http://localhost:3001/uploads\\1730660596150-download.png"
-            // },
-            // {
-            //     "uid": "rc-upload-1730660552903-5",
-            //     "name": "1730660604617-images.jpeg",
-            //     "status": "done",
-            //     "url": "http://localhost:3001/uploads\\1730660604617-images.jpeg"
-            // },
-            // {
-            //     "uid": "rc-upload-1730660552903-7",
-            //     "name": "1730660606851-download (1).png",
-            //     "status": "done",
-            //     "url": "http://localhost:3001/uploads\\1730660606851-download (1).png"
-            // },
-            // {
-            //     "uid": "rc-upload-1730660552903-9",
-            //     "name": "1730660609580-download.png",
-            //     "status": "done",
-            //     "url": "http://localhost:3001/uploads\\1730660609580-download.png"
-            // },
-        ],
-        randomSystemImages: [
-            {
-                "uid": "rc-upload-1730707500959-2",
-                "name": "1730707529992-test.png",
-                "status": "done",
-                "url": "http://localhost:3001/uploads\\1730707529992-test.png"
-            },
-            {
-                "uid": "rc-upload-1730707500959-4",
-                "name": "1730707532282-test.png",
-                "status": "done",
-                "url": "http://localhost:3001/uploads\\1730707532282-test.png"
-            },
-            {
-                "uid": "rc-upload-1730707500959-6",
-                "name": "1730707534766-test.png",
-                "status": "done",
-                "url": "http://localhost:3001/uploads\\1730707534766-test.png"
-            },
-            {
-                "uid": "rc-upload-1730707500959-8",
-                "name": "1730707538238-test.png",
-                "status": "done",
-                "url": "http://localhost:3001/uploads\\1730707538238-test.png"
-            },
-            {
-                "uid": "rc-upload-1730707500959-10",
-                "name": "1730707540255-test.png",
-                "status": "done",
-                "url": "http://localhost:3001/uploads\\1730707540255-test.png"
-            },
-            {
-                "uid": "rc-upload-1730707500959-12",
-                "name": "1730707542236-test.png",
-                "status": "done",
-                "url": "http://localhost:3001/uploads\\1730707542236-test.png"
-            },
-            {
-                "uid": "rc-upload-1730707500959-14",
-                "name": "1730707545497-test.png",
-                "status": "done",
-                "url": "http://localhost:3001/uploads\\1730707545497-test.png"
-            },
-            {
-                "uid": "rc-upload-1730707500959-16",
-                "name": "1730707547397-test.png",
-                "status": "done",
-                "url": "http://localhost:3001/uploads\\1730707547397-test.png"
-            }
-        ],
+        randomSelectedImages: [],
+        randomSystemImages: [],
         authenticationDisplayImages: [],
     },
     reducers: {
@@ -150,6 +77,9 @@ export const mfaSlice = createSlice({
         },
         setAuthenticationDisplayImages: (state, action) => {
             state.authenticationDisplayImages = action.payload
+        },
+        setUploadedGeneralImage: (state, action) => {
+            state.uploadedGeneralImage = action.payload
         }
     },
 })

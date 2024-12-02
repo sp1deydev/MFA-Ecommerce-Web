@@ -11,9 +11,18 @@ const storage = multer.diskStorage({
     cb(null, Date.now() + "-" + file.originalname); // Đổi tên file để tránh bị trùng lặp
   },
 });
+const generalStorage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, "./uploads/general"); // Thư mục để lưu trữ ảnh
+  },
+  filename: function (req, file, cb) {
+    cb(null, Date.now() + "-" + file.originalname); // Đổi tên file để tránh bị trùng lặp
+  },
+});
 
 // Tạo middleware upload để xử lý yêu cầu upload ảnh
 const upload = multer({ storage: storage });
+const uploadGeneral = multer({ storage: generalStorage});
 
 router.post('/upload', upload.single('image'), (req, res) => {
     console.log(res);
@@ -26,6 +35,19 @@ router.post('/upload', upload.single('image'), (req, res) => {
         filePath: req.file.path,
         fileName: req.file.filename
       });
+});
+
+router.post('/upload-general', uploadGeneral.single('image'), (req, res) => {
+  console.log(res);
+  res
+    .status(200)
+    .json({
+      message: "General Image successfully uploaded",
+      success: true,
+      status: "done",
+      filePath: req.file.path,
+      fileName: req.file.filename
+    });
 });
 
 
