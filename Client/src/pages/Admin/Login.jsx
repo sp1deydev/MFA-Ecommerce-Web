@@ -12,6 +12,8 @@ import { handleSessionStorage } from '../../utils/handleSessionStorage';
 import Loading from '../../components/loading';
 import { mfaSlice } from '../../redux/mfaSlice';
 import OTP from '../../components/OTP/otp';
+import logo from '../../assets/image/whitelogo.png'
+
 
 LoginAdmin.propTypes = {
     
@@ -147,6 +149,19 @@ function LoginAdmin(props) {
     return (
       <div className="form-container">
         <div className="sub-form-container">
+        <div
+          className="logo"
+          style={{ width: "100%",textAlign: 'center', margin:'-20px 0px 0px 8px' }}
+        >
+          <img
+            src={logo} // Replace with your logo image path
+            alt="Logo"
+            style={{
+              width: "200px",
+              margin:'8px'
+            }}
+          />
+        </div>
           <Form
             {...layout}
             form={form}

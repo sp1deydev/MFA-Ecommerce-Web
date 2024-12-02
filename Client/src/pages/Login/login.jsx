@@ -12,6 +12,7 @@ import { handleSessionStorage } from '../../utils/handleSessionStorage';
 import Loading from '../../components/loading';
 import OTP from '../../components/OTP/otp';
 import { cartApi } from '../../api/cartApi';
+import logo from '../../assets/image/whitelogo.png'
 
 Login.propTypes = {
     
@@ -139,6 +140,19 @@ function Login(props) {
     return (
       <div className="form-container">
         <div className="sub-form-container">
+        <div
+          className="logo"
+          style={{ width: "100%",textAlign: 'center', margin:'-20px 0px 0px 8px' }}
+        >
+          <img
+            src={logo} // Replace with your logo image path
+            alt="Logo"
+            style={{
+              width: "200px",
+              margin:'8px'
+            }}
+          />
+        </div>
           <Form
             {...layout}
             form={form}
