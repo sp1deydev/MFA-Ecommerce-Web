@@ -43,7 +43,6 @@ const systemController = {
                 return res.status(200).json({ data: {}, success: true });
             }
             systemConfig = {...result._doc};
-            console.log(systemConfig)
             GeneralImage.aggregate([{ $sample: { size: Number(12 - systemConfig.numOfAuthenticatedImages)} }])
             .then(result => {
         if (result) {

@@ -22,23 +22,7 @@ export const mfaSlice = createSlice({
         relationships: [],
         userSelectedRelationType: '',
         userSelectedImages: [],
-        randomSelectedRelationType: {
-            "images": [
-                {
-                    "uid": "rc-upload-1730660552903-3",
-                    "name": "1730660596150-download.png",
-                    "status": "done",
-                    "url": "http://localhost:3001/uploads\\1730660596150-download.png"
-                },
-                {
-                    "uid": "rc-upload-1730660552903-9",
-                    "name": "1730660609580-download.png",
-                    "status": "done",
-                    "url": "http://localhost:3001/uploads\\1730660609580-download.png"
-                }
-            ],
-            "relationtype": "Relation Type 4"
-        },
+        randomSelectedRelationType: {},
         randomSelectedImages: [],
         randomSystemImages: [],
         authenticationDisplayImages: [],
@@ -60,23 +44,16 @@ export const mfaSlice = createSlice({
         setUserSelectedRelationType: (state, action) => {
           state.userSelectedRelationType = action.payload
         },
-        setRandomSelectedRelationType: (state, action) => {
-          state.randomSelectedRelationType = action.payload
-        },
         setUserSelectedImages: (state, action) => {
           state.userSelectedImages = action.payload
-        },
-        setRandomSelectedImages: (state, action) => {
-          state.randomSelectedImages = action.payload
-        },
-        setRandomSystemImages: (state, action) => {
-          state.randomSystemImages = action.payload
         },
         setSystemConfiguration: (state, action) => {
             state.systemConfiguration = action.payload
         },
         setAuthenticationDisplayImages: (state, action) => {
-            state.authenticationDisplayImages = action.payload
+            state.authenticationDisplayImages = action.payload.displayImages;
+            state.randomSelectedImages = action.payload.randomSelectedImages;
+            state.randomSelectedRelationType = action.payload.randomSelectedRelationType;
         },
         setUploadedGeneralImage: (state, action) => {
             state.uploadedGeneralImage = action.payload

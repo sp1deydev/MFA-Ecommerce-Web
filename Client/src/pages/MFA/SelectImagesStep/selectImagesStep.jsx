@@ -17,13 +17,13 @@ const SelectImagesStep = () => {
   const images = useSelector((state) => state.mfa.authenticationDisplayImages)
 
   // Trạng thái chọn của ảnh (mảng này cũng tự động điều chỉnh theo số lượng ảnh)
-  const [selectedImages, setSelectedImages] = useState(new Array(images.length).fill(false));
+  const [selectedImages, setSelectedImages] = useState(new Array(images?.length).fill(false));
   const [selectedImagesInfo, setSelectedImagesInfo] = useState([]);
   useEffect(() => {
-    setSelectedImages(new Array(images.length).fill(false))
+    setSelectedImages(new Array(images?.length).fill(false))
   }, [images])
   const toggleSelectImage = (index) => {
-    const selectedCount = selectedImages.filter((selected) => selected).length;
+    const selectedCount = selectedImages.filter((selected) => selected)?.length;
     if (!selectedImages[index] && selectedCount >= systemConfig.numOfAuthenticatedImages) {
       toast.warn(`You can only select up to ${systemConfig.numOfAuthenticatedImages} images.`);
       // dispatch(mfaSlice.actions.setUserSelectedImages(selectedImagesInfo));
@@ -60,7 +60,7 @@ const SelectImagesStep = () => {
         />
       </div>
       <Row gutter={[16, 16]}>
-        {images.map((image, index) => (
+        {Array.isArray(images) && images.map((image, index) => (
           <Col span={6} key={index}>
             <div
               style={{

@@ -40,7 +40,6 @@ const [current, setCurrent] = useState(0);
 const systemConfig = useSelector(state => state.mfa.systemConfiguration)
 const userSelectedImages = useSelector(state => state.mfa.userSelectedImages)
 const randomSelectedImages = useSelector(state => state.mfa.randomSelectedImages)
-const randomSystemImages = useSelector(state => state.mfa.randomSystemImages);
 const randomSelectedRelationType = useSelector(state => state.mfa.randomSelectedRelationType)
 const userSelectedRelationType = useSelector(state => state.mfa.userSelectedRelationType)
 const authenticationDisplayImages = useSelector(state => state.mfa.authenticationDisplayImages)
@@ -52,12 +51,13 @@ const getAuthenticationData = async () => {
       const response = await userApi.getRandomUserImages();
       const response2 = await userApi.getRandomUserRelationType();
       const systemImageResponse = await systemApi.getRandomSystemImage();
-      dispatch(mfaSlice.actions.setRandomSystemImages(systemImageResponse.data.result));
       let displayImages = [...systemImageResponse.data.result, ...response.data.result];
-      displayImages = displayImages.sort(() => Math.random() - 0.5);
-      dispatch(mfaSlice.actions.setAuthenticationDisplayImages(displayImages))
-      dispatch(mfaSlice.actions.setRandomSelectedImages(response.data.result));
-      dispatch(mfaSlice.actions.setRandomSelectedRelationType(response2.data.result));
+      const payload = {
+        displayImages: displayImages.sort(() => Math.random() - 0.5),
+        randomSelectedImages: response.data.result,
+        randomSelectedRelationType: response2.data.result
+      }
+      dispatch(mfaSlice.actions.setAuthenticationDisplayImages(payload))
     } catch (err) {
       toast.error(err.response.data.message || "Get System Configuration Error");
     }
@@ -174,7 +174,7 @@ useEffect(() => {
             </Button>
           {/* choose images step */}
            {current < steps.length - 1 && current == 0 && (
-            <Button type="primary" onClick={() => confirmSelectImage()} icon={<RightOutlined />} iconPosition='end' disabled={systemConfig.numOfAuthenticatedImages == userSelectedImages.length ? false : true}>
+            <Button type="primary" onClick={() => confirmSelectImage()} icon={<RightOutlined />} iconPosition='end' disabled={systemConfig.numOfAuthenticatedImages == userSelectedImages?.length ? false : true}>
               Authenticate
             </Button>
           )}
