@@ -4,6 +4,7 @@ import { PlusOutlined, EditOutlined, DeleteOutlined, CheckOutlined, CloseOutline
 import { useDispatch, useSelector } from 'react-redux';
 import { mfaSlice } from '../../redux/mfaSlice';
 import { toast } from 'react-toastify';
+import logo from '../../assets/image/bluesquarelogo.png'
 
 const RelationTypes = () => {
   const dispatch = useDispatch();
@@ -125,7 +126,7 @@ const RelationTypes = () => {
             ]}
           >
             <List.Item.Meta
-              avatar={<Avatar src={`https://api.dicebear.com/7.x/miniavs/svg?seed=${index}`} />}
+              avatar={<Avatar src={logo} />}
               title={
                 editingIndex === index ? (
                   <Input value={editedValue} onChange={handleEditInputChange} />
