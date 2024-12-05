@@ -28,7 +28,7 @@ const authController = {
         User.findOne({username: req.body.username})
             .then(result => {
                 if (result) {
-                    res.json({message: "Username exists"})
+                    res.status(400).json({message: "Username exists"})
                 }
                 else {
                     const user = new User(newUser);
