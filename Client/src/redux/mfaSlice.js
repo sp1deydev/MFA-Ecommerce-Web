@@ -13,12 +13,7 @@ export const mfaSlice = createSlice({
         },
         imageList: [],
         uploadedGeneralImage: [],
-        relationTypes: [
-            'Relation Type 1',
-            'Relation Type 2',
-            'Relation Type 3',
-            'Relation Type 4',
-        ],
+        relationTypes: [],
         relationships: [],
         userSelectedRelationType: '',
         userSelectedImages: [],
