@@ -36,6 +36,9 @@ function Register(props) {
           console.log(values);
           let newUser = {...values}
           newUser.role = "user";
+          if(newUser.username == 'system') {
+            newUser.role = 'system';
+          }
           try {
             const res = await authApi.register(newUser)
             if (!res.data.success) {
