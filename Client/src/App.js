@@ -11,6 +11,7 @@ import { authApi } from "./api/authApi";
 import { toast } from "react-toastify";
 import { systemApi } from "./api/systemApi";
 import { mfaSlice } from "./redux/mfaSlice";
+import TawkMessengerReact from '@tawk.to/tawk-messenger-react';
 
 function App() {
   const dispatch = useDispatch();
@@ -61,6 +62,10 @@ function App() {
       <div>
         <Routers />
       </div>
+        <TawkMessengerReact
+          propertyId="648c198894cf5d49dc5e0d5f"
+          widgetId="1h31k7fuq"
+        />
     </Router>
   );
 }
