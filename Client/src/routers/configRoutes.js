@@ -140,6 +140,8 @@ export const configRoutes = [
     {
         path: '/purchase-order',
         component: PurchaseOrder,
+        protected: true,
+        rolePermissions: ['user'],
     },
     {
         path: '/admin/products',
@@ -176,6 +178,13 @@ export const configRoutes = [
     },
     {
         path: '/system/profile',
+        component: UserInfo,
+        layout: SYSTEM_LAYOUT,
+        protected: true,
+        rolePermissions: ['system'],
+    },
+    {
+        path: '/system',
         component: UserInfo,
         layout: SYSTEM_LAYOUT,
         protected: true,
